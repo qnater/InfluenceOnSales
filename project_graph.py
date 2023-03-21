@@ -6,7 +6,7 @@ from explore.exploration_graph import ExploreGraph as eg
 from visualization.visualization_graph import VisualizationGraph as vg
 from analytics.analytics_graph import AnalyticsGraph as ag
 
-# QUENTIN NATER - 01.03.2023 - ASS 1 - EX 2
+# QUENTIN NATER - 01.03.2023
 if __name__ == '__main__':
     print("\n=========================================================================================")
     print("========================INFLUENCE=OF=POPULARITY=ON=SALES===UNI-FR========================")
