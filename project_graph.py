@@ -7,6 +7,7 @@ from explore.exploration_graph import ExploreGraph as eg
 from visualization.visualization_graph import VisualizationGraph as vg
 from analytics.analytics_graph import AnalyticsGraph as ag
 from preprocessing.pre_processing_graph import PreProcessGraph as pg
+from export.export_graph import ExportGraph as xg
 
 # QUENTIN NATER - 01.03.2023
 if __name__ == '__main__':
@@ -16,7 +17,7 @@ if __name__ == '__main__':
 
     mpl.use('TkAgg')  # without it, cannot run my plots (maybe personal)
 
-    tag = "prod"  # prod or test
+    tag = "staging"  # prod or test
 
     if tag == "test":
         graph = nx.DiGraph()
@@ -30,15 +31,21 @@ if __name__ == '__main__':
                                 ])
 
         graph = pg.refined_graph(graph)
-        vg.display_simple_graph(graph, False)
 
-        nodes = nx.betweenness_centrality(graph)
+        xg.create_dataset(graph)
 
-        print(nodes)
+        graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
 
+        vg.display_simple_graph(graph, True)
 
-    elif tag == "prod":
+        ag.centrality_betweenness_library(graph)
+
+    elif tag == "staging":
         graph = eg.construct_graph_by_file("./dataset/amazon-meta.txt")
         graph = pg.refined_graph(graph)
-        vg.display_simple_graph(graph, False)
+        xg.create_dataset(graph)
+
+    elif tag == "prod":
+        graph = eg.construct_graph_by_file("./dataset/mazon_refined.txt")
+        vg.display_simple_graph(graph, True)
         ag.centrality_betweenness_library(graph)

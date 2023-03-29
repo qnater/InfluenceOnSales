@@ -39,6 +39,7 @@ class ExploreGraph:
         # read every information of the file (dataset)
         with open(file_name, "r", encoding='utf-8') as f:
             for line in f:
+
                 i += 1  # inc break
 
                 # read nodes ===============================================
