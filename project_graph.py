@@ -1,3 +1,5 @@
+from sys import platform
+
 import matplotlib as mpl
 import networkx as nx
 import spicy as sp
@@ -14,6 +16,13 @@ if __name__ == '__main__':
     print("\n=========================================================================================")
     print("========================INFLUENCE=OF=POPULARITY=ON=SALES===UNI-FR========================")
     print("=========================================================================================\n")
+
+    if platform.system() == "Windows":
+        mpl.use('TkAgg')  # without it, cannot run my plots (maybe personal)
+    elif platform.system() == "Darwin":
+        print("Sorry, my bro...")
+    else:
+        print("Unknown operating system.")
 
     mpl.use('TkAgg')  # without it, cannot run my plots (maybe personal)
 
@@ -46,6 +55,6 @@ if __name__ == '__main__':
         xg.create_dataset(graph)
 
     elif tag == "prod":
-        graph = eg.construct_graph_by_file("./dataset/mazon_refined.txt")
+        graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         vg.display_simple_graph(graph, True)
         ag.centrality_betweenness_library(graph)
