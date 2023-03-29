@@ -547,7 +547,7 @@ ASIN: B00005NTSV
   title: Come What May
   group: Music
   salesrank: 83369
-  similar: 5  B00000JCDS  B000004CSZ  B00016XN6Q  B00005LLY3  B00023B1UI
+  similar: 5  B00000JCDS  B000004CSZ  B00016XN6Q  B00005LLY3  0393049388O
   categories: 5
    |Music[5174]|Styles[301668]|Jazz[34]|General[63926]
    |Music[5174]|Styles[301668]|Jazz[34]|Vocal Jazz[598170]|Vocal Jazz General[63934]
@@ -574,3 +574,13 @@ ASIN: 0393049388
     2001-6-14  cutomer:  AA90ANPKJB452  rating: 4  votes:   4  helpful:   1
     2001-8-20  cutomer: A382XQ7SYXEW1Q  rating: 2  votes:   2  helpful:   2
     2002-8-5  cutomer: A12MOYPCEJUGW6  rating: 3  vote
+
+Id:   9
+ASIN: 0393049388O
+  title: Making Bread: The Taste of Traditional Home-Baking
+  group: Book
+  salesrank: 949166
+  similar: 0
+  categories: 1
+   |Books[283155]|Subjects[1000]|Cooking, Food & Wine[6]|Baking[4196]|Bread[4197]
+  reviews: total: 0  downloaded: 0  avg rating: 0
