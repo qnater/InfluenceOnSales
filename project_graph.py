@@ -24,8 +24,6 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    mpl.use('TkAgg')  # without it, cannot run my plots (maybe personal)
-
     tag = "staging"  # prod or test
 
     if tag == "test":
