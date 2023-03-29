@@ -22,7 +22,7 @@ if __name__ == '__main__':
     if os.name == "nt":
         print("This computer is running Windows.")
     elif os.name == "posix":
-        print("Sorry, my bro...")
+        print("Sorry bro about you MAC...")
     else:
         print("Unknown operating system.")
 

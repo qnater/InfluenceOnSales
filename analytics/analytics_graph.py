@@ -12,7 +12,8 @@ class AnalyticsGraph:
     def centrality_betweenness_library(graph):
         print(">> You have called the betweenness centrality library for your graph.")
 
-        nodes = nx.betweenness_centrality(graph) # Centrality dictionary: node as key and its betweenness centrality as value
+        nodes = nx.betweenness_centrality(
+            graph)  # Centrality dictionary: node as key and its betweenness centrality as value
 
         for node in nodes.keys():
             if round(nodes[node], 2) > 0.0:
@@ -21,3 +22,15 @@ class AnalyticsGraph:
             print("\t\t\t\t Result: There are no central nodes.")
 
         return nodes
+
+    # Creator : Quentin Nater
+    # reviewed by : Sophie Caroni
+    #
+    # myGraph       : networkX - graph of the dataset
+    # library       : Library choosen
+    #
+    # Detect communities with a specific library
+    def commununity_library_detection(graph, library="Default"):
+        print(">> You have called the community detection with ", library, " settings")
+
+        return ""
