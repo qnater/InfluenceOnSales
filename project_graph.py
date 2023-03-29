@@ -41,11 +41,11 @@ if __name__ == '__main__':
         ag.centrality_betweenness_library(graph)
 
     elif tag == "staging":
-        graph = eg.construct_graph_by_file("./dataset/amazon-meta.txt")
+        graph = eg.construct_graph_by_file("./dataset/small_amazon.txt")
         graph = pg.refined_graph(graph)
         xg.create_dataset(graph)
 
     elif tag == "prod":
-        graph = eg.construct_graph_by_file("./dataset/mazon_refined.txt")
+        graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         vg.display_simple_graph(graph, True)
         ag.centrality_betweenness_library(graph)
