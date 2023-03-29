@@ -1,4 +1,4 @@
-from sys import platform
+import os
 
 import matplotlib as mpl
 import networkx as nx
@@ -17,9 +17,11 @@ if __name__ == '__main__':
     print("========================INFLUENCE=OF=POPULARITY=ON=SALES===UNI-FR========================")
     print("=========================================================================================\n")
 
-    if platform.system() == "Windows":
-        mpl.use('TkAgg')  # without it, cannot run my plots (maybe personal)
-    elif platform.system() == "Darwin":
+
+
+    if os.name == "nt":
+        print("This computer is running Windows.")
+    elif os.name == "posix":
         print("Sorry, my bro...")
     else:
         print("Unknown operating system.")
