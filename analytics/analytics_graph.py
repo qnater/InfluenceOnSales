@@ -6,7 +6,7 @@ class AnalyticsGraph:
     # Creator : Quentin Nater
     # reviewed by : Sophie Caroni
     #
-    # myGraph       : networkX - graph of the dataset
+    # graph       : networkX - graph of the dataset
     #
     # Calculate the betweenness centrality of a graph using the networkx library
     def centrality_betweenness_library(graph):

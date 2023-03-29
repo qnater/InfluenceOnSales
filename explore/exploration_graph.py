@@ -11,6 +11,7 @@ class ExploreGraph:
     #
     # Convert the id (ASIN) into a INT unique value
     def convert_asin_to_int(asin):
+
         alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         if any(char.isalpha() for char in asin): # isalpha() returns True if it detects letters
             for char in asin:
@@ -39,44 +40,47 @@ class ExploreGraph:
         # read every information of the file (dataset)
         with open(file_name, "r", encoding='utf-8') as f:
             for line in f:
-                i += 1  # inc break
+                line = line.strip("\n")
+                if len(line) > 0:
 
-                # read nodes ===============================================
-                match = re.search(r'ASIN:\s*(\w+)', line)  # each ASIN
-                if match:
-                    asin = match.group(1)  # Take the first element matched
+                    i += 1  # inc break
 
-                    # add a node to the graph for the ASIN value (INT)
-                    asin_int = ExploreGraph.convert_asin_to_int(asin)
-                    graph.add_node(asin_int)
-                    list_asin.append(asin_int)
+                    # read nodes ===============================================
+                    match = re.search(r'ASIN:\s*(\w+)', line)  # each ASIN
+                    if match:
+                        asin = match.group(1)  # Take the first element matched
 
-                # read edges ===============================================
-                match = re.search(r'similar:\s*(\w+)', line)  # each similar
-                if match:
-                    similars = line.split(sep="  ") # Create a list of each one of the similars as an element
-                    inc = 0
+                        # add a node to the graph for the ASIN value (INT)
+                        asin_int = ExploreGraph.convert_asin_to_int(asin)
+                        graph.add_node(asin_int)
+                        list_asin.append(asin_int)
 
-                    for similar in similars:
-                        inc += 1
+                    # read edges ===============================================
+                    match = re.search(r'similar:\s*(\w+)', line)  # each similar
+                    if match:
+                        similars = line.split(sep="  ") # Create a list of each one of the similars as an element
+                        inc = 0
 
-                        if inc > 2:  # if more than 0 categories ## ??? categories? why inc > 2? and why 0 and not 2?
-                            similar_int = ExploreGraph.convert_asin_to_int(similar)  # casting
-                            list_similars.append(similar_int)
-                            graph.add_edge(*(asin_int, similar_int)) # Add edges between the asin product and each of its similar ones
+                        for similar in similars:
+                            inc += 1
 
-                            if displayDetail:
-                                print("\t\t\t\t(" + str(asin_int) + ", " + str(similar_int) + ")")
+                            if inc > 2:  # if more than 0 categories ## ??? categories? why inc > 2? and why 0 and not 2?
+                                similar_int = ExploreGraph.convert_asin_to_int(similar)  # casting
+                                list_similars.append(similar_int)
+                                graph.add_edge(*(asin_int, similar_int)) # Add edges between the asin product and each of its similar ones
 
-                        elif len(similars) == 2:  # information if it has 0 category (CHECK FOR ANALYSIS)
-                            notOutEdged += 0.5  # because read 2 times
-                            if notOutEdged % 1 == 0:
-                                asin_i = ExploreGraph.convert_asin_to_int(asin)  # casting
-                                list_not_out_edged.append(asin_i)
+                                if displayDetail:
+                                    print("\t\t\t\t(" + str(asin_int) + ", " + str(similar_int) + ")")
 
-                # Stop reading file when the given line limit is reached =======================================
-                if i == limit:
-                    break
+                            elif len(similars) == 2:  # information if it has 0 category (CHECK FOR ANALYSIS)
+                                notOutEdged += 0.5  # because read 2 times
+                                if notOutEdged % 1 == 0:
+                                    asin_i = ExploreGraph.convert_asin_to_int(asin)  # casting
+                                    list_not_out_edged.append(asin_i)
+
+                    # Stop reading file when the given line limit is reached =======================================
+                    if i == limit:
+                        break
 
         nNodes, nEdges = graph.number_of_nodes(), graph.number_of_edges()
         print("\t\tThe graph has been successfully constructed! (nodes:" + str(nNodes) + ", edges:" + str(nEdges) + ")")
