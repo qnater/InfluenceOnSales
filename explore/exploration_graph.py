@@ -39,6 +39,7 @@ class ExploreGraph:
         # read every information of the file (dataset)
         with open(file_name, "r", encoding='utf-8') as f:
             for line in f:
+
                 i += 1  # inc break
 
                 # read nodes ===============================================
@@ -95,6 +96,6 @@ class ExploreGraph:
             print("\t\t\t\tNOT IN-EDGED NODES: \t\t\t" + str(len(list_not_in_edged)))
             print("\t\t\t\tNODES CREATED OUTSIDE (FILE) : \t" + str(len(list_extern)))
             print("\t\t\t\tNOT OUT-EDGED NODES: \t\t\t" + str(int(notOutEdged)))
-            print("\t\t\t\tISOLATED NODES: \t\t\t\t" + str(len(total_isolated)))
+            print("\t\t\t\tISOLATED NODES: \t\t\t\t" + str(len(total_isolated)), "\n")
 
         return graph
