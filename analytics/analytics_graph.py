@@ -38,7 +38,7 @@ class AnalyticsGraph:
         Detect communities with a specific library
         :param graph: networkX - Graph networkX of the amazon dataset
         :type graph: networkX
-        :param library: String - Library chosen (girvanNewman;louvain)
+        :param library: String - Library chosen (girvanNewman;louvain;modularity)
         :type graph: String
         :return: Communities found
         """
@@ -62,6 +62,10 @@ class AnalyticsGraph:
         # Library: greedy_modularity_communities
         if library == "modularity":
             communities = greedy_modularity_communities(graph)
+
+            for i, c in enumerate(communities):
+                print("(greedy_modularity_communities) > community ", i, " : ", c)
+
             modularity_score = modularity(graph, communities)
             print("Modularity score:", modularity_score)
 
