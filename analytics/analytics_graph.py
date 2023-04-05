@@ -1,3 +1,5 @@
+import datetime
+
 import networkx as nx
 from networkx.algorithms.clique import find_cliques
 from networkx.algorithms.community import girvan_newman, louvain_communities, k_clique_communities, \
@@ -5,7 +7,6 @@ from networkx.algorithms.community import girvan_newman, louvain_communities, k_
 
 
 class AnalyticsGraph:
-
 
     def centrality_betweenness_library(graph):
         """
@@ -16,8 +17,8 @@ class AnalyticsGraph:
         :type graph: networkX
         :return: nodes with the betweenness centrality
         """
-
-        print(">> You have called the betweenness centrality library for your graph.")
+        current_time = datetime.datetime.now()
+        print(">> You have called the betweenness centrality library for your graph (at", current_time, ").")
 
         nodes = nx.betweenness_centrality(
             graph)  # Centrality dictionary: node as key and its betweenness centrality as value
@@ -30,9 +31,6 @@ class AnalyticsGraph:
 
         return nodes
 
-
-
-
     def community_library_detection(graph, library="Default"):
         """
         Creator : Quentin Nater
@@ -42,27 +40,29 @@ class AnalyticsGraph:
         :type graph: networkX
         :param library: String - Library chosen (girvanNewman;louvain)
         :type graph: String
-        :return: The display of the result
+        :return: Communities found
         """
-        print(">> You have called the community detection with ", library, " settings")
+        current_time = datetime.datetime.now()
+        print(">> You have called the community detection with ", library, " (at", current_time, ")")
+
+        communities = []
 
         # Library: community.girvan_newman
         if library == "girvanNewman":
-            communitiesGirvanNewman = girvan_newman(graph, seed=123)
-            for c in communitiesGirvanNewman:
+            communities = girvan_newman(graph)
+            for c in communities:
                 print("Cliques results", c)
 
         # Library: louvain_communities
         if library == "louvain":
-            communitiesLouvain = louvain_communities(graph, seed=123)
-            for c in communitiesLouvain:
-                print("Cliques results" , c)
+            communities = louvain_communities(graph, seed=123)
+            for c in communities:
+                print("Cliques results", c)
 
         # Library: greedy_modularity_communities
-        if library == "louvain":
+        if library == "modularity":
             communities = greedy_modularity_communities(graph)
             modularity_score = modularity(graph, communities)
             print("Modularity score:", modularity_score)
 
-
-        return ""
+        return communities

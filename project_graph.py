@@ -34,8 +34,8 @@ if __name__ == '__main__':
 
     if tag == "test2":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
-        pg.display_score_by_degree(graph, 100, 10)
-        pg.remove_nodes_by_degree(graph, 1)
+        #pg.display_score_by_degree(graph, 10)
+        pg.remove_nodes_by_degree(graph, 0)
 
     elif tag == "staging":
         graph = eg.construct_graph_by_file("./dataset/amazon-meta.txt")
@@ -45,5 +45,6 @@ if __name__ == '__main__':
     elif tag == "prod":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         vg.display_simple_graph(graph, False)
+        pg.remove_nodes_by_degree(graph, 4)
         ag.community_library_detection(graph, "girvanNewman")
         #ag.centrality_betweenness_library(graph)
