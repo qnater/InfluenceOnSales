@@ -50,14 +50,14 @@ class AnalyticsGraph:
         # Library: community.girvan_newman
         if library == "girvanNewman":
             communities = girvan_newman(graph)
-            for c in communities:
-                print("Cliques results", c)
+            for i, c in enumerate(communities):
+                print("(girvanNewman) > community ", i, " : ", c)
 
         # Library: louvain_communities
         if library == "louvain":
             communities = louvain_communities(graph, seed=123)
-            for c in communities:
-                print("Cliques results", c)
+            for i, c in enumerate(communities):
+                print("(louvain) > community ", i, " : ", c)
 
         # Library: greedy_modularity_communities
         if library == "modularity":
