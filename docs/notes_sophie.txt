@@ -3,8 +3,10 @@
 # code's review
 TODO's next session:
 
-- investigate what are the asin given as "discontinued product"
+- find out what are the asin given as "discontinued product"
+    -> DONE: Means that this particular model is no longer made by the manufacturer but it has nothing to do with the quality of the product and because it is discontinued allows the consumer to purchase it at a lower price
 - clarify (and better describe as comments) what lines 60-66 of exploration_graph.py do: categories?
+    -> DONE: categories = similars
 - clarify (and better describe as comments) what do lines 71-75 of exploration_graph.py do:
 - requirements.txt ? We all should have a single identical environment
 
