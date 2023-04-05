@@ -20,8 +20,7 @@ class AnalyticsGraph:
         current_time = datetime.datetime.now()
         print(">> You have called the betweenness centrality library for your graph (at", current_time, ").")
 
-        nodes = nx.betweenness_centrality(
-            graph)  # Centrality dictionary: node as key and its betweenness centrality as value
+        nodes = nx.betweenness_centrality(graph)  # Centrality dictionary: node as key and its betweenness centrality as value
 
         for node in nodes.keys():
             if round(nodes[node], 2) > 0.0:
@@ -53,11 +52,19 @@ class AnalyticsGraph:
             for i, c in enumerate(communities):
                 print("(girvanNewman) > community ", i, " : ", c)
 
+            modularity_score = modularity(graph, communities)
+            print("Modularity score:", modularity_score)
+
+
         # Library: louvain_communities
         if library == "louvain":
             communities = louvain_communities(graph, seed=123)
             for i, c in enumerate(communities):
                 print("(louvain) > community ", i, " : ", c)
+
+            modularity_score = modularity(graph, communities)
+            print("Modularity score:", modularity_score)
+
 
         # Library: greedy_modularity_communities
         if library == "modularity":
@@ -70,3 +77,28 @@ class AnalyticsGraph:
             print("Modularity score:", modularity_score)
 
         return communities
+
+
+    def homemade_community_detection(graph):
+        """
+        Creator : Quentin Nater
+        reviewed by :
+        Detect communities with a specific algo
+        :param graph: networkX - Graph networkX of the amazon dataset (rafined)
+        :type graph: networkX
+        :return: Communities found
+        """
+        current_time = datetime.datetime.now()
+        print(">> You've called the homemade (good choice) community detection (at", current_time, "), please wait <3")
+
+        # phase 1 ======================================================================================================
+        print("\tPhase 1 of the algo <3")
+
+        # phase 2 ======================================================================================================
+        print("\tPhase 2 of the algo <3")
+
+        # phase 3 ======================================================================================================
+        print("\tPhase 3 of the algo <3")
+
+        # phase 4 ======================================================================================================
+        print("\tPhase 4 of the algo <3")
