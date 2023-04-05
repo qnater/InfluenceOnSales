@@ -1,5 +1,4 @@
 import os
-
 import matplotlib as mpl
 import networkx as nx
 import spicy as sp
@@ -39,9 +38,13 @@ if __name__ == '__main__':
         #ag.centrality_betweenness_library(graph)
 
     elif tag == "staging":
-        graph = eg.construct_graph_by_file("./dataset/amazon-meta.txt")
-        graph = pg.refined_graph(graph)
-        xg.create_dataset(graph)
+        # graph = eg.construct_graph_by_file("./dataset/amazon-meta.txt")
+        # graph = pg.refined_graph(graph)
+        # xg.create_dataset(graph)
+        # deleted previous lines after staging
+        graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+        vg.display_simple_graph(graph, False)
+        ag.centrality_betweenness_library(graph)
 
     elif tag == "prod":
         graph = nx.Graph()
