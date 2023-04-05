@@ -1,6 +1,4 @@
 import random
-import time
-from tqdm import tqdm
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -8,29 +6,31 @@ import networkx as nx
 
 class VisualizationGraph:
 
-    # Creator : Quentin Nater
-    # reviewed by :
-    #
-    # myGraph       : networkX - graph of the dataset
-    # display       : bool - display the plot
-    #
-    # Display a simple graph
-    def display_simple_graph(myGraph, display=True):
-
+    def display_simple_graph(graph, display=True):
+        """
+        Creator : Quentin Nater
+        reviewed by :
+        Display a simple graph
+        :param graph: networkX - graph of the dataset
+        :param display: bool - display the plot
+        :return: the display of the graph
+        """
         if display:
-            nx.draw(myGraph, with_labels=True)
+            nx.draw(graph, with_labels=True)
             plt.show()
 
-        return myGraph
+        return graph
 
-    # Creator : Quentin Nater
-    # reviewed by :
-    #
-    # myGraph       : networkX - graph of the dataset
-    # display       : bool - display the plot
-    #
-    # Display a sampled graph
+
     def display_sampled_graph(myGraph, display=True):
+        """
+        Creator : Quentin Nater
+        reviewed by :
+        Display a sample of a graph
+        :param graph: networkX - graph of the dataset
+        :param display: bool - display the plot
+        :return: the display of the sampled graph
+        """
         # number of nodes to sample
         num_nodes = 1000
 
@@ -45,13 +45,3 @@ class VisualizationGraph:
             # draw the sampled graph
             nx.draw(sampled_graph, with_labels=True)
             plt.show()
-
-    def display_progress(self):
-        total_seconds = 10
-        progress_bar = tqdm(total=total_seconds)
-
-        for i in range(total_seconds):
-            time.sleep(1)  # Wait for one second
-            progress_bar.update(1)  # Update the progress bar
-
-        progress_bar.close()

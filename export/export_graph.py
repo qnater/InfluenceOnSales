@@ -4,13 +4,16 @@ from explore.exploration_graph import ExploreGraph as eg
 
 class ExportGraph:
 
-    # Creator : Sophie Caroni
-    # reviewed by :
-    #
-    # graph       : networkX - graph of the dataset
-    #
-    # Create a .txt dataset with the for our analysis meaningful informations only
     def create_dataset(graph):
+        """
+        Creator : Sophie Caroni
+        reviewed by :
+        Create a .txt dataset with the for our analysis meaningful information only
+        :param graph: networkX - Graph networkX of the amazon dataset
+        :type graph: networkX
+        :return: -
+        """
+
         print(">> You have called the export of your graph, please wait :)")
 
         # Create new .txt file
@@ -43,7 +46,3 @@ class ExportGraph:
         print(">> You can find your refined graph in this directory './dataset/', please enjoy ;)")
 
         return
-
-
-
-

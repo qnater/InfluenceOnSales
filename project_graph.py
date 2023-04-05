@@ -32,6 +32,11 @@ if __name__ == '__main__':
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         ag.community_library_detection()
 
+    if tag == "test2":
+        graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+        pg.display_score_by_degree(graph, 100, 10)
+        pg.remove_nodes_by_degree(graph, 1)
+
     elif tag == "staging":
         graph = eg.construct_graph_by_file("./dataset/amazon-meta.txt")
         graph = pg.refined_graph(graph)
