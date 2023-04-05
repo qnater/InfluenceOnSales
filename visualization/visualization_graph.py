@@ -1,4 +1,7 @@
 import random
+import time
+from tqdm import tqdm
+
 import matplotlib.pyplot as plt
 import networkx as nx
 
@@ -42,3 +45,13 @@ class VisualizationGraph:
             # draw the sampled graph
             nx.draw(sampled_graph, with_labels=True)
             plt.show()
+
+    def display_progress(self):
+        total_seconds = 10
+        progress_bar = tqdm(total=total_seconds)
+
+        for i in range(total_seconds):
+            time.sleep(1)  # Wait for one second
+            progress_bar.update(1)  # Update the progress bar
+
+        progress_bar.close()

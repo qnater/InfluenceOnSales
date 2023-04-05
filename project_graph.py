@@ -20,34 +20,17 @@ if __name__ == '__main__':
 
 
     if os.name == "nt":
-        print("This computer is running Windows.")
+        mpl.use('TkAgg')  # without it, cannot run my plots (maybe personal)
     elif os.name == "posix":
         print("Sorry bro about you MAC...")
     else:
         print("Unknown operating system.")
 
-    tag = "staging"  # prod or test
+    tag = "prod"  # prod or test
 
     if tag == "test":
-        graph = nx.DiGraph()
-        graph.add_nodes_from([1, 2, 3, 4, 5, 6, 7, 8])
-        graph.add_edges_from([(1, 2), (1, 4), (1, 5),
-                                (2, 5),
-                                (3, 6), (3, 7),
-                                (4, 5), (4, 2), (4, 3),
-                                (5, 7),
-                                (6, 5), (6, 7),
-                                ])
-
-        graph = pg.refined_graph(graph)
-
-        xg.create_dataset(graph)
-
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
-
-        vg.display_simple_graph(graph, True)
-
-        ag.centrality_betweenness_library(graph)
+        ag.community_library_detection()
 
     elif tag == "staging":
         graph = eg.construct_graph_by_file("./dataset/amazon-meta.txt")
@@ -56,5 +39,6 @@ if __name__ == '__main__':
 
     elif tag == "prod":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
-        vg.display_simple_graph(graph, True)
-        ag.centrality_betweenness_library(graph)
+        vg.display_simple_graph(graph, False)
+        ag.community_library_detection(graph, "girvanNewman")
+        #ag.centrality_betweenness_library(graph)
