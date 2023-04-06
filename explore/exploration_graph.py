@@ -4,13 +4,14 @@ import re
 
 class ExploreGraph:
 
-    # Creator : Quentin Nater
-    # reviewed by : Sophie Caroni
-    #
-    # asin : string - ID of the node
-    #
-    # Convert the id (ASIN) into a INT unique value
     def convert_asin_to_int(asin):
+        """
+        Creator : Quentin Nater
+        reviewed by : Sophie Caroni
+        Convert the id (ASIN) into a INT unique value
+        :param asin: string - ID of the node
+        :return: an integer corresponding to the converted asin
+        """
         alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         if any(char.isalpha() for char in asin): # isalpha() returns True if it detects letters
             for char in asin:
@@ -19,16 +20,18 @@ class ExploreGraph:
 
         return int(asin)
 
-    # Creator : Quentin Nater
-    # reviewed by : Sophie Caroni
-    #
-    # filename      : string - path to the dataset
-    # limit         : int - limit of the line to read (sample)
-    # display       : bool - display the results of the analysis
-    # displayDetail : bool - display the detail of the construction
-    #
-    # Construct a complex graph with a file
+
     def construct_graph_by_file(file_name, limit=15010574, display=True, displayDetail=False):
+        """
+        Creator : Quentin Nater
+        reviewed by : Sophie Caroni
+        Construct a complex graph with a file
+        :param filename: string - path to the dataset
+        :param limit: int - limit of the line to read (sample)
+        :param display: bool - display the results of the analysis
+        :param displayDetail: bool - display the detail of the construction
+        :return: an integer corresponding to the converted asin
+        """
         print(">> You have called the construction of your graph, please wait :)")
 
         # initialization of the variables
@@ -61,7 +64,7 @@ class ExploreGraph:
                     for similar in similars:
                         inc += 1
 
-                        if inc > 2:  # if more than 0 categories ## ??? categories? why inc > 2? and why 0 and not 2?
+                        if inc > 2:  # skip two initial blank spaces; only if there are more than 0 similars
                             similar_int = ExploreGraph.convert_asin_to_int(similar)  # casting
                             list_similars.append(similar_int)
                             graph.add_edge(*(asin_int, similar_int)) # Add edges between the asin product and each of its similar ones
@@ -69,8 +72,8 @@ class ExploreGraph:
                             if displayDetail:
                                 print("\t\t\t\t(" + str(asin_int) + ", " + str(similar_int) + ")")
 
-                        elif len(similars) == 2:  # information if it has 0 category (CHECK FOR ANALYSIS)
-                            notOutEdged += 0.5  # because read 2 times
+                        elif len(similars) == 2:  # information if it has 0 similars (CHECK FOR ANALYSIS)
+                            notOutEdged += 0.5  # to correct the two times entering the loop
                             if notOutEdged % 1 == 0:
                                 asin_i = ExploreGraph.convert_asin_to_int(asin)  # casting
                                 list_not_out_edged.append(asin_i)
