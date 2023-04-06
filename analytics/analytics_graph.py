@@ -89,7 +89,7 @@ class AnalyticsGraph:
         :type first_community: list
         :param second_community: list of nodes belonging to the first community
         :type second_community: list
-        :return: modularity gain
+        :return: modularity gain with first and second communities
         """
         n_edges = nx.number_of_edges(graph)
 
@@ -151,7 +151,7 @@ class AnalyticsGraph:
 
         maxResults = []
         for node in community_0:
-            maxResults.append(AnalyticsGraph.homemade_modularity_gain(graph, node_0, node))
+            maxResults.append(AnalyticsGraph.homemade_modularity_gain(graph, [node_0], [node]))
 
         maxValue = max(maxResults[n][0] for n in range(len(maxResults)))
 
