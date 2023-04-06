@@ -26,7 +26,7 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "analyse"  # prod or test
+    tag = "prod"  # prod or test
 
     if tag == "test":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")

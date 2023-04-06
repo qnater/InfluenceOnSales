@@ -78,6 +78,47 @@ class AnalyticsGraph:
 
         return communities
 
+    def homemade_modularity_gain(graph, first_community, second_community):
+        """
+        Creator : Sophie Caroni
+        reviewed by :
+        Compute modularity gain between two communities
+        :param graph: networkX - Graph networkX of the amazon dataset (rafined)
+        :type graph: networkX
+        :param first_community: list of nodes belonging to the first community
+        :type first_community: list
+        :param second_community: list of nodes belonging to the first community
+        :type second_community: list
+        :return: modularity gain
+        """
+        n_edges = nx.number_of_edges(graph)
+
+        # find number of neighbors of each node inside the first community
+        d_i = 0
+        for n in first_community:
+            d_i += len(list(graph.neighbors(n)))
+
+        # find number of neighbors of each node inside the second community
+        d_j = 0
+        for n in second_community:
+            d_j += len(list(graph.neighbors(n)))
+
+        # find number of shared links between first and second community
+        d_ij = 0
+        for n in first_community:
+            for ni in graph.neighbors(n):
+                if ni in second_community:
+                    d_ij += 1
+
+        for m in second_community:
+            for mi in graph.neighbors(m):
+                if mi in first_community:
+                    d_ij += 1
+
+        # compute modularity gain
+        modularity_gain = 1 / (2 * n_edges) * (d_ij - (d_i * d_j / n_edges))
+
+        return [modularity_gain, first_community, second_community]
 
     def homemade_community_detection(graph):
         """
@@ -91,14 +132,39 @@ class AnalyticsGraph:
         current_time = datetime.datetime.now()
         print(">> You've called the homemade (good choice) community detection (at", current_time, "), please wait <3")
 
-        # phase 1 ======================================================================================================
-        print("\tPhase 1 of the algo <3")
+        # phase 1 =====================================================================================================
+        print("\n\tPhase 1 of the algo <3")
+        node_0 = list(graph.nodes())[0]
+        print("\t\tAlpha Node :\t\t", node_0, "(degrees->", graph.degree(node_0),")")
 
-        # phase 2 ======================================================================================================
-        print("\tPhase 2 of the algo <3")
+        community_0 = list(graph.neighbors(node_0))
+        print("\t\tAlpha Community :\t", community_0)
 
-        # phase 3 ======================================================================================================
-        print("\tPhase 3 of the algo <3")
 
-        # phase 4 ======================================================================================================
-        print("\tPhase 4 of the algo <3")
+
+        # phase 2 =====================================================================================================
+        print("\n\tPhase 2 of the algo <3")
+        print("\t\tAlpha Community :\t", community_0)
+
+        # phase 3 =====================================================================================================
+        print("\n\tPhase 3 of the algo <3")
+
+        maxResults = []
+        for node in community_0:
+            maxResults.append(AnalyticsGraph.homemade_modularity_gain(graph, node_0, node))
+
+        maxValue = max(maxResults[n][0] for n in range(len(maxResults)))
+
+        for i, values in enumerate(maxResults):
+            if maxResults[i][0] == maxValue:
+                newCommunity = maxResults[i][2]
+
+        print("\t\tMax value :", maxValue, " (for ", maxResults, ")")
+        print("\t\tNew Community :", newCommunity)
+
+        newCommunity.append(node_0)
+
+
+
+        # phase 4 =====================================================================================================
+        print("\n\tPhase 4 of the algo <3")
