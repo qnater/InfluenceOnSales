@@ -2,9 +2,15 @@ import datetime
 
 import networkx as nx
 import numpy as mynp
+import numpy as np
 from networkx.algorithms.clique import find_cliques
 from networkx.algorithms.community import girvan_newman, louvain_communities, k_clique_communities, \
-    greedy_modularity_communities, modularity
+    greedy_modularity_communities, modularity, label_propagation_communities
+from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
+from sklearn.metrics.cluster import normalized_mutual_info_score as NMI3
+
+from networkx.algorithms.community.quality import modularity
+
 
 
 class AnalyticsGraph:
@@ -132,15 +138,22 @@ class AnalyticsGraph:
         current_time = datetime.datetime.now()
         print(">> You've called the homemade (good choice) community detection (at", current_time, "), please wait <3")
 
+
         # phase 1 =====================================================================================================
         print("\n\tPhase 1 of the algo <3")
 
         communities = [[community] for community in graph.nodes()]
+        best_modularity = modularity(nx.Graph(graph), communities)
+        original_modularity = best_modularity
+
+
+
         print("\tOriginal community list : ", communities)
+        print("\tBest_modularity : ", best_modularity)
 
         inc, limit, deltaQ, oldValue, oldDeltaQ = 0, len(communities), 0, 0, 0
 
-        while len(communities) != 1:
+        while limit > inc:
             # phase 2 =====================================================================================================
             print("\n\tPhase 2 of the algo <3")
 
@@ -154,8 +167,10 @@ class AnalyticsGraph:
             allResult, neighbors, communityNeighbors = [], [], []
 
             for node in community_vi:
+
                 for n in graph.neighbors(node):
                     neighbors.append(n)
+
 
             for n in neighbors:
                 for community in communities:
@@ -164,33 +179,83 @@ class AnalyticsGraph:
                             communityNeighbors.append(community)
 
             communityNeighbors = sorted(communityNeighbors, reverse=True)
+
+            if len(communityNeighbors) == 0:
+                communities.append(community_vi)
+                inc += 1
+                continue
+
             for community in communityNeighbors:
                 allResult.append(AnalyticsGraph.homemade_modularity_gain(graph, community_vi, community))
 
             maxValue = max(allResult[n][0] for n in range(len(allResult)))
+
 
             for i, values in enumerate(allResult):
                 if allResult[i][0] == maxValue:
                     winningCommunity = allResult[i][2]
 
             print("\t\tMax value :", maxValue, " (for ", allResult, ")")
-            print("\t\tOld value :", oldValue)
             print("\t\tWinning Community :", winningCommunity)
+            print("\t\tdeltaQ :", deltaQ, )
 
-
-            print("\t\tdeltaQ vs oldDeltaQ :", deltaQ, " vs ", oldDeltaQ)
-
-            if maxValue > deltaQ:
+            if maxValue > 0:
                 for community in communities:
                     if community == winningCommunity:
                         for c in community_vi:
                             community.append(c)
-                deltaQ = maxValue
-
-            elif deltaQ == oldDeltaQ:
-                break
+            else:
+                communities.append(community_vi)
 
             print("\tUpdated community list : ", communities)
 
-            oldDeltaQ = deltaQ
+            current_modularity = modularity(graph, communities)
+            print("\t\tscore : ", current_modularity)
+            print("\t\thigh score : ", best_modularity)
+
+            if current_modularity < best_modularity > 0:
+                break
+            else:
+                best_modularity = current_modularity
+
+            print("\t\tnew score : ", best_modularity)
+
             inc += 1
+
+            print("======= LOOP ===============================================")
+
+        for i, community in enumerate(communities):
+            print("\t\t\t\t\t\t\t\t", i, " : ", community)
+        print("original modularity :", original_modularity)
+        print("final modularity :", modularity(graph, communities))
+
+        return communities
+
+
+    def compare_algo_efficiency(graph, communities_algo_one):
+
+        communities_algo_two = louvain_communities(graph, seed=123)
+
+        modularity_1vs2 = modularity(graph, communities_algo_one)
+        modularity_2vs1 = modularity(graph, communities_algo_two)
+
+        delta_1 = modularity_1vs2 - modularity_2vs1
+        delta_2 = modularity_2vs1 - modularity_1vs2
+
+        print("modularity 1st algorithm :", modularity_1vs2)
+        print("modularity 2nd algorithm :", modularity_2vs1)
+
+        labels1 = communities_algo_one
+        labels2 = communities_algo_two
+
+        # Calculate ARI
+        ari = adjusted_rand_score(labels1, labels2)
+
+        # Calculate NMI
+        nmi = normalized_mutual_info_score(labels1, labels2)
+        print("The score of (ALGO1 - ALGO2) is (NMI) ", nmi)
+        print("The score of (ALGO1 - ALGO2) is (ARI) ", ari)
+
+
+
+
