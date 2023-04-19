@@ -15,6 +15,8 @@ class PreProcessGraph:
         :return: The graph refined
         """
 
+        PreProcessGraph.display_efficiency_of_graph(graph)
+
         graph = PreProcessGraph.remove_isolated_nodes(graph)
         graph = PreProcessGraph.remove_not_incoming_edged_nodes(graph)
         graph = PreProcessGraph.remove_not_outgoing_edges_nodes(graph)
@@ -22,6 +24,8 @@ class PreProcessGraph:
         print(">> Final pre-processing results : ",
               "\n\t\t\t\tNodes in the refined graph :\t\t", len(graph.nodes()),
               "\n\t\t\t\tEdges in the refined graph :\t\t", len(graph.edges()), "\n")
+
+        PreProcessGraph.display_efficiency_of_graph(graph)
 
         return graph
 
@@ -121,6 +125,8 @@ class PreProcessGraph:
 
         print(">> You have called the pre-processing function to refined your graph (by degree), please wait :)")
 
+        PreProcessGraph.display_efficiency_of_graph(graph)
+
         nodeToEliminate = []
 
         for node, degree in graph.out_degree():
@@ -136,6 +142,8 @@ class PreProcessGraph:
               "\n\t\t\t\tEdges in the original graph:\t\t", originalEdges,
               "\n\t\t\t\tNodes in the refined graph :\t\t", len(graph.nodes()),
               "\n\t\t\t\tEdges in the refined graph :\t\t", len(graph.edges()), "\n")
+
+        PreProcessGraph.display_efficiency_of_graph(graph)
 
         return graph
 
@@ -197,3 +205,10 @@ class PreProcessGraph:
                 print(f"\t\t\tDegree centrality of node {node}\t\t: {degree_centrality}")
 
         return nodeDegrees
+
+
+    def display_efficiency_of_graph(graph):
+        degrees = [graph.degree(n) for n in graph.nodes()]
+        print("\n\t\t\t\t\t\t (I) number of edges        :\t", graph.number_of_edges(),
+              "\n\t\t\t\t\t\t (I) coefficient clustering :\t", nx.average_clustering(graph),
+              "\n\t\t\t\t\t\t (I) average of degrees     :\t", (sum(degrees) / len(degrees)), "\n\n")

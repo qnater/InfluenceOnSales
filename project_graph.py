@@ -4,6 +4,7 @@ import matplotlib as mpl
 import networkx as nx
 import spicy as sp
 from matplotlib import pyplot as plt
+from networkx.algorithms.community import louvain_communities
 
 from explore.exploration_graph import ExploreGraph as eg
 from visualization.visualization_graph import VisualizationGraph as vg
@@ -17,8 +18,6 @@ if __name__ == '__main__':
     print("========================INFLUENCE=OF=POPULARITY=ON=SALES===UNI-FR========================")
     print("=========================================================================================\n")
 
-
-
     if os.name == "nt":
         mpl.use('TkAgg')  # without it, cannot run my plots (maybe personal)
     elif os.name == "posix":
@@ -26,7 +25,7 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "analyse"  # prod or test
+    tag = "prod"  # prod or test
 
     if tag == "test":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
@@ -52,7 +51,6 @@ if __name__ == '__main__':
                               ("2", "4"), ("2", "5"), ("2", "6"),
                               ("3", "7"),
                               ("4", "10"),
-                              ("4", "10"),
                               ("5", "7"),("5", "11"),
                               ("6", "7"),("6", "11"),
                               ("8", "11"), ("8", "9"),("8", "14"),("8", "15"),("8", "10"),
@@ -60,7 +58,21 @@ if __name__ == '__main__':
                               ("10", "14"), ("10", "12"), ("10", "11"), ("10", "13"),
                               ("11", "13")])
 
-        #graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+        graph2 = nx.Graph()
+        graph2.add_nodes_from(["1","2","3","4","5","6","7","8"])
+        graph2.add_edges_from([("1", "2"),("1", "4"),
+                              ("2", "4"),
+                              ("1", "3"),("3", "4"),("2", "3"),
+                              ("3", "5"),
+                              ("5", "7"),
+                              ("5", "8"),("5", "6"),
+                              ("6", "7"),("6", "8")])
+
+
+        graph3 = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+        pg.remove_nodes_by_degree(graph3, 5)
+
         vg.display_simple_graph(graph, False)
-        #pg.remove_nodes_by_degree(graph, 4)
-        ag.homemade_community_detection(graph)
+
+        communities = ag.homemade_community_detection(graph3)
+        ag.compare_algo_efficiency(graph3, communities)
