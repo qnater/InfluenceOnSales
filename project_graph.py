@@ -61,4 +61,4 @@ if __name__ == '__main__':
         #graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         vg.display_simple_graph(graph, False)
         #pg.remove_nodes_by_degree(graph, 4)
-        ag.homemade_community_detection(graph)
+        ag.louvain(graph)
