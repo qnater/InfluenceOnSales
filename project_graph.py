@@ -51,7 +51,6 @@ if __name__ == '__main__':
                               ("2", "4"), ("2", "5"), ("2", "6"),
                               ("3", "7"),
                               ("4", "10"),
-                              ("4", "10"),
                               ("5", "7"),("5", "11"),
                               ("6", "7"),("6", "11"),
                               ("8", "11"), ("8", "9"),("8", "14"),("8", "15"),("8", "10"),
@@ -69,12 +68,11 @@ if __name__ == '__main__':
                               ("5", "8"),("5", "6"),
                               ("6", "7"),("6", "8")])
 
+
         graph3 = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         pg.remove_nodes_by_degree(graph3, 5)
+
         vg.display_simple_graph(graph, False)
-        #pg.remove_nodes_by_degree(graph, 4)
+
         communities = ag.homemade_community_detection(graph3)
         ag.compare_algo_efficiency(graph3, communities)
-
-
-        print("\n\n RESULT : ", communities)
