@@ -17,8 +17,6 @@ if __name__ == '__main__':
     print("========================INFLUENCE=OF=POPULARITY=ON=SALES===UNI-FR========================")
     print("=========================================================================================\n")
 
-
-
     if os.name == "nt":
         mpl.use('TkAgg')  # without it, cannot run my plots (maybe personal)
     elif os.name == "posix":
@@ -26,7 +24,7 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "prod"  # prod or test
+    tag = "analyse"  # prod or test
 
     if tag == "test":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")

@@ -197,3 +197,11 @@ class PreProcessGraph:
                 print(f"\t\t\tDegree centrality of node {node}\t\t: {degree_centrality}")
 
         return nodeDegrees
+
+
+    def display_efficiency_of_graph(graph):
+
+        print(graph.number_of_edges(), nx.average_clustering(graph))
+        degrees = [graph.degree(n) for n in graph.nodes()]
+
+        print(degrees)
