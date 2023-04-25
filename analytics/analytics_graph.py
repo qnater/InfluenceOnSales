@@ -1,14 +1,9 @@
 import datetime
 
 import networkx as nx
-import numpy as mynp
-import numpy as np
-from networkx.algorithms.clique import find_cliques
-from networkx.algorithms.community import girvan_newman, louvain_communities, k_clique_communities, \
-    greedy_modularity_communities, modularity, label_propagation_communities
-from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
+from networkx.algorithms.community import girvan_newman, louvain_communities, \
+    greedy_modularity_communities
 from sklearn.metrics.cluster import normalized_mutual_info_score as NMI3
-
 from networkx.algorithms.community.quality import modularity
 
 
@@ -146,8 +141,8 @@ class AnalyticsGraph:
         # phase 1 =====================================================================================================
         # Set initial communities as one node each and compute the initial modularity
         communities = [[community] for community in graph.nodes()]
-        best_modularity = modularity(nx.Graph(graph), communities) ### should't be original_modularity instead and
-        original_modularity = best_modularity                      ### here the best ? btw would change to initial_modularity - Sophie
+        original_modularity = modularity(nx.Graph(graph), communities)
+        best_modularity = original_modularity
 
         if display:
             print("\tOriginal community list : ", communities)
@@ -164,16 +159,15 @@ class AnalyticsGraph:
                 print("\t\tcommunity_vi :\t", community_vi)
 
             # phase 3 =====================================================================================================
-            allResult, neighbors, communityNeighbors = [], [], [] ### maybe need to better define the last two (what is the difference?) - Sophie
+            allResult, nodeNeighbors, communityNeighbors = [], [], []
 
-            # Retrieve all neighbors of this first community (i.e. of each node of the community)
+            # Retrieve all neighbors of the treated community (i.e. of each node of the community)
             for node in community_vi:
                 for n in graph.neighbors(node):
-                    neighbors.append(n)
+                    nodeNeighbors.append(n)
 
-            # Retrieve all non-common (?) neighbors between this first community and all other communities (?)
-            ### not sure about this, need to double check - Sophie
-            for n in neighbors:
+            # Retrieve all communities that are neighbored to all nodes of the treated community
+            for n in nodeNeighbors:
                 for community in communities:
                     if n in community:
                         if community not in communityNeighbors:
@@ -181,25 +175,26 @@ class AnalyticsGraph:
 
             communityNeighbors = sorted(communityNeighbors, reverse=True)
 
+            # Skip the treated community if it currently hasn't any neighbor
             if len(communityNeighbors) == 0:
                 communities.append(community_vi)
                 inc += 1
-                continue ### is this really needed? - Sophie
+                continue
 
             # Compute modularity gain for each of the communities born by adding community_vi to each of them
             for community in communityNeighbors:
                 allResult.append(AnalyticsGraph.homemade_modularity_gain(graph, community_vi, community))
 
             # Save as "maxValue" the highest modularity gain brought by the adding of community_vi
-            maxValue = max(allResult[n][0] for n in range(len(allResult)))
+            bestDeltaQ = max(allResult[n][0] for n in range(len(allResult)))
 
             # Save as "winningCommunity" the one getting the highest modularity gain from the adding of community_vi
             for i, values in enumerate(allResult):
-                if allResult[i][0] == maxValue:
+                if allResult[i][0] == bestDeltaQ:
                     winningCommunity = allResult[i][2]
 
-            ### not sure about what does this - Sophie
-            if maxValue > 0:
+            # If the new community score is increasing the total modularity score
+            if bestDeltaQ > 0:
                 for community in communities:
                     if community == winningCommunity:
                         for c in community_vi:
@@ -210,14 +205,14 @@ class AnalyticsGraph:
             current_modularity = modularity(graph, communities)
 
             if display:
-                print("\t\tMax value :", maxValue, " (for ", allResult, ")")
+                print("\t\tMax Delta Q :", bestDeltaQ, " (for ", allResult, ")")
                 print("\t\tWinning Community :", winningCommunity)
                 print("\t\tdeltaQ :", deltaQ, )
                 print("\t\tUpdated community list : ", communities)
                 print("\t\tscore : ", current_modularity)
                 print("\t\thigh score : ", best_modularity)
 
-            ### not sure about what does this - Sophie
+            # Stop if the total modularity is not improving anymore
             if current_modularity < best_modularity > 0:
                 break
             else:
