@@ -25,7 +25,7 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "prod"  # prod or test
+    tag = "analyse"  # prod or test
 
     if tag == "test":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
@@ -34,8 +34,9 @@ if __name__ == '__main__':
     elif tag == "analyse":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         vg.display_simple_graph(graph, False)
-        pg.remove_nodes_by_degree(graph, 4)
-        ag.community_library_detection(graph, "louvain")
+        xg.txt_to_csv('./dataset/amazon_refined_small.txt', './dataset/amazon_refined_neo4j.csv')
+        #pg.remove_nodes_by_degree(graph, 4)
+        #ag.community_library_detection(graph, "louvain")
         #ag.centrality_betweenness_library(graph)
 
     elif tag == "staging":
