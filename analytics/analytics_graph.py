@@ -320,6 +320,16 @@ class AnalyticsGraph:
 
 
     def closeness_centrality_scores(graph, display=False):
+        """
+        Creator : Emmanuel Cazzato
+        reviewed by : Quentin Nater
+        Get the score for centrality analytics in the context of exploration analysis
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        :param display: Boolean - Display or not the plots and prints
+        :type display: Boolean
+        :return: list of the results
+        """
         # Closeness centrality measure
         cc_scores = nx.closeness_centrality(graph)
         if display:
@@ -329,7 +339,17 @@ class AnalyticsGraph:
         return cc_scores
 
     def pagerank_centrality_scores(graph, display=False):
-        # PageRank centrality measure
+        """
+        Creator : Emmanuel Cazzato
+        reviewed by : Quentin Nater
+        Get the score for centrality analytics in the context of exploration analysis
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        :param display: Boolean - Display or not the plots and prints
+        :type display: Boolean
+        :return: list of the results
+        """
+        # PageRank's centrality measure
         pr_scores = nx.pagerank(graph)
         if display:
             print("PageRank:")
@@ -338,6 +358,16 @@ class AnalyticsGraph:
         return pr_scores
 
     def eigenvector_centrality_scores(graph, display=False):
+        """
+        Creator : Emmanuel Cazzato
+        reviewed by : Quentin Nater
+        Get the score for centrality analytics in the context of exploration analysis
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        :param display: Boolean - Display or not the plots and prints
+        :type display: Boolean
+        :return: list of the results
+        """
         # Eigenvector centrality measure
         ec_scores = nx.eigenvector_centrality(graph)
 
@@ -348,6 +378,16 @@ class AnalyticsGraph:
         return ec_scores
 
     def degree_centrality_scores(graph, display=False):
+        """
+        Creator : Emmanuel Cazzato
+        reviewed by : Quentin Nater
+        Get the score for centrality analytics in the context of exploration analysis
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        :param display: Boolean - Display or not the plots and prints
+        :type display: Boolean
+        :return: Result of the degree centrality
+        """
         # Degree centrality measure
         dc_scores = nx.degree_centrality(graph)
 
@@ -358,7 +398,16 @@ class AnalyticsGraph:
         return dc_scores
 
     def betweenness_centrality_scores(graph, display=False):
-        # Get the betweenness centrality of the nodes in the graph (a measure of the importance of a node in connecting different parts of the graph)
+        """
+        Creator : Emmanuel Cazzato
+        reviewed by : Quentin Nater
+        Get the betweenness centrality of the nodes in the graph (a measure of the importance of a node in connecting different parts of the graph)
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        :param display: Boolean - Display or not the plots and prints
+        :type display: Boolean
+        :return: list of the results
+        """
         bc_scores = nx.betweenness_centrality(graph)
 
         if display:
@@ -368,12 +417,32 @@ class AnalyticsGraph:
         return bc_scores
 
     def clustering_coefficient(graph, display=False):
+        """
+        Creator : Emmanuel Cazzato
+        reviewed by : Quentin Nater
+        Get the score for centrality analytics in the context of exploration analysis
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        :param display: Boolean - Display or not the plots and prints
+        :type display: Boolean
+        :return: Result of the clustering coefficient
+        """
         cc = nx.average_clustering(graph)
         if display:
             print("Clustering coefficient:", cc)
         return cc
 
-    def diameter_centraliry(graph, display=False):
+    def diameter_centrality(graph, display=False):
+        """
+        Creator : Emmanuel Cazzato
+        reviewed by : Quentin Nater
+        Get the score for centrality analytics in the context of exploration analysis
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        :param display: Boolean - Display or not the plots and prints
+        :type display: Boolean
+        :return: Result of the diameter centrality
+        """
         # Get the connected components of the graph
         connected_components = nx.connected_components(graph)
 
@@ -387,6 +456,16 @@ class AnalyticsGraph:
         return diameters
 
     def degree_distribution(graph, display=False):
+        """
+        Creator : Emmanuel Cazzato
+        reviewed by : Quentin Nater
+        Get the score for centrality analytics in the context of exploration analysis
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        :param display: Boolean - Display or not the plots and prints
+        :type display: Boolean
+        :return: Result of the degree distribution
+        """
         # Get the degree distribution of the nodes in the graph
         degree_sequence = [d for n, d in graph.degree()]
         degree_counts = dict(zip(sorted(set(degree_sequence)), [degree_sequence.count(d) for d in sorted(set(degree_sequence))]))
