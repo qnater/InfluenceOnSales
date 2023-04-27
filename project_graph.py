@@ -25,11 +25,23 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "prod"  # prod or test
+    tag = "explore"  # prod or test
 
     if tag == "test":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         ag.community_library_detection()
+
+    if tag == "explore":
+        graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+        vg.display_simple_graph(graph, False)
+        pg.remove_nodes_by_degree(graph, 4)
+        graph = pg.refined_graph(graph)
+
+        #results = ag.deep_analyze(graph, [], True)
+        #for dic_r in results:
+        #    print(dic_r[0][0], "\t\t\t\t:", dic_r[1][0])
+
+        eg.analytics_exploration(graph)
 
     elif tag == "analyse":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")

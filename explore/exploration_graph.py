@@ -1,5 +1,9 @@
+import heapq
+
 import networkx as nx
 import re
+
+from matplotlib import pyplot as plt
 
 
 class ExploreGraph:
@@ -102,3 +106,104 @@ class ExploreGraph:
             print("\t\t\t\tISOLATED NODES: \t\t\t\t" + str(len(total_isolated)), "\n")
 
         return graph
+
+
+    def analytics_exploration(graph, display=False):
+        if display:
+            ExploreGraph.simple_plotting(graph)
+
+        first_node = list(graph.nodes())[0]
+        path = ExploreGraph.dfs(graph, first_node, [])
+
+        print("All nodes visited nodes (path) : ", path)
+        print("Size of path ", len(path))
+        print("Number of nodes:", graph.number_of_nodes())
+
+        ExploreGraph.draw_graph(graph, path)
+
+        start_node = list(graph.nodes())[0]
+        goal_node = list(graph.nodes())[700]
+        pathStar = ExploreGraph.a_star_search(graph, start_node, goal_node)
+
+        print("All nodes visited nodes (path) : ", pathStar)
+        print("Size of path ", len(pathStar))
+
+        if pathStar is not None:
+            print("Path found:", " -> ".join(pathStar))
+            ExploreGraph.draw_path_graph(graph, pathStar)
+        else:
+            print("Path not found")
+
+
+        first_node = list(graph.nodes())[0]
+        path = ExploreGraph.dfs_iterative(graph, first_node, [])
+
+        print("All nodes visited nodes (path) : ", path)
+        print("Size of path ", len(path))
+        print("Number of nodes:", graph.number_of_nodes())
+
+
+    def draw_path_graph(G, path=None):
+        print(">> You have called the plot of your graph with draw of the path, please wait :)")
+
+        pos = nx.spring_layout(G, seed=42)
+        nx.draw(G, pos, with_labels=True, node_color="lightblue", node_size=2000, font_size=10)
+        if path:
+            edges = [(path[i], path[i + 1]) for i in range(len(path) - 1)]
+            nx.draw_networkx_edges(G, pos, edgelist=edges, edge_color='r', width=2)
+        plt.show()
+
+    def simple_plotting(graph):
+        print(">> You have called the plot of your graph, please wait :)")
+
+        # Visualize the graph
+        plt.figure(figsize=(10, 10))
+        nx.draw(graph, node_size=10, edge_color='grey', alpha=0.5)
+        plt.show()
+
+
+    # Complete exploration thru a Depth-First-Search
+    def dfs(graph, node, visited):
+        if node not in visited:
+            visited.append(node)
+            if node in graph:
+                for neighbor in graph[node]:
+                    ExploreGraph.dfs(graph, neighbor, visited)
+        return visited
+
+
+
+    def a_star_search(graph, start, goal):
+        frontier = [(0, start, [])]  # (priority, node, path)
+        explored = set()
+        heuristic = 0
+
+        while frontier:
+            cost, current, path = heapq.heappop(frontier)
+            if current == goal:
+                return path + [current]
+
+            if current not in explored:
+                explored.add(current)
+                if current in graph:
+                    for neighbor in graph[current]:
+                        new_cost = cost + 1 + heuristic
+                        heapq.heappush(frontier, (new_cost, neighbor, path + [current]))
+
+        return None
+
+    def dfs_iterative(graph, start_node):
+        visited = set()
+        stack = [start_node]
+
+        while stack:
+            node = stack.pop()
+            if node not in visited:
+                visited.add(node)
+                print(node)
+                if node in graph:
+                    for neighbor in graph[node]:
+                        stack.append(neighbor)
+        return visited
+
+

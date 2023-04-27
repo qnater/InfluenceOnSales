@@ -271,3 +271,125 @@ class AnalyticsGraph:
             print("\t\tCannot get a NMI score if the number communities are not the same...")
 
         return nmi
+
+    def deep_analyze(graph, listOfCommands, allChecked=True):
+        """
+        Creator : Emmanuel
+        reviewed by :
+        Compare communities found using homemade algorithm with those found using louvain_communities library
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        :param listOfCommands: list of String of command
+        (simple_information / degree_distribution / connected_components / diameters / clustering_coefficient /
+        betweenness_centrality / degree_centrality / eigenvector_centrality / pagerank_centrality /
+        closeness_centrality / adamicadar_score / jaccard_score)
+        Jaccard and Adamic-Adar algorith does not work with directed graph no unprocessed
+        :type listOfCommands: String
+        :return: list of all results
+        """
+
+        listOfResult = []
+
+        if "degree_distribution" in listOfCommands or allChecked:
+            listOfResult.append([["degree_distribution"], [AnalyticsGraph.degree_distribution(graph)]])
+
+        if "diameters" in listOfCommands or allChecked:
+            listOfResult.append([["diameters"], [AnalyticsGraph.degree_centrality_scores(graph)]])
+
+        if "clustering_coefficient" in listOfCommands or allChecked:
+            listOfResult.append([["clustering_coefficient"], [AnalyticsGraph.clustering_coefficient(graph)]])
+
+        if "betweenness_centrality" in listOfCommands or allChecked:
+            listOfResult.append([["betweenness_centrality"], [AnalyticsGraph.betweenness_centrality_scores(graph)]])
+
+        if "degree_centrality" in listOfCommands or allChecked:
+            listOfResult.append([["degree_centrality"], [AnalyticsGraph.degree_centrality_scores(graph)]])
+
+        if "eigenvector_centrality" in listOfCommands or allChecked:
+            listOfResult.append([["eigenvector_centrality"], [AnalyticsGraph.eigenvector_centrality_scores(graph)]])
+
+        if "pagerank_centrality" in listOfCommands or allChecked:
+            listOfResult.append([["pagerank_centrality"], [AnalyticsGraph.pagerank_centrality_scores(graph)]])
+
+        if "closeness_centrality" in listOfCommands or allChecked:
+            listOfResult.append([["closeness_centrality"], [AnalyticsGraph.closeness_centrality_scores(graph)]])
+
+
+        return listOfResult
+
+
+
+    def closeness_centrality_scores(graph, display=False):
+        # Closeness centrality measure
+        cc_scores = nx.closeness_centrality(graph)
+        if display:
+            print("Closeness centrality:")
+            for node, score in cc_scores.items():
+                print(f"{node}: {score}")
+        return cc_scores
+
+    def pagerank_centrality_scores(graph, display=False):
+        # PageRank centrality measure
+        pr_scores = nx.pagerank(graph)
+        if display:
+            print("PageRank:")
+            for node, score in pr_scores.items():
+                print(f"{node}: {score}")
+        return pr_scores
+
+    def eigenvector_centrality_scores(graph, display=False):
+        # Eigenvector centrality measure
+        ec_scores = nx.eigenvector_centrality(graph)
+
+        if display:
+            print("Eigenvector centrality:")
+            for node, score in ec_scores.items():
+                print(f"{node}: {score}")
+        return ec_scores
+
+    def degree_centrality_scores(graph, display=False):
+        # Degree centrality measure
+        dc_scores = nx.degree_centrality(graph)
+
+        if display:
+            print("Degree centrality:")
+            for node, score in dc_scores.items():
+                print(f"{node}: {score}")
+        return dc_scores
+
+    def betweenness_centrality_scores(graph, display=False):
+        # Get the betweenness centrality of the nodes in the graph (a measure of the importance of a node in connecting different parts of the graph)
+        bc_scores = nx.betweenness_centrality(graph)
+
+        if display:
+            print("Betweenness centrality:")
+            for node, score in bc_scores.items():
+                print(f"{node}: {score}")
+        return bc_scores
+
+    def clustering_coefficient(graph, display=False):
+        cc = nx.average_clustering(graph)
+        if display:
+            print("Clustering coefficient:", cc)
+        return cc
+
+    def diameter_centraliry(graph, display=False):
+        # Get the connected components of the graph
+        connected_components = nx.connected_components(graph)
+
+        # Compute the diameter for each connected component
+        diameters = [nx.diameter(graph.subgraph(component)) for component in connected_components]
+
+        # Print the diameters
+        if display:
+            print("Diameters of connected components:", diameters)
+
+        return diameters
+
+    def degree_distribution(graph, display=False):
+        # Get the degree distribution of the nodes in the graph
+        degree_sequence = [d for n, d in graph.degree()]
+        degree_counts = dict(zip(sorted(set(degree_sequence)), [degree_sequence.count(d) for d in sorted(set(degree_sequence))]))
+        if display:
+            print("Degree distribution:", degree_counts)
+        return degree_counts
