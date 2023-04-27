@@ -208,6 +208,13 @@ class PreProcessGraph:
 
 
     def display_efficiency_of_graph(graph):
+        """
+        :author:Quentin Nater
+        reviewed by :
+        Display efficiency of the graph with coefficient clustering and average of degrees
+        :param graph: networkX - Graph networkX of the amazon dataset
+        :type graph: networkX
+        """
         degrees = [graph.degree(n) for n in graph.nodes()]
         print("\n\t\t\t\t\t\t (I) number of edges        :\t", graph.number_of_edges(),
               "\n\t\t\t\t\t\t (I) coefficient clustering :\t", nx.average_clustering(graph),
