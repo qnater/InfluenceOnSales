@@ -145,8 +145,8 @@ class AnalyticsGraph:
         best_modularity = original_modularity
 
         if display:
-            print("\tOriginal community list : ", communities)
-            print("\tBest_modularity : ", best_modularity)
+            print("\t(ANL) : Original community list : ", communities)
+            print("\t(ANL) : Best_modularity : ", best_modularity)
 
         inc, limit, deltaQ, oldValue, oldDeltaQ = 0, len(communities), 0, 0, 0
 
@@ -156,7 +156,7 @@ class AnalyticsGraph:
             community_vi = communities.pop(0)
 
             if display:
-                print("\t\tcommunity_vi :\t", community_vi)
+                print("\t\t(ANL) : community_vi :\t", community_vi)
 
             # phase 3 =====================================================================================================
             allResult, nodeNeighbors, communityNeighbors = [], [], []
@@ -205,12 +205,12 @@ class AnalyticsGraph:
             current_modularity = modularity(graph, communities)
 
             if display:
-                print("\t\tMax Delta Q :", bestDeltaQ, " (for ", allResult, ")")
-                print("\t\tWinning Community :", winningCommunity)
-                print("\t\tdeltaQ :", deltaQ, )
-                print("\t\tUpdated community list : ", communities)
-                print("\t\tscore : ", current_modularity)
-                print("\t\thigh score : ", best_modularity)
+                print("\t\t(ANL) : Max Delta Q :", bestDeltaQ, " (for ", allResult, ")")
+                print("\t\t(ANL) : Winning Community :", winningCommunity)
+                print("\t\t(ANL) : deltaQ :", deltaQ, )
+                print("\t\t(ANL) : Updated community list : ", communities)
+                print("\t\t(ANL) : score : ", current_modularity)
+                print("\t\t(ANL) : high score : ", best_modularity)
 
             # Stop if the total modularity is not improving anymore
             if current_modularity < best_modularity > 0:
@@ -222,17 +222,17 @@ class AnalyticsGraph:
             inc += 1
 
             if display:
-                print("\t\tnew score : ", best_modularity)
+                print("\t\t(ANL) : new score : ", best_modularity)
                 print("======= LOOP ===============================================")
 
-                print("\toriginal modularity :", original_modularity)
-                print("\tfinal modularity :", final_modularity)
+                print("\t(ANL) : original modularity :", original_modularity)
+                print("\t(ANL) : final modularity :", final_modularity)
 
         if display:
             for i, community in enumerate(communities):
                 print("\t\t\t\t\t\t\t\t", i, " : ", community)
 
-        print("\n\tCommunities result : ", communities, " \n\n")
+        print("\n\t(ANL) : Communities result : ", communities, " \n\n")
 
         return communities
 
@@ -256,8 +256,8 @@ class AnalyticsGraph:
         modularity_homemade = modularity(graph, communities_algo_homemade)
         modularity_library = modularity(graph, communities_algo_library)
 
-        print("\t\tmodularity 1st algorithm :", modularity_homemade)
-        print("\t\tmodularity 2nd algorithm :", modularity_library)
+        print("\t\t(ANL) : modularity 1st algorithm :", modularity_homemade)
+        print("\t\t(ANL) : modularity 2nd algorithm :", modularity_library)
 
         # Compare the communities, if they are the same number
         try:
@@ -265,10 +265,10 @@ class AnalyticsGraph:
             labels_pred = [0] * len(communities_algo_library[0]) + [1] * len(communities_algo_library[1])
 
             nmi = NMI3(labels_true, labels_pred)
-            print("\t\tNMI3 score :", round((nmi * 100), 2), "%")
+            print("\t\t(ANL) : NMI3 score :", round((nmi * 100), 2), "%")
         except:
             nmi = -1
-            print("\t\tCannot get a NMI score if the number communities are not the same...")
+            print("\t\t(ANL) : Cannot get a NMI score if the number communities are not the same...")
 
         return nmi
 
@@ -392,7 +392,7 @@ class AnalyticsGraph:
         dc_scores = nx.degree_centrality(graph)
 
         if display:
-            print("Degree centrality:")
+            print("\t\t\t (ANL) : Degree centrality:")
             for node, score in dc_scores.items():
                 print(f"{node}: {score}")
         return dc_scores
@@ -411,10 +411,65 @@ class AnalyticsGraph:
         bc_scores = nx.betweenness_centrality(graph)
 
         if display:
-            print("Betweenness centrality:")
+            print("\t\t\t (ANL) : Betweenness centrality:")
             for node, score in bc_scores.items():
                 print(f"{node}: {score}")
         return bc_scores
+
+
+    def highest_betweenness_centrality_score(graph, community, display=False):
+        """
+        Creator : Emmanuel Cazzato
+        reviewed by : Quentin Nater
+        Get the betweenness centrality of the nodes in the graph (a measure of the importance of a node in connecting different parts of the graph)
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        :param community: List of String - All nodes of a community
+        :type community: List of String
+        :param display: Boolean - Display or not the plots and prints
+        :type display: Boolean
+        :return: list of the results
+        """
+        subgraph = graph.subgraph(community)  # create subgraph with only those nodes
+
+        bc_scores = nx.betweenness_centrality(subgraph)
+
+        high_score = 0
+        high_node = ""
+
+        if display:
+            print("\t\t\t (ANL) : Betweenness centrality:")
+        for node, score in bc_scores.items():
+            if display:
+                print(f"\t\t\t (ANL) : {node}: {score}")
+            if score > high_score:
+                high_score = score
+                high_node = node
+
+        return [high_score, high_node]
+
+    def highest_betweenness_centrality_scores(graph, communities, display=False):
+        """
+        Creator : Emmanuel Cazzato
+        reviewed by : Quentin Nater
+        Get the betweenness centrality of the nodes in the graph (a measure of the importance of a node in connecting different parts of the graph)
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        :param communities: String [[]] - All communities with all nodes of a community
+        :type communities: String [[]]
+        :param display: Boolean - Display or not the plots and prints
+        :type display: Boolean
+        :return: list of the results
+        """
+        popular_nodes = []
+        for community in communities:
+            popular_nodes.append(AnalyticsGraph.highest_betweenness_centrality_score(graph, community, display))
+
+        if display:
+            for x, popular in enumerate(popular_nodes):
+                print("\t\t\t (ANL) : ", x, ": ", popular[1], ' with a centrality score of ', round(int(popular[0]*100), 2), "%")
+
+        return popular_nodes
 
     def clustering_coefficient(graph, display=False):
         """
@@ -429,7 +484,7 @@ class AnalyticsGraph:
         """
         cc = nx.average_clustering(graph)
         if display:
-            print("Clustering coefficient:", cc)
+            print("\t\t\t (ANL) : Clustering coefficient:", cc)
         return cc
 
     def diameter_centrality(graph, display=False):
@@ -451,7 +506,7 @@ class AnalyticsGraph:
 
         # Print the diameters
         if display:
-            print("Diameters of connected components:", diameters)
+            print("\t\t\t (ANL) : Diameters of connected components:", diameters)
 
         return diameters
 
@@ -470,5 +525,5 @@ class AnalyticsGraph:
         degree_sequence = [d for n, d in graph.degree()]
         degree_counts = dict(zip(sorted(set(degree_sequence)), [degree_sequence.count(d) for d in sorted(set(degree_sequence))]))
         if display:
-            print("Degree distribution:", degree_counts)
+            print("\t\t\t (ANL) : Degree distribution:", degree_counts)
         return degree_counts
