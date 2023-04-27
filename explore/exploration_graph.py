@@ -109,6 +109,17 @@ class ExploreGraph:
 
 
     def analytics_exploration(graph, display=False):
+        """
+        Creator : Emmanuel Cazzato
+        reviewed by : Quentin Nater
+        Get all needed analytics for exploration
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        :param display: Boolean - Display or not the plots and prints
+        :type display: Boolean
+        """
+
+        print(">> You have called the construction of your graph, please wait :)")
         if display:
             ExploreGraph.simple_plotting(graph)
 
@@ -119,7 +130,7 @@ class ExploreGraph:
         print("Size of path ", len(path))
         print("Number of nodes:", graph.number_of_nodes())
 
-        ExploreGraph.draw_graph(graph, path)
+        ExploreGraph.draw_path_graph(graph, path)
 
         start_node = list(graph.nodes())[0]
         goal_node = list(graph.nodes())[700]
@@ -143,17 +154,33 @@ class ExploreGraph:
         print("Number of nodes:", graph.number_of_nodes())
 
 
-    def draw_path_graph(G, path=None):
+    def draw_path_graph(graph, path):
+        """
+        Creator : Emmanuel Cazzato
+        reviewed by : Quentin Nater
+        Display all the path inside the graph plot
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        :param path: String[] - Path with all nodes
+        :type path: String[]
+        """
         print(">> You have called the plot of your graph with draw of the path, please wait :)")
 
-        pos = nx.spring_layout(G, seed=42)
-        nx.draw(G, pos, with_labels=True, node_color="lightblue", node_size=2000, font_size=10)
+        pos = nx.spring_layout(graph, seed=42)
+        nx.draw(graph, pos, with_labels=True, node_color="lightblue", node_size=2000, font_size=10)
         if path:
             edges = [(path[i], path[i + 1]) for i in range(len(path) - 1)]
-            nx.draw_networkx_edges(G, pos, edgelist=edges, edge_color='r', width=2)
+            nx.draw_networkx_edges(graph, pos, edgelist=edges, edge_color='r', width=2)
         plt.show()
 
     def simple_plotting(graph):
+        """
+        Creator : Emmanuel Cazzato
+        reviewed by : Quentin Nater
+        Simple plot the graph with better view
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        """
         print(">> You have called the plot of your graph, please wait :)")
 
         # Visualize the graph
@@ -162,8 +189,19 @@ class ExploreGraph:
         plt.show()
 
 
-    # Complete exploration thru a Depth-First-Search
+
     def dfs(graph, node, visited):
+        """
+        Creator : Emmanuel Cazzato
+        reviewed by : Quentin Nater
+        Complete exploration through a Depth-First-Search
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        :param node: String - First node of the graph (current used)
+        :type node: String
+        :param visited: String[] - List of current the visited nodes
+        :type visited: String[]
+        """
         if node not in visited:
             visited.append(node)
             if node in graph:
@@ -174,6 +212,17 @@ class ExploreGraph:
 
 
     def a_star_search(graph, start, goal):
+        """
+        Creator : Emmanuel Cazzato
+        reviewed by : Quentin Nater
+        Exploration from one node to one other with A* algo method
+        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :type graph: networkX
+        :param start: String - Starting point of the graph (node)
+        :type start: String
+        :param goal: String[] - Destination point of the graph (node)
+        :type goal: String[]
+        """
         frontier = [(0, start, [])]  # (priority, node, path)
         explored = set()
         heuristic = 0
