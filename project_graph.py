@@ -34,7 +34,7 @@ if __name__ == '__main__':
     if tag == "explore":
         graphFat = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         vg.display_simple_graph(graphFat, False)
-        pg.remove_nodes_by_degree(graphFat, 4)
+        pg.remove_nodes_by_degree(graphFat, 5)
         graphFat = pg.refined_graph(graphFat)
 
         graph = nx.Graph()
