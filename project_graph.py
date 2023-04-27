@@ -21,7 +21,7 @@ if __name__ == '__main__':
     if os.name == "nt":
         mpl.use('TkAgg')  # without it, cannot run my plots (maybe personal)
     elif os.name == "posix":
-        print("Choosing a Mac really is the best thing you've done in life!")
+        print("Choosing a Mac really is the worst thing you've done in life!")
     else:
         print("Unknown operating system.")
 
