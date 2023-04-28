@@ -52,24 +52,25 @@ if __name__ == '__main__':
                               ("10", "14"), ("10", "12"), ("10", "11"), ("10", "13"),
                               ("11", "13")])
 
-        #results = ag.deep_analyze(graphFat, [], True)
-        #for dic_r in results:
+        # results = ag.deep_analyze(graphFat, [], True)
+        # for dic_r in results:
         #    print("\t\t\t\t(ANL) : ", dic_r[0][0], "\t\t\t\t :", dic_r[1][0])
 
-        eg.analytics_exploration(graphFat, False)
+        eg.analytics_exploration(graph, False)
 
-        vg.display_simple_graph(graphFat, False)
+        vg.display_simple_graph(graph, False)
 
-        communities = ag.homemade_community_detection(graphFat, False)
+        communities = ag.homemade_community_detection(graph, False)
+        vg.saveCommunities(communities)
 
         for community in communities:
-            eg.exploreCommunity(graphFat, community, False)
+            eg.exploreCommunity(graph, community, False)
 
-        popular_nodes = ag.highest_betweenness_centrality_scores(graphFat, communities, False)
+        popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
 
-        vg.display_communities_graph(graphFat, communities, popular_nodes)
+        vg.display_communities_graph(graph, communities, popular_nodes)
 
-        vg.degree_distribution(graphFat, True)
+        vg.degree_distribution(graph, True)
 
 
     elif tag == "analyse":
