@@ -127,3 +127,18 @@ class VisualizationGraph:
             plt.savefig("./plots/degree_distribution_" + str(tag) + ".png", format="PNG")
             plt.show()
 
+    def saveCommunities(communities):
+        """
+        Creator : Quentin Nater
+        reviewed by :
+        Save on file all communities
+        :param communities: String [[]] - list of all communities
+        :type communities: String [[]]
+        """
+        myExport = ""
+        for x, community in enumerate(communities):
+            myExport = myExport + str(x) + ":" + str(community) + "\n"
+        with open('./results/communities.txt', 'w') as file:
+            # Write the string variable to the file
+            file.write(myExport)
+
