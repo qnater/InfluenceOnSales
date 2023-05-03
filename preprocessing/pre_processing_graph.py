@@ -47,6 +47,8 @@ class PreProcessGraph:
         VisualizationGraph.display_simple_graph(graph, False)
         print("\t\t\t\t(PRE-PRO) : current number of nodes : ", graph.number_of_nodes())
 
+        return graph
+
     def remove_isolated_nodes(graph):
         """
         Creator : Quentin Nater
