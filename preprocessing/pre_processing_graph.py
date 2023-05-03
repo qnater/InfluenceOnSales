@@ -32,6 +32,7 @@ class PreProcessGraph:
         return graph
 
     def refined_perfect_graph_k(graph, k=0, limit=200000):
+
         inc, current_score = 1, 0
         while limit < graph.number_of_nodes():
             current_score = graph.number_of_nodes()
