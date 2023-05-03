@@ -1,4 +1,5 @@
 import random
+import datetime
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -17,11 +18,17 @@ class VisualizationGraph:
         :type display: bool
         :return: the display of the graph
         """
+        current_time = datetime.datetime.now()
+        print(">> You have called the display of the full graph, (at", current_time, "), please wait :)")
+
         if display:
             nx.draw(graph, with_labels=True, node_color="lightblue", node_size=400, font_size=10)
             plt.title("Simple Display Plot")
             plt.savefig("./plots/display_simple_graph" + str(tag) + ".png", format="PNG")
             plt.show()
+
+        current_time = datetime.datetime.now()
+        print("<< The display of the full graph has finished (at", current_time, "), arigato <3")
 
         return graph
 

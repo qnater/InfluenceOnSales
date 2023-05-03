@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 from networkx.algorithms.community import louvain_communities
 
 from explore.exploration_graph import ExploreGraph as eg
+from persistence.persistence_graph import PersistenceGraph
 from visualization.visualization_graph import VisualizationGraph as vg
 from analytics.analytics_graph import AnalyticsGraph as ag
 from preprocessing.pre_processing_graph import PreProcessGraph as pg
@@ -26,31 +27,65 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "explore"  # prod or test
+    tag = "persistence"  # prod or test
+
+    if tag == "persistence":
+        graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+        graph = pg.refined_graph(graph)
+        graph = pg.refined_perfect_graph_k(graph, 0, limit=200000)
+        PersistenceGraph.populateDB(None, graph)
+
+    if tag == "prepro":
+        graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+        graph = pg.refined_graph(graph)
+        graph = pg.refined_perfect_graph_k(graph, 0, limit=120000)
+
+        #eg.analytics_exploration(graph, False)
+
+        vg.display_simple_graph(graph, True)
+
+        communities = ag.homemade_community_detection(graph, False)
+        vg.saveCommunities(communities)
+
+        for community in communities:
+            eg.exploreCommunity(graph, community, False)
+
+        popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
+
+        vg.display_communities_graph(graph, communities, popular_nodes)
+
+        vg.degree_distribution(graph, False)
+
+        ag.silhouetteIndex(graph, communities, display=False)
 
     if tag == "test":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         ag.community_library_detection()
 
     if tag == "explore":
-        graphFat = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
-        vg.display_simple_graph(graphFat, False)
-        pg.remove_nodes_by_degree(graphFat, 5)
-        graphFat = pg.refined_graph(graphFat)
 
-        graph = nx.Graph()
-        graph.add_nodes_from(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"])
-        graph.add_edges_from([("0", "2"), ("0", "4"), ("0", "3"), ("0", "5"),
-                              ("1", "2"), ("1", "4"), ("1", "7"),
-                              ("2", "4"), ("2", "5"), ("2", "6"),
-                              ("3", "7"),
-                              ("4", "10"),
-                              ("5", "7"), ("5", "11"),
-                              ("6", "7"), ("6", "11"),
-                              ("8", "11"), ("8", "9"), ("8", "14"), ("8", "15"), ("8", "10"),
-                              ("9", "12"), ("9", "14"),
-                              ("10", "14"), ("10", "12"), ("10", "11"), ("10", "13"),
-                              ("11", "13")])
+        s = "big"  # ? small/big
+        if s == "big":
+            graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+            vg.display_simple_graph(graph, False)
+            pg.remove_nodes_by_degree(graph, 5)
+            graph = pg.refined_graph(graph)
+
+
+        elif s == "small":
+            graph = nx.Graph()
+            graph.add_nodes_from(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"])
+            graph.add_edges_from([("A", "C"), ("A", "E"), ("A", "D"), ("A", "F"),
+                                  ("B", "C"), ("B", "E"), ("B", "H"),
+                                  ("C", "E"), ("C", "F"), ("C", "G"),
+                                  ("D", "H"),
+                                  ("E", "K"),
+                                  ("F", "H"), ("F", "L"),
+                                  ("G", "H"), ("G", "L"),
+                                  ("I", "L"), ("I", "J"), ("I", "O"), ("I", "P"), ("I", "K"),
+                                  ("J", "M"), ("J", "O"),
+                                  ("K", "O"), ("K", "M"), ("K", "L"), ("K", "N"),
+                                  ("L", "N")])
 
         # results = ag.deep_analyze(graphFat, [], True)
         # for dic_r in results:
@@ -70,7 +105,9 @@ if __name__ == '__main__':
 
         vg.display_communities_graph(graph, communities, popular_nodes)
 
-        vg.degree_distribution(graph, True)
+        vg.degree_distribution(graph, False)
+
+        ag.silhouetteIndex(graph, communities, display=False)
 
 
     elif tag == "analyse":

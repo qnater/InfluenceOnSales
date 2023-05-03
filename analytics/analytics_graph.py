@@ -1,8 +1,8 @@
 import datetime
-
 import networkx as nx
-from networkx.algorithms.community import girvan_newman, louvain_communities, \
-    greedy_modularity_communities
+import numpy as np
+from networkx.algorithms.community import girvan_newman, louvain_communities, greedy_modularity_communities
+from sklearn.metrics import silhouette_score
 from sklearn.metrics.cluster import normalized_mutual_info_score as NMI3
 from networkx.algorithms.community.quality import modularity
 
@@ -234,6 +234,10 @@ class AnalyticsGraph:
 
         print("\n\t(ANL) : Communities result : ", communities, " \n\n")
 
+        current_time = datetime.datetime.now()
+        print("<< the louvain detection homemade has finished (at", current_time, "), arigato <3")
+
+
         return communities
 
     def compare_algo_efficiency(graph, communities_algo_homemade):
@@ -461,6 +465,10 @@ class AnalyticsGraph:
         :type display: Boolean
         :return: list of the results
         """
+
+        current_time = datetime.datetime.now()
+        print(">> You have called the highest betweeness centrality scores, (at", current_time, "), please wait :)")
+
         popular_nodes = []
         for community in communities:
             popular_nodes.append(AnalyticsGraph.highest_betweenness_centrality_score(graph, community, display))
@@ -468,6 +476,10 @@ class AnalyticsGraph:
         if display:
             for x, popular in enumerate(popular_nodes):
                 print("\t\t\t (ANL) : ", x, ": ", popular[1], ' with a centrality score of ', round(int(popular[0]*100), 2), "%")
+
+
+        current_time = datetime.datetime.now()
+        print("<< The highest betweeness centrality scores has finished (at", current_time, "), arigato <3")
 
         return popular_nodes
 
@@ -527,3 +539,43 @@ class AnalyticsGraph:
         if display:
             print("\t\t\t (ANL) : Degree distribution:", degree_counts)
         return degree_counts
+
+
+    def silhouetteIndex(graph, communities, display=False):
+        """
+        Creator : Quentin Nater
+        reviewed by :
+        Compute the silhouette index algorithm score to determine the quality of the community detection
+        :param graph: networkX - Graph networkX of the amazon dataset
+        :type graph: networkX
+        :param communities: String [[]] - All communities with all nodes of a community
+        :type communities: String [[]]
+        :param display: Boolean - Display or not the plots and prints
+        :type display: Boolean
+        :return: silhouette index score of the community detection
+        """
+        current_time = datetime.datetime.now()
+        print(">> You've called the Silhouette Index Score, (at", current_time, "), please wait :)")
+
+        labels = np.zeros(len(graph.nodes()))
+
+        node_dict = dict(zip(graph.nodes(), range(len(graph.nodes()))))
+
+        for i, comm in enumerate(communities):
+            for node in comm:
+                labels[node_dict[node]] = i
+
+        adj_matrix = nx.to_numpy_array(graph)
+
+        if display:
+            print("\t\t\t\t(ANL) : ", adj_matrix)
+            print("\t\t\t\t(ANL) : ", labels.reshape(-1, ))
+
+        scores = silhouette_score(adj_matrix, labels.reshape(-1, ), metric='euclidean')
+
+        print("\t(ANL) : Silhouette Index Score :", scores)
+
+        current_time = datetime.datetime.now()
+        print("<< The Silhouette Index Score has finished (at", current_time, "), arigato <3")
+
+        return scores
