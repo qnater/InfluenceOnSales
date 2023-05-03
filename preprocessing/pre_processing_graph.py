@@ -1,3 +1,4 @@
+import datetime
 import random
 
 import networkx as nx
@@ -43,6 +44,8 @@ class PreProcessGraph:
         :param limit: int - Number of nodes desired
         :type limit: int
         """
+        current_time = datetime.datetime.now()
+        print(">> You have called the refinement of the graph (perfect), (at", current_time, "), please wait :)")
 
         inc, current_score = 1, 0
         while limit < graph.number_of_nodes():
@@ -61,6 +64,9 @@ class PreProcessGraph:
             inc += 1
 
         print("\t\t\t\t(PRE-PRO) : current number of nodes : ", graph.number_of_nodes())
+
+        current_time = datetime.datetime.now()
+        print("<< The refinement of the graph (perfect) has finished (at", current_time, "), arigato <3")
 
         return graph
 
