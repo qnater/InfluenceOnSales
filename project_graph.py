@@ -33,10 +33,7 @@ if __name__ == '__main__':
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         graph = pg.refined_graph(graph)
         graph = pg.refined_perfect_graph_k(graph, 0, limit=200000)
-        PersistenceGraph.initatialisation(None, graph)
-
-
-
+        PersistenceGraph.populateDB(None, graph)
 
     if tag == "prepro":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")

@@ -14,7 +14,7 @@ class PersistenceGraph:
     #
     # MATCH p = () - [:SIMILAR_TO]->() RETURN p LIMIT 25;
 
-    def initatialisation(self, graph):
+    def populateDB(self, graph):
         # Aura queries use an encrypted connection using the "neo4j+s" URI scheme
         uri = "neo4j+s://0d2d7b8e.databases.neo4j.io:7687"
         user = "neo4j"
