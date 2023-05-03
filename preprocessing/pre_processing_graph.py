@@ -32,25 +32,34 @@ class PreProcessGraph:
         return graph
 
     def refined_perfect_graph_k(graph, k=0, limit=200000):
+        """
+        Creator : Quentin Nater
+        reviewed by :
+        Clean the dataset and create sample of the graph
+        :param graph: networkX - Graph networkX of the amazon dataset
+        :type graph: networkX
+        :param k: int - Node with this number of degree will be removed if the cleaning is stuck before the limit
+        :type k: int
+        :param limit: int - Number of nodes desired
+        :type limit: int
+        """
 
         inc, current_score = 1, 0
         while limit < graph.number_of_nodes():
             current_score = graph.number_of_nodes()
 
-            if current_score == graph.number_of_nodes():
+            if current_score == graph.number_of_nodes():  # if the graph is perfect (without useless nodes)
                 k += 1
                 graph = PreProcessGraph.remove_nodes_by_degree(graph, k)
                 print("\t\t\t\t(PRE-PRO) : Change k - ", k)
 
-                if current_score != graph.number_of_nodes():
+                if current_score != graph.number_of_nodes():  # allows to keep the lowest k possible
                     k = 0
-
 
             print("\t\t\t\t(PRE-PRO) : number loops : ", inc, " : ", graph.number_of_nodes(), " for k = ", k)
             graph = PreProcessGraph.refined_graph(graph)
             inc += 1
 
-        VisualizationGraph.display_simple_graph(graph, False)
         print("\t\t\t\t(PRE-PRO) : current number of nodes : ", graph.number_of_nodes())
 
         return graph
@@ -231,7 +240,6 @@ class PreProcessGraph:
                 print(f"\t\t\tDegree centrality of node {node}\t\t: {degree_centrality}")
 
         return nodeDegrees
-
 
     def display_efficiency_of_graph(graph):
         """
