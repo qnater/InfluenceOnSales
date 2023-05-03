@@ -1,8 +1,10 @@
 import datetime
 
 import networkx as nx
+import numpy as np
 from networkx.algorithms.community import girvan_newman, louvain_communities, \
     greedy_modularity_communities
+from sklearn.metrics import silhouette_score
 from sklearn.metrics.cluster import normalized_mutual_info_score as NMI3
 from networkx.algorithms.community.quality import modularity
 
@@ -527,3 +529,27 @@ class AnalyticsGraph:
         if display:
             print("\t\t\t (ANL) : Degree distribution:", degree_counts)
         return degree_counts
+
+
+    def silhouetteIndex(graph, communities, display=False):
+        print("\n>> You've called the Silhouette Index Score, please wait <3")
+
+        labels = np.zeros(len(graph.nodes()))
+
+        node_dict = dict(zip(graph.nodes(), range(len(graph.nodes()))))
+
+        for i, comm in enumerate(communities):
+            for node in comm:
+                labels[node_dict[node]] = i
+
+        adj_matrix = nx.to_numpy_array(graph)
+
+        if display:
+            print("\t\t\t\t(ANL) : ", adj_matrix)
+            print("\t\t\t\t(ANL) : ", labels.reshape(-1, ))
+
+        scores = silhouette_score(adj_matrix, labels.reshape(-1, ), metric='euclidean')
+
+        print("\t(ANL) : Silhouette Index Score :", scores)
+
+        return scores

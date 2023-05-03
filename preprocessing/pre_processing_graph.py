@@ -2,6 +2,8 @@ import random
 
 import networkx as nx
 
+from visualization.visualization_graph import VisualizationGraph
+
 
 class PreProcessGraph:
 
@@ -28,6 +30,22 @@ class PreProcessGraph:
         PreProcessGraph.display_efficiency_of_graph(graph)
 
         return graph
+
+    def refined_perfect_graph_k(graph, k=0, limit=200000):
+        inc, current_score = 1, 0
+        while limit < graph.number_of_nodes():
+            current_score = graph.number_of_nodes()
+
+            if current_score == graph.number_of_nodes():
+                graph = PreProcessGraph.remove_nodes_by_degree(graph, k)
+                #k += 1
+
+            print("\t\t\t\t(PRE-PRO) : number loops : ", inc, " : ", graph.number_of_nodes(), " for k = ", k)
+            graph = PreProcessGraph.refined_graph(graph)
+            inc += 1
+
+        VisualizationGraph.display_simple_graph(graph, False)
+        print("\t\t\t\t(PRE-PRO) : current number of nodes : ", graph.number_of_nodes())
 
     def remove_isolated_nodes(graph):
         """
