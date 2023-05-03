@@ -5,6 +5,15 @@ import csv
 
 class ExportGraph:
 
+    # MATCH(n) DETACH DELETE n
+    #
+    # LOAD CSV WITH HEADERS FROM "https://naterscreations.com/d/baby.csv"
+    # AS row MERGE(from:Product {ASIN: row.ASIN})
+    # MERGE(to: Product {ASIN: row.Similar})
+    # MERGE(from)-[: SIMILAR_TO]->(to)
+    #
+    # MATCH p = () - [:SIMILAR_TO]->() RETURN p LIMIT 25;
+
     def create_dataset(graph):
         """
         Creator : Sophie Caroni

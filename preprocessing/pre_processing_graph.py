@@ -38,8 +38,13 @@ class PreProcessGraph:
             current_score = graph.number_of_nodes()
 
             if current_score == graph.number_of_nodes():
+                k += 1
                 graph = PreProcessGraph.remove_nodes_by_degree(graph, k)
-                #k += 1
+                print("\t\t\t\t(PRE-PRO) : Change k - ", k)
+
+                if current_score != graph.number_of_nodes():
+                    k = 0
+
 
             print("\t\t\t\t(PRE-PRO) : number loops : ", inc, " : ", graph.number_of_nodes(), " for k = ", k)
             graph = PreProcessGraph.refined_graph(graph)

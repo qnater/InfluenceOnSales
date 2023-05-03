@@ -17,6 +17,8 @@ class VisualizationGraph:
         :type display: bool
         :return: the display of the graph
         """
+        print(">> You have called the display of the full graph, please wait :)")
+
         if display:
             nx.draw(graph, with_labels=True, node_color="lightblue", node_size=400, font_size=10)
             plt.title("Simple Display Plot")

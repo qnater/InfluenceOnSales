@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 from networkx.algorithms.community import louvain_communities
 
 from explore.exploration_graph import ExploreGraph as eg
+from persistence.persistence_graph import PersistenceGraph
 from visualization.visualization_graph import VisualizationGraph as vg
 from analytics.analytics_graph import AnalyticsGraph as ag
 from preprocessing.pre_processing_graph import PreProcessGraph as pg
@@ -26,16 +27,25 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "prepro"  # prod or test
+    tag = "persistence"  # prod or test
+
+    if tag == "persistence":
+        graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+        graph = pg.refined_graph(graph)
+        graph = pg.refined_perfect_graph_k(graph, 0, limit=200000)
+        PersistenceGraph.initatialisation(None, graph)
+
+
+
 
     if tag == "prepro":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         graph = pg.refined_graph(graph)
-        graph = pg.refined_perfect_graph_k(graph, 1)
+        graph = pg.refined_perfect_graph_k(graph, 0, limit=120000)
 
-        eg.analytics_exploration(graph, False)
+        #eg.analytics_exploration(graph, False)
 
-        vg.display_simple_graph(graph, False)
+        vg.display_simple_graph(graph, True)
 
         communities = ag.homemade_community_detection(graph, False)
         vg.saveCommunities(communities)
