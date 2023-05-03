@@ -33,7 +33,7 @@ if __name__ == '__main__':
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         graph = pg.refined_graph(graph)
         graph = pg.refined_perfect_graph_k(graph, 0, limit=200000)
-        PersistenceGraph.populateDB(None, graph)
+        #PersistenceGraph.populateDB(None, graph)
 
     if tag == "prepro":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
         #eg.analytics_exploration(graph, False)
 
-        vg.display_simple_graph(graph, True)
+        vg.display_simple_graph(graph, False)
 
         communities = ag.homemade_community_detection(graph, False)
         vg.saveCommunities(communities)
