@@ -45,7 +45,7 @@ if __name__ == '__main__':
                               ("K", "O"), ("K", "M"), ("K", "L"), ("K", "N"),
                               ("L", "N")])
 
-        graph = eg.construct_graph_by_file("./dataset/amazon_60.txt")
+        #graph = eg.construct_graph_by_file("./dataset/amazon_60.txt")
 
         print("\n\nLIBRARY======================================================================================")
 
