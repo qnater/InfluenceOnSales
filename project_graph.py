@@ -1,3 +1,4 @@
+import datetime
 import os
 
 import matplotlib as mpl
@@ -44,17 +45,27 @@ if __name__ == '__main__':
                               ("K", "O"), ("K", "M"), ("K", "L"), ("K", "N"),
                               ("L", "N")])
 
-        #graph = eg.construct_graph_by_file("./dataset/amazon_120.txt")
-
-        print("\n\nHOMEMADE======================================================================================")
-        communities = ag.amazon_community_detection(graph, tag="baby", display=False)
-        popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
-        vg.display_communities_graph(graph, communities, popular_nodes, True)
+        graph = eg.construct_graph_by_file("./dataset/amazon_60.txt")
 
         print("\n\nLIBRARY======================================================================================")
+
+        current_time = datetime.datetime.now()
+        print("\n<< TEST LIBRARY (at", current_time, "), arigato <3")
+
         communities = louvain_communities(graph)
         ag.silhouetteIndex(graph, communities, display=False)
         vg.saveCommunities(communities, 121)
+
+        current_time = datetime.datetime.now()
+        print("\n<< TEST LIBRARY (at", current_time, "), arigato <3")
+
+
+        print("\n\nHOMEMADE======================================================================================")
+        communities = ag.amazon_community_detection(graph, tag="amazon_120", display=False)
+        popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
+        vg.display_communities_graph(graph, communities, popular_nodes, True)
+
+
 
 
 
