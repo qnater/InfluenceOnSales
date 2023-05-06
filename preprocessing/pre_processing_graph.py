@@ -68,6 +68,7 @@ class PreProcessGraph:
         current_time = datetime.datetime.now()
         print("<< The refinement of the graph (perfect) has finished (at", current_time, "), arigato <3")
 
+        graph = PreProcessGraph.refined_graph(graph)
         return graph
 
     def remove_isolated_nodes(graph):
