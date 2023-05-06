@@ -27,13 +27,42 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "prepro"  # prod or test
+    tag = "louvain"  # prod or test
+
+    if tag == "louvain":
+        graph = nx.Graph()
+        graph.add_nodes_from(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"])
+        graph.add_edges_from([("A", "C"), ("A", "E"), ("A", "D"), ("A", "F"),
+                              ("B", "C"), ("B", "E"), ("B", "H"),
+                              ("C", "E"), ("C", "F"), ("C", "G"),
+                              ("D", "H"),
+                              ("E", "K"),
+                              ("F", "H"), ("F", "L"),
+                              ("G", "H"), ("G", "L"),
+                              ("I", "L"), ("I", "J"), ("I", "O"), ("I", "P"), ("I", "K"),
+                              ("J", "M"), ("J", "O"),
+                              ("K", "O"), ("K", "M"), ("K", "L"), ("K", "N"),
+                              ("L", "N")])
+
+        graph = eg.construct_graph_by_file("./dataset/amazon_120.txt")
+
+        communities = ag.louvain_algorithm_homemade(graph, display=False)
+        ag.silhouetteIndex(graph, communities, display=False)
+        vg.saveCommunities(communities, 120)
+
+        communities = louvain_communities(graph)
+        ag.silhouetteIndex(graph, communities, display=False)
+        vg.saveCommunities(communities, 121)
+
+        popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
+        vg.display_communities_graph(graph, communities, popular_nodes, True)
 
     if tag == "persistence":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         graph = pg.refined_graph(graph)
         graph = pg.refined_perfect_graph_k(graph, 0, limit=200000)
-        #PersistenceGraph.populateDB(None, graph)
+        PersistenceGraph.populateDB(None, graph)
+
 
     if tag == "prepro":
 
@@ -42,6 +71,8 @@ if __name__ == '__main__':
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         graph = pg.refined_graph(graph)
         graph = pg.refined_perfect_graph_k(graph, 0, limit=limit)
+
+
 
         #eg.analytics_exploration(graph, False)
         vg.display_simple_graph(graph, False)
