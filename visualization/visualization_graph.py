@@ -1,5 +1,6 @@
 import random
 import datetime
+import re
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -156,4 +157,30 @@ class VisualizationGraph:
         with open('./results/communities'+str(limit)+'.txt', 'w') as file:
             # Write the string variable to the file
             file.write(myExport)
+
+
+    def retrieveCommunities(txt_file):
+        """
+        Creator : Sophie Caroni
+        reviewed by :
+        Retrieve communities from a txt file
+        :param txt_file: File containing all communities
+        :type txt_file: String
+        """
+
+        communities = []
+        # Open the input txt file for reading
+        with open(txt_file, 'r') as file:
+
+            # Loop through each line
+            for line in file:
+
+                # As soon as the line as '[', extract the community from the list and set it as community
+                matches = re.findall(r"\{(.*?)\}", line)
+                if len(matches) > 0:
+                    for match in matches:
+                        current_community = {asin for asin in match.split(", ")}
+                        communities.append(current_community)
+        return communities
+
 
