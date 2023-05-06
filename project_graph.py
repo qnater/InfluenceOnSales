@@ -1,3 +1,4 @@
+import datetime
 import os
 
 import matplotlib as mpl
@@ -27,36 +28,106 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "persistence"  # prod or test
+    tag = "louvain"  # prod or test
+
+    if tag == "louvain":
+        graph = nx.Graph()
+        graph.add_nodes_from(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"])
+        graph.add_edges_from([("A", "C"), ("A", "E"), ("A", "D"), ("A", "F"),
+                              ("B", "C"), ("B", "E"), ("B", "H"),
+                              ("C", "E"), ("C", "F"), ("C", "G"),
+                              ("D", "H"),
+                              ("E", "K"),
+                              ("F", "H"), ("F", "L"),
+                              ("G", "H"), ("G", "L"),
+                              ("I", "L"), ("I", "J"), ("I", "O"), ("I", "P"), ("I", "K"),
+                              ("J", "M"), ("J", "O"),
+                              ("K", "O"), ("K", "M"), ("K", "L"), ("K", "N"),
+                              ("L", "N")])
+
+        #graph = eg.construct_graph_by_file("./dataset/amazon_60.txt")
+
+        print("\n\nLIBRARY======================================================================================")
+
+        current_time = datetime.datetime.now()
+        print("\n<< TEST LIBRARY (at", current_time, "), arigato <3")
+
+        communities = louvain_communities(graph)
+        ag.silhouetteIndex(graph, communities, display=False)
+        vg.saveCommunities(communities, 121)
+
+        current_time = datetime.datetime.now()
+        print("\n<< TEST LIBRARY (at", current_time, "), arigato <3")
+
+
+        print("\n\nHOMEMADE======================================================================================")
+        communities = ag.amazon_community_detection(graph, tag="amazon_60", display=False)
+        popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
+        vg.display_communities_graph(graph, communities, popular_nodes, True)
+
+
+
+
 
     if tag == "persistence":
-        graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
-        graph = pg.refined_graph(graph)
-        graph = pg.refined_perfect_graph_k(graph, 0, limit=200000)
-        #PersistenceGraph.populateDB(None, graph)
+        # graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+        # graph = pg.refined_graph(graph)
+        # graph = pg.refined_perfect_graph_k(graph, 0, limit=200000)
+
+        # define graph (baby)
+        graph = nx.Graph()
+        graph.add_nodes_from(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"])
+        graph.add_edges_from([("A", "C"), ("A", "E"), ("A", "D"), ("A", "F"),
+                              ("B", "C"), ("B", "E"), ("B", "H"),
+                              ("C", "E"), ("C", "F"), ("C", "G"),
+                              ("D", "H"),
+                              ("E", "K"),
+                              ("F", "H"), ("F", "L"),
+                              ("G", "H"), ("G", "L"),
+                              ("I", "L"), ("I", "J"), ("I", "O"), ("I", "P"), ("I", "K"),
+                              ("J", "M"), ("J", "O"),
+                              ("K", "O"), ("K", "M"), ("K", "L"), ("K", "N"),
+                              ("L", "N")])
+
+        persistence_graph = PersistenceGraph(uri="neo4j+s://0d2d7b8e.databases.neo4j.io:7687", user="neo4j",
+                                             password="bta9fHGXHYBwD1fIKnLpJwwFUiZZxwtV5zouYfcgCwA")  # Create an instance of the class
+
+        # create new graph in neo4j
+        persistence_graph.populateDB(graph=graph)
+
+        persistence_graph.display_communities()
+
 
     if tag == "prepro":
+
+        # =NIGHTLY=====================================================================================================
+        limit = 70000
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         graph = pg.refined_graph(graph)
-        graph = pg.refined_perfect_graph_k(graph, 0, limit=120000)
+        graph = pg.refined_perfect_graph_k(graph, 0, limit=limit)
+
+
 
         #eg.analytics_exploration(graph, False)
-
         vg.display_simple_graph(graph, False)
 
-        communities = ag.homemade_community_detection(graph, False)
-        vg.saveCommunities(communities)
+        #communities = ag.homemade_community_detection(graph, False)
+        communities = ag.community_library_detection(graph, "louvain")
+        vg.saveCommunities(communities, limit=limit)
 
         for community in communities:
             eg.exploreCommunity(graph, community, False)
 
         popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
 
-        vg.display_communities_graph(graph, communities, popular_nodes)
+        vg.display_communities_graph(graph, communities, popular_nodes, False)
 
         vg.degree_distribution(graph, False)
 
         ag.silhouetteIndex(graph, communities, display=False)
+
+        # =============================================================================================================
+
 
     if tag == "test":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")

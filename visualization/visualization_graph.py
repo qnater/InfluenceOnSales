@@ -1,5 +1,6 @@
 import random
 import datetime
+import re
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -79,6 +80,10 @@ class VisualizationGraph:
         :param tag: String - special information for the saved plot
         :type tag: String
         """
+
+        current_time = datetime.datetime.now()
+        print("\n>> You have called the display of the community graph, (at", current_time, "), please wait :)")
+
         # Create a dictionary mapping each node to its community
         node_to_community = {}
         community_colors = []
@@ -101,7 +106,11 @@ class VisualizationGraph:
         nx.draw_networkx_labels(graph, pos)
         plt.title("Communities Graph Detection")
         plt.savefig("./plots/display_communities_graph_" + str(tag) + ".png", format="PNG")
-        plt.show()
+        if display:
+            plt.show()
+
+        current_time = datetime.datetime.now()
+        print("<< The display of the community graph has finished (at", current_time, "), arigato <3\n")
 
 
 
@@ -134,7 +143,7 @@ class VisualizationGraph:
             plt.savefig("./plots/degree_distribution_" + str(tag) + ".png", format="PNG")
             plt.show()
 
-    def saveCommunities(communities):
+    def saveCommunities(communities, limit=100000):
         """
         Creator : Quentin Nater
         reviewed by :
@@ -145,7 +154,33 @@ class VisualizationGraph:
         myExport = ""
         for x, community in enumerate(communities):
             myExport = myExport + str(x) + ":" + str(community) + "\n"
-        with open('./results/communities.txt', 'w') as file:
+        with open('./results/communities'+str(limit)+'.txt', 'w') as file:
             # Write the string variable to the file
             file.write(myExport)
+
+
+    def retrieveCommunities(txt_file):
+        """
+        Creator : Sophie Caroni
+        reviewed by :
+        Retrieve communities from a txt file
+        :param txt_file: File containing all communities
+        :type txt_file: String
+        """
+
+        communities = []
+        # Open the input txt file for reading
+        with open(txt_file, 'r') as file:
+
+            # Loop through each line
+            for line in file:
+
+                # As soon as the line as '[', extract the community from the list and set it as community
+                matches = re.findall(r"\{(.*?)\}", line)
+                if len(matches) > 0:
+                    for match in matches:
+                        current_community = {asin for asin in match.split(", ")}
+                        communities.append(current_community)
+        return communities
+
 

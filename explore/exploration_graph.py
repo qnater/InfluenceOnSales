@@ -276,9 +276,9 @@ class ExploreGraph:
         first_node = list(subgraph.nodes())[0]
         pathDFS = ExploreGraph.dfs(subgraph, first_node, [])
 
-        print("\t\t\t (EXP) : All nodes visited nodes (pathDFS) : ", pathDFS)
-        print("\t\t\t (EXP) : Size of pathDFS ", len(pathDFS))
-        print("\t\t\t (EXP) : Number of nodes:", subgraph.number_of_nodes())
-
         if display:
+            print("\t\t\t (EXP) : All nodes visited nodes (pathDFS) : ", pathDFS)
+            print("\t\t\t (EXP) : Size of pathDFS ", len(pathDFS))
+            print("\t\t\t (EXP) : Number of nodes:", subgraph.number_of_nodes())
+
             ExploreGraph.draw_path_graph(subgraph, pathDFS)

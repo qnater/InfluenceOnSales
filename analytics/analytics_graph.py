@@ -1,10 +1,17 @@
 import datetime
+from collections import defaultdict
+
 import networkx as nx
 import numpy as np
-from networkx.algorithms.community import girvan_newman, louvain_communities, greedy_modularity_communities
+from networkx.algorithms.community import girvan_newman, louvain_communities, greedy_modularity_communities, \
+    is_partition
+from networkx.utils import py_random_state
 from sklearn.metrics import silhouette_score
 from sklearn.metrics.cluster import normalized_mutual_info_score as NMI3
-from networkx.algorithms.community.quality import modularity
+from networkx.algorithms.community.quality import modularity, NotAPartition
+from collections import defaultdict, deque
+
+from visualization.visualization_graph import VisualizationGraph
 
 
 class AnalyticsGraph:
@@ -65,7 +72,7 @@ class AnalyticsGraph:
 
         # Library: louvain_communities
         if library == "louvain":
-            communities = louvain_communities(graph, seed=123)
+            communities = louvain_communities(graph, seed=127)
             for i, c in enumerate(communities):
                 print("(louvain) > community ", i, " : ", c)
 
@@ -237,7 +244,6 @@ class AnalyticsGraph:
         current_time = datetime.datetime.now()
         print("<< the louvain detection homemade has finished (at", current_time, "), arigato <3")
 
-
         return communities
 
     def compare_algo_efficiency(graph, communities_algo_homemade):
@@ -318,10 +324,7 @@ class AnalyticsGraph:
         if "closeness_centrality" in listOfCommands or allChecked:
             listOfResult.append([["closeness_centrality"], [AnalyticsGraph.closeness_centrality_scores(graph)]])
 
-
         return listOfResult
-
-
 
     def closeness_centrality_scores(graph, display=False):
         """
@@ -420,7 +423,6 @@ class AnalyticsGraph:
                 print(f"{node}: {score}")
         return bc_scores
 
-
     def highest_betweenness_centrality_score(graph, community, display=False):
         """
         Creator : Emmanuel Cazzato
@@ -467,7 +469,7 @@ class AnalyticsGraph:
         """
 
         current_time = datetime.datetime.now()
-        print(">> You have called the highest betweeness centrality scores, (at", current_time, "), please wait :)")
+        print("\n>> You have called the highest betweeness centrality scores, (at", current_time, "), please wait :)")
 
         popular_nodes = []
         for community in communities:
@@ -475,11 +477,11 @@ class AnalyticsGraph:
 
         if display:
             for x, popular in enumerate(popular_nodes):
-                print("\t\t\t (ANL) : ", x, ": ", popular[1], ' with a centrality score of ', round(int(popular[0]*100), 2), "%")
-
+                print("\t\t\t (ANL) : ", x, ": ", popular[1], ' with a centrality score of ',
+                      round(int(popular[0] * 100), 2), "%")
 
         current_time = datetime.datetime.now()
-        print("<< The highest betweeness centrality scores has finished (at", current_time, "), arigato <3")
+        print("<< The highest betweeness centrality scores has finished (at", current_time, "), arigato <3\n")
 
         return popular_nodes
 
@@ -535,11 +537,11 @@ class AnalyticsGraph:
         """
         # Get the degree distribution of the nodes in the graph
         degree_sequence = [d for n, d in graph.degree()]
-        degree_counts = dict(zip(sorted(set(degree_sequence)), [degree_sequence.count(d) for d in sorted(set(degree_sequence))]))
+        degree_counts = dict(
+            zip(sorted(set(degree_sequence)), [degree_sequence.count(d) for d in sorted(set(degree_sequence))]))
         if display:
             print("\t\t\t (ANL) : Degree distribution:", degree_counts)
         return degree_counts
-
 
     def silhouetteIndex(graph, communities, display=False):
         """
@@ -555,7 +557,7 @@ class AnalyticsGraph:
         :return: silhouette index score of the community detection
         """
         current_time = datetime.datetime.now()
-        print(">> You've called the Silhouette Index Score, (at", current_time, "), please wait :)")
+        print("\n\t>> You've called the Silhouette Index Score, (at", current_time, "), please wait :)")
 
         labels = np.zeros(len(graph.nodes()))
 
@@ -573,9 +575,170 @@ class AnalyticsGraph:
 
         scores = silhouette_score(adj_matrix, labels.reshape(-1, ), metric='euclidean')
 
-        print("\t(ANL) : Silhouette Index Score :", scores)
+        print("\t\t(ANL) : Silhouette Index Score :", scores)
 
         current_time = datetime.datetime.now()
-        print("<< The Silhouette Index Score has finished (at", current_time, "), arigato <3")
+        print("\t<< The Silhouette Index Score has finished (at", current_time, "), arigato <3\n")
 
         return scores
+
+    # =================================================================================================================
+    # COMMUNITY DETECTION HOMEMADE
+    # =================================================================================================================
+    def amazon_community_detection(graph, tag="louvain", display=False):
+        current_time = datetime.datetime.now()
+        print("\n<< You have run the homemade amazon community detection algorithm (at", current_time, "), arigato <3")
+
+        #=STAGE ONE====================================================================================================
+        communities = [{u} for u in graph.nodes()]
+        modularity = 1 / pow(sum(dict(graph.degree()).values()), 2)
+
+        myGraph = graph.__class__()
+        myGraph.add_nodes_from(graph)
+        myGraph.add_weighted_edges_from(graph.edges(data="weight", default=1))
+
+        graphSize = myGraph.size()
+
+        communities, inner_partition, stillBetter = AnalyticsGraph.inner_logic(myGraph, graphSize, communities,
+                                                                               display=display)
+        stillBetter = True
+
+        #====STAGE TWO=================================================================================================
+        while stillBetter:
+            new_modularity = sum(dict(myGraph.degree()).values()) / 2
+            deltaQ = new_modularity - modularity
+            if deltaQ <= 0:
+                break
+            modularity = new_modularity
+
+            # =UPDATE WEIGHT===========================================================================
+            H = myGraph.__class__()
+            dicIndex = {}
+            for i, part in enumerate(inner_partition):
+                nodes = set()
+                for node in part:
+                    dicIndex[node] = i
+                    nodes.add(node)
+                H.add_node(i, nodes=nodes)
+            for node1, node2, wt in myGraph.edges(data=True):
+                wt = wt["weight"]
+                com1 = dicIndex[node1]
+                com2 = dicIndex[node2]
+                temp = H.get_edge_data(com1, com2, {"weight": 0})["weight"]
+                H.add_edge(com1, com2, weight=wt + temp)
+            myGraph = H
+            # =============================================================================
+            communities, inner_partition, stillBetter = AnalyticsGraph.inner_logic(myGraph, graphSize, communities, display=display)
+
+        # ==DISPLAY=====================================================================================================
+        best_communities = list(communities)
+        print("\t\t(ANL) : Community detection (louvain homemade) result :")
+        for x, c in enumerate(best_communities):
+            print("\t\t\t(ANL) : ", x, ": ", c)
+        # ==SAVE========================================================================================================
+        VisualizationGraph.saveCommunities(best_communities, tag)
+        # ==ANALYTICS===================================================================================================
+        AnalyticsGraph.silhouetteIndex(graph, best_communities, display=False)
+        # ==============================================================================================================
+
+        current_time = datetime.datetime.now()
+        print("<< The homemade amazon community detection algorithm has finished (at", current_time, "), arigato <3\n")
+        return best_communities
+
+    def inner_logic(graph, size_of_graph, communities, display=True):
+        #===STAGE THREE================================================================================================
+        communityNodes, newCommunity = {}, []
+
+        # *** INITIALIZATION AND THE ALGO AND LIST *****************************
+        # initialization of the community with each node as community
+        operations      = 1
+        myDegrees       = graph.degree()
+        pushNodeList    =  list(graph.nodes)
+        degrees         = dict(myDegrees)
+        degreeStrength  = list(degrees.values())
+        weightStrength  = {}
+        stillBetter     = False
+
+        for x, node in enumerate(graph.nodes()):
+            communityNodes[node] = x
+
+        for node in graph.nodes():
+            newCommunity.append({node})
+
+        for node in graph:
+            weightStrength[node] = {}
+            for value, link in graph[node].items():
+                if value != node:
+                    weightStrength[node][value] = link["weight"]
+                    if display:
+                        print("\t\t\t\t\t\tnode (data[weight]) :", node, "(", link["weight"], ")")
+
+        while operations > 0:
+            operations = 0
+
+            for node in pushNodeList:
+                bestModality, bestCommunity = 0, communityNodes[node]
+
+                weightCommunity = defaultdict(int)
+                for key, number_of_edges in weightStrength[node].items():
+                    weightCommunity[communityNodes[key]] += number_of_edges
+
+                degree = degrees[node]
+                degreeStrength[bestCommunity] -= degree
+
+                size_power = 2 * pow(size_of_graph, 2)
+                remove_cost = -weightCommunity[bestCommunity] / size_of_graph + (degreeStrength[bestCommunity] * degree) / size_power
+
+                for numberCommunities, number_of_edges in weightCommunity.items():
+                    gain = (number_of_edges / size_of_graph - (degreeStrength[numberCommunities] * degree) / size_power)
+                    Q = remove_cost + gain
+
+                    if display:
+                        print("\t\t\t\t\t\tnode : ", node)
+                        print("\t\t\t\t\t\tnbr_com / number_of_edges: ", numberCommunities, " / ", number_of_edges)
+                        print("\t\t\t\t\t\tgain :   (number_of_edges / size_of_graph - (degreeStrength[nbr_com] * degree) / (2 * pow(size_of_graph, 2))) = (", number_of_edges, " / ", size_of_graph, " - (", degreeStrength[numberCommunities], " * ", degree, ") / (2 * , ", size_of_graph, "^2))) = ", gain)
+                        print("\t\t\t\t\t\tdeltaQ : ", Q, "\n")
+
+                    if Q > bestModality:
+                        bestModality = Q
+                        bestCommunity = numberCommunities
+
+                        if display:
+                            print("\t\t\t\t\t\tNEW BEST MODALITY !!! \n")
+
+                degreeStrength[bestCommunity] += degree
+
+                if bestCommunity != communityNodes[node]:
+                    # Retrieve the community of the current node
+                    node_community = communityNodes[node]
+                    community = graph.nodes[node].get("nodes", {node})
+
+                    # Remove the current node from its community
+                    communities[node_community] -= community
+                    newCommunity[node_community].remove(node)
+
+                    # Add the current node to the best community
+                    communities[bestCommunity] |= community
+                    newCommunity[bestCommunity].add(node)
+
+                    stillBetter = True
+                    operations = operations + 1
+
+                    communityNodes[node] = bestCommunity
+
+                    if display:
+                        print("\t\t\t\t\t\tnumber of operations : ", operations)
+                        print("\t\t\t\t\t\tcurrent communities : ", communities, "\n")
+
+        communitiesTMP, newCommunitiesTMP = [], []
+        for community in communities:
+            if len(community) > 0:
+                communitiesTMP.append(community)
+        for community in newCommunity:
+            if len(community) > 0:
+                newCommunitiesTMP.append(community)
+
+        newCommunity = newCommunitiesTMP
+        communities = communitiesTMP
+
+        return communities, newCommunity, stillBetter
