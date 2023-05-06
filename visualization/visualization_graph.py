@@ -81,7 +81,7 @@ class VisualizationGraph:
         """
 
         current_time = datetime.datetime.now()
-        print(">> You have called the display of the community graph, (at", current_time, "), please wait :)")
+        print("\n>> You have called the display of the community graph, (at", current_time, "), please wait :)")
 
         # Create a dictionary mapping each node to its community
         node_to_community = {}
@@ -109,7 +109,7 @@ class VisualizationGraph:
             plt.show()
 
         current_time = datetime.datetime.now()
-        print("<< The display of the community graph has finished (at", current_time, "), arigato <3")
+        print("<< The display of the community graph has finished (at", current_time, "), arigato <3\n")
 
 
 
