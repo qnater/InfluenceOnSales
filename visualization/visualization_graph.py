@@ -79,6 +79,10 @@ class VisualizationGraph:
         :param tag: String - special information for the saved plot
         :type tag: String
         """
+
+        current_time = datetime.datetime.now()
+        print(">> You have called the display of the community graph, (at", current_time, "), please wait :)")
+
         # Create a dictionary mapping each node to its community
         node_to_community = {}
         community_colors = []
@@ -101,7 +105,11 @@ class VisualizationGraph:
         nx.draw_networkx_labels(graph, pos)
         plt.title("Communities Graph Detection")
         plt.savefig("./plots/display_communities_graph_" + str(tag) + ".png", format="PNG")
-        plt.show()
+        if display:
+            plt.show()
+
+        current_time = datetime.datetime.now()
+        print("<< The display of the community graph has finished (at", current_time, "), arigato <3")
 
 
 
@@ -134,7 +142,7 @@ class VisualizationGraph:
             plt.savefig("./plots/degree_distribution_" + str(tag) + ".png", format="PNG")
             plt.show()
 
-    def saveCommunities(communities):
+    def saveCommunities(communities, limit=100000):
         """
         Creator : Quentin Nater
         reviewed by :
@@ -145,7 +153,7 @@ class VisualizationGraph:
         myExport = ""
         for x, community in enumerate(communities):
             myExport = myExport + str(x) + ":" + str(community) + "\n"
-        with open('./results/communities.txt', 'w') as file:
+        with open('./results/communities'+str(limit)+'.txt', 'w') as file:
             # Write the string variable to the file
             file.write(myExport)
 

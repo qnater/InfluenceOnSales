@@ -27,7 +27,7 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "persistence"  # prod or test
+    tag = "prepro"  # prod or test
 
     if tag == "persistence":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
@@ -36,27 +36,33 @@ if __name__ == '__main__':
         #PersistenceGraph.populateDB(None, graph)
 
     if tag == "prepro":
+
+        # =NIGHTLY=====================================================================================================
+        limit = 70000
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         graph = pg.refined_graph(graph)
-        graph = pg.refined_perfect_graph_k(graph, 0, limit=120000)
+        graph = pg.refined_perfect_graph_k(graph, 0, limit=limit)
 
         #eg.analytics_exploration(graph, False)
-
         vg.display_simple_graph(graph, False)
 
-        communities = ag.homemade_community_detection(graph, False)
-        vg.saveCommunities(communities)
+        #communities = ag.homemade_community_detection(graph, False)
+        communities = ag.community_library_detection(graph, "louvain")
+        vg.saveCommunities(communities, limit=limit)
 
         for community in communities:
             eg.exploreCommunity(graph, community, False)
 
         popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
 
-        vg.display_communities_graph(graph, communities, popular_nodes)
+        vg.display_communities_graph(graph, communities, popular_nodes, False)
 
         vg.degree_distribution(graph, False)
 
         ag.silhouetteIndex(graph, communities, display=False)
+
+        # =============================================================================================================
+
 
     if tag == "test":
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
