@@ -14,7 +14,7 @@ class ExportGraph:
     #
     # MATCH p = () - [:SIMILAR_TO]->() RETURN p LIMIT 25;
 
-    def create_dataset(graph):
+    def create_dataset(graph, name):
         """
         Creator : Sophie Caroni
         reviewed by :
@@ -27,7 +27,7 @@ class ExportGraph:
         print(">> You have called the export of your graph, please wait :)")
 
         # Create new .txt file
-        with open("./dataset/amazon_refined.txt", "w", encoding="utf-8") as file:
+        with open("./dataset/"+str(name)+".txt", "w", encoding="utf-8") as file:
 
             # Retrieve ASIN from node
             asin_lst = graph.nodes()

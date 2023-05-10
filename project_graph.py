@@ -28,9 +28,9 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "louvain"  # prod or test
+    tag = "prepro"  # prod or test
 
-    if tag == "louvain":
+    if tag == "pre":
         graph = nx.Graph()
         graph.add_nodes_from(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"])
         graph.add_edges_from([("A", "C"), ("A", "E"), ("A", "D"), ("A", "F"),
@@ -45,7 +45,7 @@ if __name__ == '__main__':
                               ("K", "O"), ("K", "M"), ("K", "L"), ("K", "N"),
                               ("L", "N")])
 
-        #graph = eg.construct_graph_by_file("./dataset/amazon_60.txt")
+        graph = eg.construct_graph_by_file("./dataset/amazon_60.txt")
 
         print("\n\nLIBRARY======================================================================================")
 
@@ -94,8 +94,8 @@ if __name__ == '__main__':
 
         # create new graph in neo4j
         persistence_graph.populateDB(graph=graph)
-
-        persistence_graph.display_communities()
+        persistence_graph.display_communities(graph=graph)
+        persistence_graph.display_hypernodes_communities(graph=graph)
 
 
     if tag == "prepro":
@@ -105,27 +105,7 @@ if __name__ == '__main__':
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         graph = pg.refined_graph(graph)
         graph = pg.refined_perfect_graph_k(graph, 0, limit=limit)
-
-
-
-        #eg.analytics_exploration(graph, False)
-        vg.display_simple_graph(graph, False)
-
-        #communities = ag.homemade_community_detection(graph, False)
-        communities = ag.community_library_detection(graph, "louvain")
-        vg.saveCommunities(communities, limit=limit)
-
-        for community in communities:
-            eg.exploreCommunity(graph, community, False)
-
-        popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
-
-        vg.display_communities_graph(graph, communities, popular_nodes, False)
-
-        vg.degree_distribution(graph, False)
-
-        ag.silhouetteIndex(graph, communities, display=False)
-
+        xg.create_dataset(graph, limit)
         # =============================================================================================================
 
 
