@@ -179,8 +179,9 @@ class VisualizationGraph:
                 matches = re.findall(r"\{(.*?)\}", line)
                 if len(matches) > 0:
                     for match in matches:
-                        current_community = {asin for asin in match.split(", ")}
+                        current_community = {asin.replace("'", "") for asin in match.split(", ")}
                         communities.append(current_community)
+
         return communities
 
 

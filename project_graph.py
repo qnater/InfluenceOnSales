@@ -28,7 +28,13 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "prepro"  # prod or test
+    tag = "ciao"  # prod or test
+
+    if tag == "ciao":
+        graph = eg.construct_graph_by_file("./dataset/dataset_off_amazon_small.txt")
+        pg.refined_graph(graph)
+        xg
+
 
     if tag == "pre":
         graph = nx.Graph()
