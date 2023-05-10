@@ -91,7 +91,6 @@ if __name__ == '__main__':
 
         persistence_graph = PersistenceGraph(uri="neo4j+s://0d2d7b8e.databases.neo4j.io:7687", user="neo4j",
                                              password="bta9fHGXHYBwD1fIKnLpJwwFUiZZxwtV5zouYfcgCwA")  # Create an instance of the class
-
         # create new graph in neo4j
         persistence_graph.populateDB(graph=graph)
         persistence_graph.display_communities(graph=graph)
