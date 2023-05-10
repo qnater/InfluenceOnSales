@@ -46,7 +46,7 @@ class PersistenceGraph:
 
         # Delete any previous graph currently existing on Neo4j
         if delete_previous:
-            app.delete_db(verbose=False)
+            app.delete_graph(verbose=False)
 
         # Keep track of the Neo4j node IDs for each node in the networkx graph
         node_ids = {}
@@ -94,6 +94,8 @@ class PersistenceGraph:
         with self.driver.session() as session:
             session.run(query)
 
+        return
+
 
     def create_node(self, node_id):
         """
@@ -111,7 +113,7 @@ class PersistenceGraph:
         return node_id
 
 
-    def delete_db(self, verbose=True):
+    def delete_graph(self, verbose=True):
         """
         Creator : Sophie Caroni
         reviewed by :
@@ -127,6 +129,8 @@ class PersistenceGraph:
 
         if verbose:
             print(">> The graph was successfully deleted from Neo4j.")
+
+        return
 
 
     def display_communities(self, communities=None):
@@ -172,11 +176,111 @@ class PersistenceGraph:
         #     session.run(query)
 
         # No errors but no color
-        # with self.driver.session() as session:
-        #     for i, community in enumerate(communities):
-        #         query = f"MATCH (n) WHERE n.id IN {community} SET n:community_{i} RETURN count(n)"
-        #         session.run(query)
         with self.driver.session() as session:
             for i, community in enumerate(communities):
                 query = f"MATCH (n) WHERE n.name IN {community} SET n:community_{i} RETURN count(n)"
                 session.run(query)
+
+        return
+
+    def display_community(self, community_id, communities=None, delete_previous=True): # not sure about the parameters
+        """
+        Creator : Sophie Caroni
+        reviewed by :
+        :param community_id:
+        :type communities: Int
+        Display a selected community.
+        """
+
+        ## needed to be able to call create_node, right?
+        # Aura queries use an encrypted connection using the "neo4j+s" URI scheme
+        uri = "neo4j+s://0d2d7b8e.databases.neo4j.io:7687"
+        user = "neo4j"
+        password = "bta9fHGXHYBwD1fIKnLpJwwFUiZZxwtV5zouYfcgCwA"
+        app = PersistenceGraph(uri, user, password)
+
+        # Delete any previous graph currently existing on Neo4j
+        if delete_previous:
+            app.delete_graph(verbose=False)
+
+        # # Compute communities using Louvain algorithm if not already passed as argument
+        if not communities:
+            communities = vg.retrieveCommunities("./results/communities100000.txt")
+
+        # Convert the sets into lists, to make them suitable for Cypher
+        communities = [list(community) for community in communities]
+
+        # Pick the community to display
+        community = communities[community_id]
+
+        # Display community members
+        for node in community:
+            node = node.replace("'", "") # see if still needed
+            app.create_node(node)
+
+        # Close driver connection
+        app.close()
+
+        return
+
+
+    def display_hypernodes_communities(self, communities=None, delete_previous=True): # not sure about the parameters
+        """
+        Creator : Sophie Caroni
+        reviewed by :
+        :param community_id:
+        :type communities: Int
+        Display a selected community.
+        """
+
+        ## needed to be able to call create_node, right?
+        # Aura queries use an encrypted connection using the "neo4j+s" URI scheme
+        uri = "neo4j+s://0d2d7b8e.databases.neo4j.io:7687"
+        user = "neo4j"
+        password = "bta9fHGXHYBwD1fIKnLpJwwFUiZZxwtV5zouYfcgCwA"
+        app = PersistenceGraph(uri, user, password)
+
+        # Delete any previous graph currently existing on Neo4j
+        if delete_previous:
+            app.delete_graph(verbose=False)
+
+        # Compute communities using Louvain algorithm if not already passed as argument
+        if not communities:
+            communities = vg.retrieveCommunities("./results/communities100000.txt")
+
+        # Convert the sets into lists, to make them suitable for Cypher
+        communities = [list(community) for community in communities]
+
+        # Create and display community as hypernodes (naming them by their index)
+        # hypernodes = []
+        # for idx, community in enumerate(communities):
+        #     for node in community
+        #         node = node.replace("'", "") # see if still needed
+        #     hypernodes.append(i)
+        #     app.create_node([hypernode] for hypernode in hypernodes)
+        #
+        # # Close driver connection
+        # app.close()
+        #
+        # return
+
+    # Create and display community as hypernodes (naming them by their index and the number of nodes contained)
+        for idx, community in enumerate(communities):
+            # hypernode_name =
+            app.create_node(idx)
+
+            # # Add each node in the community as a child node of the hypernode
+            # for node in community:
+            #     node = node.replace("'", "")
+            #     app.create_node(node)
+            #     app.create_relationship("PART_OF", [node], [f"Community {idx}"])
+
+        # Close driver connection
+        app.close()
+
+
+###### TO REVIEW
+    # def create_relationship(self, source_name, target_name, label):
+    #     with self._driver.session() as session:
+    #         session.write_transaction(self._create_relationship, source_name, target_name, label)
+    #
