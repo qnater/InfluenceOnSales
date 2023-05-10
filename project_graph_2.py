@@ -30,7 +30,7 @@ if __name__ == '__main__':
 
     tag = "persistence"  # prod or test
 
-    if tag == "pre":
+    if tag == "louvain":
         graph = nx.Graph()
         graph.add_nodes_from(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"])
         graph.add_edges_from([("A", "C"), ("A", "E"), ("A", "D"), ("A", "F"),
@@ -93,9 +93,8 @@ if __name__ == '__main__':
 
         # create new graph in neo4j
         persistence_graph.populateDB(graph=graph)
-        persistence_graph.display_community(1, delete_previous=False)
-        persistence_graph.display_hypernodes_communities()
-
+        # persistence_graph.display_community(0)
+        # persistence_graph.display_hypernodes_communities(graph=graph)
 
 
     if tag == "prepro":
@@ -105,7 +104,25 @@ if __name__ == '__main__':
         graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
         graph = pg.refined_graph(graph)
         graph = pg.refined_perfect_graph_k(graph, 0, limit=limit)
-        xg.create_dataset(graph, limit)
+
+
+        #eg.analytics_exploration(graph, False)
+        vg.display_simple_graph(graph, False)
+
+        communities = ag.homemade_community_detection(graph, False)
+        vg.saveCommunities(communities, limit=limit)
+
+        for community in communities:
+            eg.exploreCommunity(graph, community, False)
+
+        popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
+
+        vg.display_communities_graph(graph, communities, popular_nodes, False)
+
+        vg.degree_distribution(graph, False)
+
+        ag.silhouetteIndex(graph, communities, display=False)
+
         # =============================================================================================================
 
 

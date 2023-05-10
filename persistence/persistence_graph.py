@@ -1,3 +1,5 @@
+import networkx as nx
+import numpy as np
 from neo4j import GraphDatabase
 import logging
 from neo4j.exceptions import ServiceUnavailable
@@ -131,6 +133,20 @@ class PersistenceGraph:
 
         return
 
+    def match_node(self, node_id):
+        """
+        Creator : Quentin Nater
+        reviewed by :
+        Creates a node in the API Database NEO4J online
+        :param node_id: ID of the new node to create
+        :type node_id: str
+        """
+
+        query = f"MATCH (:Node {{id: '{node_id}'}})"
+        with self.driver.session() as session:
+            session.run(query)
+
+        return node_id
 
     def display_communities(self, communities=None):
         """
@@ -149,6 +165,31 @@ class PersistenceGraph:
 
         # Convert the sets into lists, to make them suitable for Cypher
         communities = [list(community) for community in communities]
+
+        # No errors but no colors
+        # query = """
+        #         UNWIND $communities AS community
+        #         MATCH (n)
+        #         WHERE id(n) IN community
+        #         SET n.community = community
+        #     """
+        #
+        # with self.driver.session() as session:
+        #     session.run(query, communities=communities)
+
+        # Errors
+        # # Construct Cypher query to color nodes by community
+        # query = "MATCH (n) "
+        # for i, community in enumerate(communities):
+        #     # Generate a unique label for the community
+        #     label = f"community_{i}"
+        #     # Add a SET clause to color nodes in the community with the label
+        #     query += f"FOREACH (node IN [{','.join(str(n) for n in community)}] | SET node:{label}) "
+        # # Return the number of nodes colored by community
+        # query += "RETURN count(DISTINCT n)"
+        #
+        # with self.driver.session() as session:
+        #     session.run(query)
 
         # No errors but no color
         with self.driver.session() as session:
@@ -192,10 +233,12 @@ class PersistenceGraph:
         return
 
 
-    def display_hypernodes_communities(self, communities=None, delete_previous=True): # not sure about the parameters
+    def display_hypernodes_communities(self, graph, communities=None, delete_previous=True): # not sure about the parameters
         """
         Creator : Sophie Caroni
         reviewed by :
+        :param graph: networkX - Graph networkX of the amazon dataset
+        :type graph: networkX
         :param community_id:
         :type communities: Int
         Display a selected community.
@@ -214,11 +257,36 @@ class PersistenceGraph:
         # Convert the sets into lists, to make them suitable for Cypher
         communities = [list(community) for community in communities]
 
+        # Create and display community as hypernodes (naming them by their index)
+        # hypernodes = []
+        # for idx, community in enumerate(communities):
+        #     for node in community
+        #         node = node.replace("'", "") # see if still needed
+        #     hypernodes.append(i)
+        #     app.create_node([hypernode] for hypernode in hypernodes)
+        #
+        # # Close driver connection
+        # app.close()
+        #
+        # return
 
-    # Create and display community as hypernodes (naming them by their index and the number of nodes contained)
+    # Create and display community as hypernodes
         for idx, community in enumerate(communities):
             # hypernode_name =
             PersistenceGraph.create_node(self, idx)
+
+            # Name each hypernode them by their index and the number of nodes contained in the community
+            hypernode_id = str(idx) + f" ({len(community)})"
+            PersistenceGraph.create_node(self, hypernode_id)
+
+            # Retrieve neighbors of each community
+            for node in community:
+                node = node.replace("'", "")  # see if still needed
+                neighbors = np.unique(nx.neighbors(graph, node))
+                print(neighbors)
+
+
+            # Create edges between hypernodes
 
         # Close driver connection
         PersistenceGraph.close(self)
