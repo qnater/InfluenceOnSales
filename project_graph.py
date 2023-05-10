@@ -28,7 +28,12 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "prepro"  # prod or test
+    tag = "enhanced"  # prod or test
+
+    if tag == "enhanced":
+        graph = eg.construct_graph_by_file("./dataset/small_amazon.txt")
+        xg.enhanced_graph(graph, "small_amazon", "./dataset/test.txt")
+
 
     if tag == "pre":
         graph = nx.Graph()
@@ -45,56 +50,35 @@ if __name__ == '__main__':
                               ("K", "O"), ("K", "M"), ("K", "L"), ("K", "N"),
                               ("L", "N")])
 
-        graph = eg.construct_graph_by_file("./dataset/amazon_60.txt")
+        graph = eg.construct_graph_by_file("./dataset/dataset_off_amazon_small.txt")
+        graph = pg.refined_graph(graph)
 
-        print("\n\nLIBRARY======================================================================================")
-
-        current_time = datetime.datetime.now()
-        print("\n<< TEST LIBRARY (at", current_time, "), arigato <3")
-
-        communities = louvain_communities(graph)
-        ag.silhouetteIndex(graph, communities, display=False)
-        vg.saveCommunities(communities, 121)
-
-        current_time = datetime.datetime.now()
-        print("\n<< TEST LIBRARY (at", current_time, "), arigato <3")
-
+        #print("\n\nLIBRARY======================================================================================")
+        #current_time = datetime.datetime.now()
+        #print("\n<< TEST LIBRARY (at", current_time, "), arigato <3")
+        #communities = louvain_communities(graph)
+        #ag.silhouetteIndex(graph, communities, display=False)
+        #vg.saveCommunities(communities, 121)
+        #current_time = datetime.datetime.now()
+        #print("\n<< TEST LIBRARY (at", current_time, "), arigato <3")
 
         print("\n\nHOMEMADE======================================================================================")
-        communities = ag.amazon_community_detection(graph, tag="amazon_60", display=False)
+        communities = ag.amazon_community_detection(graph, tag="amazon_amazing", display=False)
         popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
         vg.display_communities_graph(graph, communities, popular_nodes, True)
 
 
-
-
-
     if tag == "persistence":
-        # graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
-        # graph = pg.refined_graph(graph)
-        # graph = pg.refined_perfect_graph_k(graph, 0, limit=200000)
+        # =NIGHTLY=====================================================================================================
 
-        # define graph (baby)
-        graph = nx.Graph()
-        graph.add_nodes_from(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"])
-        graph.add_edges_from([("A", "C"), ("A", "E"), ("A", "D"), ("A", "F"),
-                              ("B", "C"), ("B", "E"), ("B", "H"),
-                              ("C", "E"), ("C", "F"), ("C", "G"),
-                              ("D", "H"),
-                              ("E", "K"),
-                              ("F", "H"), ("F", "L"),
-                              ("G", "H"), ("G", "L"),
-                              ("I", "L"), ("I", "J"), ("I", "O"), ("I", "P"), ("I", "K"),
-                              ("J", "M"), ("J", "O"),
-                              ("K", "O"), ("K", "M"), ("K", "L"), ("K", "N"),
-                              ("L", "N")])
+        graph = eg.construct_graph_by_file("./dataset/dataset_off_amazon_small.txt")
+        graph = pg.refined_graph(graph)
+        communities = ag.amazon_community_detection(graph, tag="small70000", display=False)
 
-        persistence_graph = PersistenceGraph(uri="neo4j+s://0d2d7b8e.databases.neo4j.io:7687", user="neo4j",
-                                             password="bta9fHGXHYBwD1fIKnLpJwwFUiZZxwtV5zouYfcgCwA")  # Create an instance of the class
-        # create new graph in neo4j
-        persistence_graph.populateDB(graph=graph)
-        persistence_graph.display_communities(graph=graph)
-        persistence_graph.display_hypernodes_communities(graph=graph)
+        persistence_graph = PersistenceGraph()  # Create an instance of the class
+        persistence_graph.populateDB(graph=graph, communities=communities)
+        persistence_graph.display_hypernodes_communities(graph, communities=communities)
+        # =============================================================================================================
 
 
     if tag == "prepro":
