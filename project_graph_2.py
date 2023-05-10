@@ -28,7 +28,12 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "persistence"  # prod or test
+    tag = "enhanced"  # prod or test
+
+    if tag == "enhanced":
+        graph = eg.construct_graph_by_file("./dataset/small_amazon.txt")
+        xg.enhanced_graph(graph, "small_amazon", "./dataset/test.txt")
+
 
     if tag == "pre":
         graph = nx.Graph()
@@ -93,8 +98,8 @@ if __name__ == '__main__':
 
         # create new graph in neo4j
         persistence_graph.populateDB(graph=graph)
-        persistence_graph.display_community(1, delete_previous=False)
-        persistence_graph.display_hypernodes_communities()
+        #persistence_graph.display_community(1, delete_previous=False)
+        #persistence_graph.display_hypernodes_communities()
 
 
 
