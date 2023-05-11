@@ -70,8 +70,7 @@ class ExploreGraph:
                         if inc > 2:  # skip two initial blank spaces; only if there are more than 0 similars
                             similar_int = ExploreGraph.convert_asin_to_int(similar)  # casting
                             list_similars.append(similar_int)
-                            graph.add_edge(*(
-                            asin_int, similar_int))  # Add edges between the asin product and each of its similar ones
+                            graph.add_edge(*(asin_int, similar_int))  # Add edges between the asin product and each of its similar ones
 
                             if displayDetail:
                                 print("\t\t\t\t(" + str(asin_int) + ", " + str(similar_int) + ")")
@@ -94,10 +93,8 @@ class ExploreGraph:
             list_not_out_edged = set(
                 list_not_out_edged)  # casting ## should'nt this be remove redundancy instead of casting?
 
-            list_not_in_edged = set(list_asin) - set(
-                list_similars)  # find products with asin but not appearing as similars of others
-            list_extern = set(list_similars) - set(
-                list_asin)  # find products appearing as similars but not defined in this dataset file
+            list_not_in_edged = set(list_asin) - set(list_similars)  # find products with asin but not appearing as similars of others
+            list_extern = set(list_similars) - set(list_asin)  # find products appearing as similars but not defined in this dataset file
 
             total_isolated = list_not_in_edged & list_not_out_edged  # find disconnected nodes
 

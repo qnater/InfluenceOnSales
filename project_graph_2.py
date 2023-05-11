@@ -28,94 +28,54 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "louvain"  # prod or test
+    tag = "pre"  # prod or test
 
-    if tag == "louvain":
-        graph = nx.Graph()
-        graph.add_nodes_from(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"])
-        graph.add_edges_from([("A", "C"), ("A", "E"), ("A", "D"), ("A", "F"),
-                              ("B", "C"), ("B", "E"), ("B", "H"),
-                              ("C", "E"), ("C", "F"), ("C", "G"),
-                              ("D", "H"),
-                              ("E", "K"),
-                              ("F", "H"), ("F", "L"),
-                              ("G", "H"), ("G", "L"),
-                              ("I", "L"), ("I", "J"), ("I", "O"), ("I", "P"), ("I", "K"),
-                              ("J", "M"), ("J", "O"),
-                              ("K", "O"), ("K", "M"), ("K", "L"), ("K", "N"),
-                              ("L", "N")])
+    if tag == "enhanced":
+        graph = eg.construct_graph_by_file("dataset/test_dataset/small_amazon.txt")
+        xg.enhanced_graph(graph, "small_amazon", "./dataset/test.txt")
 
-        #graph = eg.construct_graph_by_file("./dataset/amazon_120.txt")
 
-        print("\n\nLIBRARY======================================================================================")
-
-        current_time = datetime.datetime.now()
-        print("\n<< TEST LIBRARY (at", current_time, "), arigato <3")
-
-        communities = louvain_communities(graph)
-        ag.silhouetteIndex(graph, communities, display=False)
-        vg.saveCommunities(communities, 121)
-
-        current_time = datetime.datetime.now()
-        print("\n<< TEST LIBRARY (at", current_time, "), arigato <3")
-
+    if tag == "pre":
+        graph = eg.construct_graph_by_file("./dataset/dataset_off_amazon_small.txt")
 
         print("\n\nHOMEMADE======================================================================================")
-        communities = ag.amazon_community_detection(graph, tag="amazon_120", display=False)
+        communities = ag.amazon_community_detection(graph, tag="amazon_test", run_silhouette=True, display=False)
         popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
-        vg.display_communities_graph(graph, communities, popular_nodes, True)
-
-
-
+        #vg.display_communities_graph(graph, communities, popular_nodes, False)
 
 
     if tag == "persistence":
-        graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+        # =NIGHTLY=====================================================================================================
+        graph = eg.construct_graph_by_file("./dataset/dataset_off_amazon_big.txt")
         graph = pg.refined_graph(graph)
-        graph = pg.refined_perfect_graph_k(graph, 0, limit=200000)
-        PersistenceGraph.populateDB(None, graph)
+        communities = ag.amazon_community_detection(graph, tag="persistence", run_silhouette=False, display=False)
+
+        persistence_graph = PersistenceGraph()  # Create an instance of the class
+        persistence_graph.populateDB(graph=graph, communities=communities)
+        persistence_graph.display_hypernodes_communities(graph, communities=communities)
+        # =============================================================================================================
 
 
     if tag == "prepro":
 
         # =NIGHTLY=====================================================================================================
-        limit = 70000
-        graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+        limit = 12000
+        graph = eg.construct_graph_by_file("dataset/origine_dataset/amazon_refined.txt")
         graph = pg.refined_graph(graph)
         graph = pg.refined_perfect_graph_k(graph, 0, limit=limit)
-
-
-
-        #eg.analytics_exploration(graph, False)
-        vg.display_simple_graph(graph, False)
-
-        #communities = ag.homemade_community_detection(graph, False)
-        communities = ag.community_library_detection(graph, "louvain")
-        vg.saveCommunities(communities, limit=limit)
-
-        for community in communities:
-            eg.exploreCommunity(graph, community, False)
-
-        popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
-
-        vg.display_communities_graph(graph, communities, popular_nodes, False)
-
-        vg.degree_distribution(graph, False)
-
-        ag.silhouetteIndex(graph, communities, display=False)
-
+        xg.create_dataset(graph, limit)
         # =============================================================================================================
 
 
     if tag == "test":
-        graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+        graph = eg.construct_graph_by_file("dataset/origine_dataset/amazon_refined.txt")
         ag.community_library_detection()
 
     if tag == "explore":
 
         s = "big"  # ? small/big
         if s == "big":
-            graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+            graph = eg.construct_graph_by_file("dataset/origine_dataset/amazon_refined.txt")
             vg.display_simple_graph(graph, False)
             pg.remove_nodes_by_degree(graph, 5)
             graph = pg.refined_graph(graph)
@@ -160,14 +120,14 @@ if __name__ == '__main__':
 
 
     elif tag == "analyse":
-        graph = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+        graph = eg.construct_graph_by_file("dataset/origine_dataset/amazon_refined.txt")
         vg.display_simple_graph(graph, False)
         pg.remove_nodes_by_degree(graph, 4)
         ag.community_library_detection(graph, "louvain")
         # ag.centrality_betweenness_library(graph)
 
     elif tag == "staging":
-        graph = eg.construct_graph_by_file("./dataset/amazon-meta.txt")
+        graph = eg.construct_graph_by_file("dataset/origine_dataset/amazon-meta.txt")
         graph = pg.refined_graph(graph)
         xg.create_dataset(graph)
 
@@ -196,7 +156,7 @@ if __name__ == '__main__':
                                ("5", "8"), ("5", "6"),
                                ("6", "7"), ("6", "8")])
 
-        graph3 = eg.construct_graph_by_file("./dataset/amazon_refined.txt")
+        graph3 = eg.construct_graph_by_file("dataset/origine_dataset/amazon_refined.txt")
         pg.remove_nodes_by_degree(graph3, 5)
 
         # vg.display_simple_graph(graph2, display=False)

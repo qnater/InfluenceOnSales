@@ -1,5 +1,7 @@
+import re
+
 import networkx as nx
-from explore.exploration_graph import ExploreGraph as eg
+from explore.exploration_graph import ExploreGraph as eg, ExploreGraph
 import csv
 
 
@@ -14,7 +16,7 @@ class ExportGraph:
     #
     # MATCH p = () - [:SIMILAR_TO]->() RETURN p LIMIT 25;
 
-    def create_dataset(graph):
+    def create_dataset(graph, name):
         """
         Creator : Sophie Caroni
         reviewed by :
@@ -27,7 +29,7 @@ class ExportGraph:
         print(">> You have called the export of your graph, please wait :)")
 
         # Create new .txt file
-        with open("./dataset/amazon_refined.txt", "w", encoding="utf-8") as file:
+        with open("./dataset/"+str(name)+".txt", "w", encoding="utf-8") as file:
 
             # Retrieve ASIN from node
             asin_lst = graph.nodes()
@@ -99,4 +101,60 @@ class ExportGraph:
                     writer.writerow([current_asin, *similar_asins])
 
         return
+
+
+    def enhanced_graph(graph, dataset_name, enhanced_dataset):
+        """
+        Creator : Sophie Caroni
+        reviewed by :
+        Create a .csv file of the txt amazon_refined dataset
+        :param input_file: file of the amazon_refined dataset
+        :type input_file: .txt
+        :return: -
+        """
+
+        print(">> You have called the enhancement of your graph, please wait :)")
+
+        # initialization of the variables
+        i, asin_int = 0,0
+        list_asin, list_similars = [], []
+
+        # read every information of the file (dataset)
+        with open(enhanced_dataset, "r", encoding='utf-8') as f:
+            for line in f:
+
+                i += 1  # inc break
+
+                # read nodes ===============================================
+                match = re.search(r'ASIN:\s*(\w+)', line)  # each ASIN
+                if match:
+                    asin = match.group(1)  # Take the first element matched
+
+                    # add a node to the graph for the ASIN value (INT)
+                    asin_int = ExploreGraph.convert_asin_to_int(asin)
+                    graph.add_node(asin_int)
+                    list_asin.append(asin_int)
+
+                # read edges ===============================================
+                match = re.search(r'similar:\s*(\w+)', line)  # each similar
+                if match:
+                    similars = line.split(sep="  ")  # Create a list of each one of the similars as an element
+                    inc = 0
+
+                    for similar in similars:
+                        inc += 1
+
+                        if inc > 2:  # skip two initial blank spaces; only if there are more than 0 similars
+                            similar_int = ExploreGraph.convert_asin_to_int(similar)  # casting
+                            list_similars.append(similar_int)
+                            graph.add_edge(*(asin_int, similar_int))  # Add edges between the asin product and each of its similar ones
+
+        nNodes, nEdges = graph.number_of_nodes(), graph.number_of_edges()
+        print("\t\tThe graph has been successfully constructed! (nodes:" + str(nNodes) + ", edges:" + str(
+            nEdges) + ")")
+
+        ExportGraph.create_dataset(graph, str(dataset_name) + "_enhanced")
+
+        return graph
+
 
