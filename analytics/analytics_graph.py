@@ -902,7 +902,7 @@ class AnalyticsGraph:
                     if display:
                         print("\t\t\t\t\t\tnode : ", node)
                         print("\t\t\t\t\t\tnbr_com / number_of_edges: ", numberCommunities, " / ", number_of_edges)
-                        print("\t\t\t\t\t\tgain :   (number_of_edges / size_of_graph - (degreeStrength[nbr_com] * degree) / (2 * pow(size_of_graph, 2))) = (", number_of_edges, " / ", size_of_graph, " - (", degreeStrength[numberCommunities], " * ", degree, ") / (2 * , ", size_of_graph, "^2))) = ", gain)
+                        print("\t\t\t\t\t\tgain :   (number_of_edges / size_of_graph - (out_degree * degreeStrengthIn[numberCommunities] + in_degree * degreeStrengthOut[numberCommunities]) / size_power) = (", number_of_edges, " / ", size_of_graph, " - ( ", out_degree, " * ", degreeStrengthIn[numberCommunities], " + ", in_degree, " * ", degreeStrengthOut[numberCommunities], ") / ", size_power, ")")
                         print("\t\t\t\t\t\tdeltaQ : ", Q, "\n")
 
                     if Q > bestModality:
