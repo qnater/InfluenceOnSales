@@ -28,7 +28,7 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "persistence"  # prod or test
+    tag = "pre"  # prod or test
 
     if tag == "enhanced":
         graph = eg.construct_graph_by_file("dataset/test_dataset/small_amazon.txt")
@@ -40,7 +40,7 @@ if __name__ == '__main__':
         print("\n\nHOMEMADE======================================================================================")
         communities = ag.amazon_community_detection(graph, tag="amazon_test", run_silhouette=True, display=False)
         popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
-        vg.display_communities_graph(graph, communities, popular_nodes, True)
+        #vg.display_communities_graph(graph, communities, popular_nodes, True)
 
 
     if tag == "persistence":
