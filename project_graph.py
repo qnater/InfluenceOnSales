@@ -42,7 +42,7 @@ if __name__ == '__main__':
     if tag == "pre":
         graph = eg.construct_graph_by_file("./dataset/dataset_off_amazon_big.txt")
         print("\n\nHOMEMADE======================================================================================")
-        communities = ag.amazon_community_detection(graph, tag="amazon_test", run_silhouette=True, display=False)
+        communities = ag.amazon_community_detection(graph, tag="amazon_test", run_silhouette=False, display=False)
         popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
         #vg.display_communities_graph(graph, communities, popular_nodes, True)
 
