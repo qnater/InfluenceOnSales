@@ -841,7 +841,7 @@ class AnalyticsGraph:
         VisualizationGraph.saveCommunities(best_communities, tag)
         # ==ANALYTICS===================================================================================================
         if run_silhouette:
-            AnalyticsGraph.silhouetteIndex(graph, best_communities, display=False)
+            AnalyticsGraph.newsilhouetteIndex(graph, best_communities, display=False)
         # ==============================================================================================================
 
         current_time = datetime.datetime.now()
