@@ -21,6 +21,10 @@ if __name__ == '__main__':
     print("========================INFLUENCE=OF=POPULARITY=ON=SALES===UNI-FR========================")
     print("=========================================================================================\n")
 
+    # TO DO : Accuracy value metric + Silhouette Index performant
+    # TO DO : Review and comment (TEST) + Scenario of all project
+    # TO DO : Add Emmanuel dataset + merge with current perfect dataset + test new performance
+
     if os.name == "nt":
         mpl.use('TkAgg')  # without it, cannot run my plots (maybe personal)
     elif os.name == "posix":
