@@ -28,7 +28,7 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "pre"  # prod or test
+    tag = "persistence"  # prod or test
 
     if tag == "enhanced":
         graph = eg.construct_graph_by_file("dataset/test_dataset/small_amazon.txt")
@@ -45,12 +45,13 @@ if __name__ == '__main__':
 
     if tag == "persistence":
         # =NIGHTLY=====================================================================================================
+        # graph = eg.construct_graph_by_file("./dataset/dataset_off_amazon_big.txt")
         graph = eg.construct_graph_by_file("./dataset/dataset_off_amazon_big.txt")
         graph = pg.refined_graph(graph)
         communities = ag.amazon_community_detection(graph, tag="persistence", run_silhouette=False, display=False)
 
-        persistence_graph = PersistenceGraph()  # Create an instance of the class
-        persistence_graph.populateDB(graph=graph, communities=communities)
+        persistence_graph = PersistenceGraph() # Create an instance of the class
+        persistence_graph.populate_database(graph=graph, communities=communities, delete_previous=True)
         persistence_graph.display_hypernodes_communities(graph, communities=communities)
         # =============================================================================================================
 
