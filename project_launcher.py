@@ -74,7 +74,7 @@ if __name__ == '__main__':
         #pg.display_efficiency_of_graph(graph=graph_sampled_enhanced)
 
         # COMMUNITY DETECTION SIMPLE==================================================================================
-        communities_homemade_big_simple = ag.homemade_community_detection(graph=graph_sampled_big, display=False)
+        #communities_homemade_big_simple = ag.homemade_community_detection(graph=graph_sampled_big, display=False)
         # communities_homemade_big_simple = ag.homemade_community_detection(graph=graph_sampled_enhanced, display=False)
 
         # COMMUNITY DETECTION HOMEMADE==================================================================================
