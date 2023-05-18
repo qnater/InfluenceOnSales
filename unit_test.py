@@ -27,7 +27,7 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    eg = ExploreGraph()
+    eg, pg = ExploreGraph(), PreProcessGraph()
     print(">>Display all information and steps of all our project ********************************************\n\n")
 
     # CONSTRUCTION OF THE GRAPH ====================================================================================
