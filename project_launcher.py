@@ -27,7 +27,7 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    eg = ExploreGraph()
+    eg, pg = ExploreGraph(), PreProcessGraph()
 
     # It exists 5 scenario to test the project:
     # scenario = 1 - Display all information and steps of the pre-processing of the dataset
