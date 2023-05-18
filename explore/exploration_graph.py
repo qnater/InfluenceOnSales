@@ -22,10 +22,8 @@ class ExploreGraph:
         if any(char.isalpha() for char in asin):  # isalpha() returns True if it detects letters
             for char in asin:
                 if char.isalpha():
-
                     # Replace each letter by the number of its alphabet's position, adding 10 to ensure unique result
                     asin = asin.replace(char, str(alphabet.index(char.upper()) + 10))
-
         return int(asin)
 
     def construct_graph_by_file(self, file_name, limit=15010574, display=True, display_detail=False):
@@ -75,7 +73,6 @@ class ExploreGraph:
                         inc += 1
 
                         if inc > 2:  # skip two initial blank spaces; only if there are more than 0 similars
-
                             similar_int = ExploreGraph.convert_asin_to_int(self, similar)  # casting
                             list_similars.append(similar_int)
 

@@ -1,3 +1,4 @@
+import datetime
 import re
 
 import networkx as nx
@@ -7,26 +8,20 @@ import csv
 
 class ExportGraph:
 
-    # MATCH(n) DETACH DELETE n
-    #
-    # LOAD CSV WITH HEADERS FROM "https://naterscreations.com/d/baby.csv"
-    # AS row MERGE(from:Product {ASIN: row.ASIN})
-    # MERGE(to: Product {ASIN: row.Similar})
-    # MERGE(from)-[: SIMILAR_TO]->(to)
-    #
-    # MATCH p = () - [:SIMILAR_TO]->() RETURN p LIMIT 25;
-
     def create_dataset(graph, name):
         """
         Creator : Sophie Caroni
-        reviewed by :
+        reviewed by : Quentin Nater
         Create a .txt dataset with the for our analysis meaningful information only
         :param graph: networkX - Graph networkX of the amazon dataset
         :type graph: networkX
+        :param name: string - name inside the dataset file
+        :type name: string
         :return: -
         """
 
-        print(">> You have called the export of your graph, please wait :)")
+        current_time = datetime.datetime.now()
+        print(">> You have called the export of your graph, (at", current_time, "), please wait...")
 
         # Create new .txt file
         with open("./dataset/"+str(name)+".txt", "w", encoding="utf-8") as file:
@@ -55,68 +50,30 @@ class ExportGraph:
                     file.write('\n')
                 file.write('\n')
 
-        print(">> You can find your refined graph in this directory './dataset/', please enjoy ;)")
+        current_time = datetime.datetime.now()
+        print(">> Job done, the refined graph in this directory './dataset/', (at", current_time, "), thank you...")
 
         return
 
-    def txt_to_csv(input_file, output_file):
+    def enrich_graph(graph, dataset_name, enhanced_dataset):
         """
         Creator : Sophie Caroni
-        reviewed by :
-        Create a .csv file of the txt amazon_refined dataset
-        :param input_file: file of the amazon_refined dataset
-        :type input_file: .txt
+        reviewed by : Quentin Nater
+        Merge the graph with enriched graph
+        :param graph: networkX - Graph networkX of the amazon dataset
+        :type graph: networkX
+        :param dataset_name: string - Name of the future exported file
+        :type dataset_name: string
+        :param enhanced_dataset: string - Name of the enhanced dataset made to improve the current graph
+        :type enhanced_dataset: string
         :return: -
         """
 
-        print(">> You have called the conversion in csv of your dataset, please wait :)")
-
-        # Open the input txt file for reading and the output csv file for writing
-        with open(input_file, 'r') as txt_file, open(output_file, 'w', newline='') as csv_file:
-
-            # Create a csv writer object and write the header row to the csv file
-            writer = csv.writer(csv_file)
-            writer.writerow(['ASIN', 'SIMILAR_TO'])
-
-            # Initialize a variable to keep track of the current ASIN being processed
-            current_asin = None
-
-            # Loop through each line in the input txt file
-            for line in txt_file:
-
-                # Strip any leading or trailing whitespace from the line
-                line = line.strip()
-
-                # If the line starts with 'ASIN:', extract the ASIN and set it as the current ASIN
-                if line.startswith('ASIN:'):
-                    current_asin = line.split()[1]
-
-                # If the line starts with 'similar:', extract the similar ASINs and write them to the csv file
-                elif line.startswith('similar:'):
-
-                    # Extract the similar ASINs (by skipping the two first elements, i.e. "similar:" and nr of similars)
-                    similar_asins = line.split()[2:]
-
-                    # Write the current ASIN and the list of similar ASINs to the csv file
-                    writer.writerow([current_asin, *similar_asins])
-
-        return
-
-
-    def enhanced_graph(graph, dataset_name, enhanced_dataset):
-        """
-        Creator : Sophie Caroni
-        reviewed by :
-        Create a .csv file of the txt amazon_refined dataset
-        :param input_file: file of the amazon_refined dataset
-        :type input_file: .txt
-        :return: -
-        """
-
-        print(">> You have called the enhancement of your graph, please wait :)")
+        current_time = datetime.datetime.now()
+        print(">> You have called the enhancement of your graph, (at", current_time, "), please wait...")
 
         # initialization of the variables
-        i, asin_int = 0,0
+        i, asin_int = 0, 0
         list_asin, list_similars = [], []
 
         # read every information of the file (dataset)
@@ -150,10 +107,12 @@ class ExportGraph:
                             graph.add_edge(*(asin_int, similar_int))  # Add edges between the asin product and each of its similar ones
 
         nNodes, nEdges = graph.number_of_nodes(), graph.number_of_edges()
-        print("\t\tThe graph has been successfully constructed! (nodes:" + str(nNodes) + ", edges:" + str(
-            nEdges) + ")")
+        print("\t\tThe graph has been successfully constructed! (nodes:" + str(nNodes) + ", edges:" + str(nEdges) + ")")
 
         ExportGraph.create_dataset(graph, str(dataset_name) + "_enhanced")
+
+        current_time = datetime.datetime.now()
+        print(">> The enhancement of your graph has been made, (at", current_time, "), thank you...")
 
         return graph
 

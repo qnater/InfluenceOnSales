@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
         print("\nConstruction of the graph_original and display of its efficiency :")
         # CONSTRUCTION OF THE GRAPH ====================================================================================
-        graph_original = eg.construct_graph_by_file(file_name="./dataset/origine_dataset/amazon-meta.txt")
+        graph_original = eg.construct_graph_by_file(file_name="dataset/origin_dataset/amazon-meta.txt")
         # QUALITY OF THE GRAPH =========================================================================================
         pg.display_efficiency_of_graph(graph=graph_original)
 
@@ -134,7 +134,7 @@ if __name__ == '__main__':
         print(">>Display all information and steps of all our project ********************************************\n\n")
 
         # CONSTRUCTION OF THE GRAPH ====================================================================================
-        graph_sampled_small = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_big.txt")
+        graph_sampled_small = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_test.txt")
 
         # QUALITY OF THE GRAPH =========================================================================================
         pg.display_efficiency_of_graph(graph=graph_sampled_small)
