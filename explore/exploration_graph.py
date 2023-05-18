@@ -117,19 +117,21 @@ class ExploreGraph:
 
         return graph
 
-    def analytics_exploration(self, graph, display=False):
+    def analytics_exploration(self, graph, display=False, plot=False):
         """
         Creator : Emmanuel Cazzato
         reviewed by : Quentin Nater & Sophie Caroni
         Get all needed analytics for exploration
         :param graph: Graph networkX of the dataset
         :type graph: networkX
-        :param display: Display or not the plots and prints
+        :param display: Display or not the prints
         :type display: Boolean
+        :param plot: Display or not the plots
+        :type plot: Boolean
         """
-        print(">> You have exploration analytic of your graph, please wait :)")
+        print("\n>> You have exploration analytic of your graph, please wait :)")
 
-        if display:
+        if plot:
             ExploreGraph.simple_plotting(self, graph)
 
         first_node = list(graph.nodes())[0]
@@ -139,7 +141,7 @@ class ExploreGraph:
         print("\t\t\t (EXP) : Size of path_dfs ", len(path_dfs))
         print("\t\t\t (EXP) : Number of nodes:", graph.number_of_nodes())
 
-        if display:
+        if plot:
             ExploreGraph.draw_path_graph(self, graph, path_dfs)
 
         start_node = list(graph.nodes())[0]
@@ -150,7 +152,7 @@ class ExploreGraph:
             print("\t\t\t (EXP) : All nodes visited nodes (path_star) : ", path_star)
             print("\t\t\t (EXP) : Size of path_star ", len(path_star))
             print("\t\t\t (EXP) : path_star found:", " -> ", path_star)
-            if display:
+            if plot:
                 ExploreGraph.draw_path_graph(self, graph, path_star)
         else:
             print("\t\t\t (EXP) : Path not found")

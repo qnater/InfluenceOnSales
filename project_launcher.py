@@ -35,7 +35,7 @@ if __name__ == '__main__':
     # scenario = 3 - Display all information and steps of the visualization of our graph
     # scenario = 4 - Display all information and steps of the exploration of our graph
     # scenario = 5 - Display all information and steps of all our project
-    scenario = 5
+    scenario = 4
 
     if scenario == 1:
         print(">>Display all information and steps of the pre-processing of the dataset **************************\n\n")
@@ -124,17 +124,20 @@ if __name__ == '__main__':
         print(">>Display all information and steps of the exploration of our graph *******************************\n\n")
 
         # CONSTRUCTION OF THE SMALLEST GRAPH SAMPLE ====================================================================
-        graph_sampled_small = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_test.txt")
+        graph_sampled_small = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_big.txt")
+
+        # DEEP ANALYZE OF ALL GRAPH ====================================================================================
+        ag.deep_analyze(graph=graph_sampled_small, listOfCommands=["degree_distribution", "clustering_coefficient"], allChecked=False)
 
         # EXPLORATION OF THE GRAPH =====================================================================================
-        eg.analytics_exploration(graph=graph_sampled_small, display=True)
+        eg.analytics_exploration(graph=graph_sampled_small, display=True, plot=False)
 
 
     else:
         print(">>Display all information and steps of all our project ********************************************\n\n")
 
         # CONSTRUCTION OF THE GRAPH ====================================================================================
-        graph_sampled_small = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_test.txt")
+        graph_sampled_small = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_big.txt")
 
         # QUALITY OF THE GRAPH =========================================================================================
         pg.display_efficiency_of_graph(graph=graph_sampled_small)
