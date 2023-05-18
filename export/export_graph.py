@@ -21,10 +21,10 @@ class ExportGraph:
         """
 
         current_time = datetime.datetime.now()
-        print(">> You have called the export of your graph, (at", current_time, "), please wait...")
+        print("\n>> You have called the export of your graph, (at", current_time, "), please wait...")
 
         # Create new .txt file
-        with open("./dataset/"+str(name)+".txt", "w", encoding="utf-8") as file:
+        with open("./dataset/" + str(name) + ".txt", "w", encoding="utf-8") as file:
 
             # Retrieve ASIN from node
             asin_lst = graph.nodes()
@@ -38,7 +38,8 @@ class ExportGraph:
 
                 # Define the entries of the file for ASIN having similars
                 if len(sim_lst) != 0:
-                    entries = ["ASIN: "+str(asin), "  similar: " + str(len(sim_lst)) + "  " + "  ".join(str(i) for i in sim_lst)]
+                    entries = ["ASIN: " + str(asin),
+                               "  similar: " + str(len(sim_lst)) + "  " + "  ".join(str(i) for i in sim_lst)]
 
                 # Define the entries of the file for ASIN not having similars
                 elif len(sim_lst) == 0:
