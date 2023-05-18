@@ -27,7 +27,7 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    eg, pg = ExploreGraph(), PreProcessGraph()
+    eg, pg, ag = ExploreGraph(), PreProcessGraph(), AnalyticsGraph()
 
     # It exists 5 scenario to test the project:
     # scenario = 1 - Display all information and steps of the pre-processing of the dataset
@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
         print("\nConstruction of the graph_original and display of its efficiency :")
         # CONSTRUCTION OF THE GRAPH ====================================================================================
-        graph_original = eg.construct_graph_by_file(file_name="./dataset/origine_dataset/amazon-meta.txt")
+        graph_original = eg.construct_graph_by_file(file_name="dataset/origin_dataset/amazon-meta.txt")
         # QUALITY OF THE GRAPH =========================================================================================
         pg.display_efficiency_of_graph(graph=graph_original)
 
@@ -79,9 +79,9 @@ if __name__ == '__main__':
         communities_library = ag.community_library_detection(graph=graph_sampled, library="louvain", display=False)
 
         # POPULAR ======================================================================================================
-        popular_nodes_simple = ag.highest_betweenness_centrality_scores(graph=graph_sampled, communities=communities_simple, display=False)
-        popular_nodes_homemade = ag.highest_betweenness_centrality_scores(graph=graph_sampled, communities=communities_homemade, display=False)
-        popular_nodes_library = ag.highest_betweenness_centrality_scores(graph=graph_sampled, communities=communities_library, display=False)
+        popular_nodes_simple = ag.highest_betweenness_centralities(graph=graph_sampled, communities=communities_simple, display=False)
+        popular_nodes_homemade = ag.highest_betweenness_centralities(graph=graph_sampled, communities=communities_homemade, display=False)
+        popular_nodes_library = ag.highest_betweenness_centralities(graph=graph_sampled, communities=communities_library, display=False)
 
         # QUALITY=====ACCURACY=PRECISION=RECALL=JACCARD=================================================================
         acc_simple, pre_simple, rec_simple, jac_simple = ag.accuracy_precision_recall_jaccard(communities_library=communities_library, community_homemade=communities_simple, display=False)
@@ -104,7 +104,7 @@ if __name__ == '__main__':
         communities = ag.amazon_community_detection(graph=graph_sampled_small, tag="visualization_scenario", run_silhouette=False, display=False)
 
         # POPULAR ======================================================================================================
-        popular_nodes = ag.highest_betweenness_centrality_scores(graph=graph_sampled_small, communities=communities, display=False)
+        popular_nodes = ag.highest_betweenness_centralities(graph=graph_sampled_small, communities=communities, display=False)
 
         # DISPLAY ALL COMMUNITY IN DIFFERENT COLOR WITH POPULAR NODE (CENTROID) IN GOLD COLOR ==========================
         vg.display_communities_graph(graph=graph_sampled_small, communities=communities, populars=popular_nodes, display=True, tag="visualization_scenario_plot")
@@ -126,6 +126,9 @@ if __name__ == '__main__':
         # CONSTRUCTION OF THE SMALLEST GRAPH SAMPLE ====================================================================
         graph_sampled_small = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_test.txt")
 
+        # DEEP ANALYZE OF ALL GRAPH ====================================================================================
+        ag.deep_analyze(graph=graph_sampled_small, commands="*", all_checked=True)
+
         # EXPLORATION OF THE GRAPH =====================================================================================
         eg.analytics_exploration(graph=graph_sampled_small, display=True)
 
@@ -146,7 +149,7 @@ if __name__ == '__main__':
         communities_library = ag.community_library_detection(graph=graph_sampled_small, library="louvain", display=False)
 
         # POPULAR ======================================================================================================
-        popular_nodes = ag.highest_betweenness_centrality_scores(graph=graph_sampled_small, communities=communities, display=False)
+        popular_nodes = ag.highest_betweenness_centralities(graph=graph_sampled_small, communities=communities, display=False)
 
         # QUALITY=====ACCURACY=PRECISION=RECALL=JACCARD=================================================================
         acc, pre, rec, jac = ag.accuracy_precision_recall_jaccard(communities_library=communities_library, community_homemade=communities, display=False)

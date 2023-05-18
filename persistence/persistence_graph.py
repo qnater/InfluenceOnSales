@@ -64,7 +64,7 @@ class PersistenceGraph:
 
         if not communities:
             #  Retrieve communities if not already passed as argument
-            communities = vg.retrieveCommunities("./results/communities100000.txt") ## to change!
+            communities = vg.retrieve_communities("./results/communities100000.txt") ## to change!
 
         for idx, community in enumerate(communities):
             for node in community:
@@ -255,7 +255,7 @@ class PersistenceGraph:
 
         if not communities:
             # Retrieve communities if not already passed as argument
-            communities = vg.retrieveCommunities("./results/communities100000.txt")
+            communities = vg.retrieve_communities("./results/communities100000.txt")
             print(communities)
 
         # Convert the sets into lists, to make them suitable for Cypher
@@ -283,7 +283,7 @@ class PersistenceGraph:
 
         # Retrieve communities if not already passed as argument
         if not communities:
-            communities = vg.retrieveCommunities("./results/communities100000.txt")
+            communities = vg.retrieve_communities("./results/communities100000.txt")
 
         # Convert the sets into lists, to make them suitable for Cypher
         communities = [list(community) for community in communities]
@@ -323,7 +323,7 @@ class PersistenceGraph:
 
         # Retrieve communities if not already passed as argument
         if not communities:
-            communities = vg.retrieveCommunities("./results/communities100000.txt")
+            communities = vg.retrieve_communities("./results/communities100000.txt")
             # communities = AnalyticsGraph.amazon_community_detection(graph, "test")
 
         # Convert the sets into lists, to make them suitable for Cypher

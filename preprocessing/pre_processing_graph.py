@@ -204,7 +204,7 @@ class PreProcessGraph:
         Generate an array of arrays of n nodes. Each node in each array has a specific degree
         :param graph: Graph networkX of the amazon dataset
         :type graph: networkX
-        :param n: int - Number of random node of each degree to keep
+        :param n: Number of random node of each degree to keep
         :type n: int
         :return: nodeDegree - array of arrays of n nodes. Each node in each array has a specific degree.
         """

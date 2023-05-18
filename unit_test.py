@@ -43,7 +43,7 @@ if __name__ == '__main__':
     communities_library = ag.community_library_detection(graph=graph_sampled_small, library="louvain", display=False)
 
     # POPULAR ======================================================================================================
-    popular_nodes = ag.highest_betweenness_centrality_scores(graph=graph_sampled_small, communities=communities, display=False)
+    popular_nodes = ag.highest_betweenness_centralities(graph=graph_sampled_small, communities=communities, display=False)
 
     # QUALITY=====ACCURACY=PRECISION=RECALL=JACCARD=================================================================
     acc, pre, rec, jac = ag.accuracy_precision_recall_jaccard(communities_library=communities_library, community_homemade=communities, display=False)

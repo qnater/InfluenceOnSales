@@ -165,7 +165,7 @@ class ExploreGraph:
         :param graph: Graph networkX of the dataset
         :type graph: networkX
         :param path: Path with all nodes
-        :type path: String[]
+        :type path: list
         :param tag: Part of the file name of the figure that will be saved
         :type tag: string
         """
@@ -219,7 +219,7 @@ class ExploreGraph:
         :param node: String - First node of the graph (current used)
         :type node: String
         :param visited: List of current the visited nodes
-        :type visited: String[]
+        :type visited: list
         """
         if node not in visited:
             visited.append(node)
@@ -238,7 +238,7 @@ class ExploreGraph:
         :param start: Starting point of the graph (node)
         :type start: String
         :param goal: Destination point of the graph (node)
-        :type goal: String[]
+        :type goal: list
         """
         frontier = [(0, start, [])]  # (priority, node, path)
         explored = set()
