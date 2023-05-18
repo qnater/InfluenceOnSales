@@ -28,7 +28,16 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    tag = "persistence"  # prod or test
+    tag = "acc"  # prod or test
+
+    if tag == "acc":
+        graph = eg.construct_graph_by_file("./dataset/dataset_off_amazon_middle.txt")
+        print("\n\nHOMEMADE======================================================================================")
+        communities_homemade = ag.amazon_community_detection(graph, tag="amazon_test", run_silhouette=True, display=False)
+        communities_library = louvain_communities(graph, seed=127)
+        accuracy, precision, recall, jaccard = ag.accuracy_precision_recall_jaccard(communities_library, communities_homemade, display=False)
+
+
 
     if tag == "enhanced":
         graph = eg.construct_graph_by_file("dataset/test_dataset/small_amazon.txt")
@@ -46,9 +55,9 @@ if __name__ == '__main__':
     if tag == "persistence":
         # =NIGHTLY=====================================================================================================
         # graph = eg.construct_graph_by_file("./dataset/dataset_off_amazon_big.txt")
-        graph = eg.construct_graph_by_file("./dataset/dataset_off_amazon_big.txt")
-        graph = pg.refined_graph(graph)
-        communities = ag.amazon_community_detection(graph, tag="persistence", run_silhouette=False, display=False)
+        #graph = eg.construct_graph_by_file("./dataset/dataset_off_amazon_big.txt")
+        #graph = pg.refined_graph(graph)
+        #communities = ag.amazon_community_detection(graph, tag="persistence", run_silhouette=False, display=False)
 
         persistence_graph = PersistenceGraph() # Create an instance of the class
         persistence_graph.populate_database(graph=graph, communities=communities, delete_previous=True)
@@ -70,7 +79,7 @@ if __name__ == '__main__':
 
     if tag == "test":
         graph = eg.construct_graph_by_file("dataset/origine_dataset/amazon_refined.txt")
-        ag.community_library_detection()
+
 
     if tag == "explore":
 
