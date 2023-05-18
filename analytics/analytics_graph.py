@@ -808,7 +808,6 @@ class AnalyticsGraph:
         :type sample_size: Integer or None
         :return: The score of the silhouette index
         """
-
         current_time = datetime.datetime.now()
         print("\n\t<< The Silhouette Index Score has been called (at", current_time, "), please wait...\n")
 
