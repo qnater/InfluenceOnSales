@@ -35,7 +35,7 @@ if __name__ == '__main__':
     # scenario = 3 - Display all information and steps of the visualization of our graph
     # scenario = 4 - Display all information and steps of the exploration of our graph
     # scenario = 5 - Display all information and steps of all our project
-    scenario = 4
+    scenario = 5
 
     if scenario == 1:
         print(">>Display all information and steps of the pre-processing of the dataset **************************\n\n")
@@ -136,8 +136,10 @@ if __name__ == '__main__':
     else:
         print(">>Display all information and steps of all our project ********************************************\n\n")
 
+        string_input = input("What size of dataset do you want (big (190'000), middle (120'000), small (90'000), test (10'000) : ")
+
         # CONSTRUCTION OF THE GRAPH ====================================================================================
-        graph_sampled_small = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_big.txt")
+        graph_sampled_small = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_"+string_input+".txt")
 
         # QUALITY OF THE GRAPH =========================================================================================
         pg.display_efficiency_of_graph(graph=graph_sampled_small)
