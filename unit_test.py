@@ -49,7 +49,7 @@ if __name__ == '__main__':
     acc, pre, rec, jac = ag.accuracy_precision_recall_jaccard(communities_library=communities_library, community_homemade=communities, display=False)
 
     # QUALITY=====SILHOUETTE========================================================================================
-    silhouette_homemade = ag.silhouette_score(graph=graph_sampled_small, community_detection=communities, metric="euclidean", sample_size=1000)
+    silhouette_homemade = ag.silhouette_score(graph=graph_sampled_small, community_detection=communities, metric="euclidean", sample_size=100)
 
     # EXPLORATION OF THE GRAPH =====================================================================================
     eg.analytics_exploration(graph=graph_sampled_small, display=False)

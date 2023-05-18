@@ -135,7 +135,7 @@ class ExploreGraph:
             ExploreGraph.simple_plotting(self, graph)
 
         first_node = list(graph.nodes())[0]
-        path_dfs = ExploreGraph.dfs(self, graph, first_node, [])
+        path_dfs = ExploreGraph.dfs_iterative(self, graph, first_node)
 
         print("\t\t\t (EXP) : All nodes visited nodes (path_dfs) : ", path_dfs)
         print("\t\t\t (EXP) : Size of path_dfs ", len(path_dfs))

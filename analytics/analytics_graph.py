@@ -457,7 +457,7 @@ class AnalyticsGraph:
         :return: list of the results
         """
         current_time = datetime.datetime.now()
-        print("\n>> You have called the highest betweeness centrality scores, (at", current_time, "), please wait.")
+        print("\n>> You have called the highest betweeness centrality scores, (at", current_time, "), please wait...")
 
         popular_nodes = []
         for community in communities:
@@ -542,6 +542,7 @@ class AnalyticsGraph:
 
         return degree_counts
 
+
     # =================================================================================================================
     # COMMUNITY DETECTION HOMEMADE
     # =================================================================================================================
@@ -561,68 +562,65 @@ class AnalyticsGraph:
         :return: Found communities
         """
         current_time = datetime.datetime.now()
-        print("\n<< You have run the homemade amazon community detection algorithm (at", current_time, ").")
+        print("\n<< You have run the homemade amazon community detection algorithm (at", current_time, "), arigato <3")
 
-        #=STAGE ONE====================================================================================================
+        # =STAGE ONE====================================================================================================
         communities = [{u} for u in graph.nodes()]
         modularity = 1 / pow(sum(dict(graph.degree()).values()), 2)
 
-        graph = graph.__class__()
-        graph.add_nodes_from(graph)
-        graph.add_weighted_edges_from(graph.edges(data="weight", default=1))
-        graph_size = graph.size()
+        myGraph = graph.__class__()
+        myGraph.add_nodes_from(graph)
+        myGraph.add_weighted_edges_from(graph.edges(data="weight", default=1))
 
-        # Perform the inner logic of the algorithm
-        communities, inner_partition, _ = AnalyticsGraph.inner_logic(self, graph, graph_size, communities, display=display)
-        still_better = True
+        graphSize = myGraph.size()
 
-        #=STAGE TWO====================================================================================================
-        # Continue until the modularity does not improve anymore
-        while still_better:
-            new_modularity = sum(dict(graph.degree()).values()) / 2
-            delta_q = new_modularity - modularity
-            if delta_q <= 0:
+        communities, inner_partition, stillBetter = AnalyticsGraph.inner_logic(self, myGraph, graphSize, communities,
+                                                                               display=display)
+        stillBetter = True
+
+        # ====STAGE TWO=================================================================================================
+        while stillBetter:
+            new_modularity = sum(dict(myGraph.degree()).values()) / 2
+            deltaQ = new_modularity - modularity
+            if deltaQ <= 0:
                 break
             modularity = new_modularity
 
             # =UPDATE WEIGHT===========================================================================
-            # Update weigth of the graph edges according to the current inner partition
-            updated_graph = graph.__class__()
-            dict_idx = {}
+            H = myGraph.__class__()
+            dicIndex = {}
             for i, part in enumerate(inner_partition):
                 nodes = set()
                 for node in part:
-                    dict_idx[node] = i
+                    dicIndex[node] = i
                     nodes.add(node)
-                updated_graph.add_node(i, nodes=nodes)
-            for node1, node2, wt in graph.edges(data=True):
+                H.add_node(i, nodes=nodes)
+            for node1, node2, wt in myGraph.edges(data=True):
                 wt = wt["weight"]
-                com1 = dict_idx[node1]
-                com2 = dict_idx[node2]
-                temp = updated_graph.get_edge_data(com1, com2, {"weight": 0})["weight"]
-                updated_graph.add_edge(com1, com2, weight=wt + temp)
-            graph = updated_graph
+                com1 = dicIndex[node1]
+                com2 = dicIndex[node2]
+                temp = H.get_edge_data(com1, com2, {"weight": 0})["weight"]
+                H.add_edge(com1, com2, weight=wt + temp)
+            myGraph = H
             # =============================================================================
-            communities, inner_partition, still_better = AnalyticsGraph.inner_logic(self, graph, graph_size,
-                                                                                    communities, display=display)
+            communities, inner_partition, stillBetter = AnalyticsGraph.inner_logic(self, myGraph, graphSize, communities,
+                                                                                   display=display)
 
         # ==DISPLAY=====================================================================================================
         best_communities = list(communities)
         print("\t\t(ANL) : Community detection (louvain homemade) result :")
         for x, c in enumerate(best_communities):
             print("\t\t\t(ANL) : ", x, ": ", c)
-
         # ==SAVE========================================================================================================
         VisualizationGraph.save_communities(self, best_communities, tag)
-
         # ==ANALYTICS===================================================================================================
         if run_silhouette:
-            AnalyticsGraph.silhouette_score(self, graph=graph, community_detection=best_communities,
-                                            metric="euclidean", sample_size=1000)
+            AnalyticsGraph.silhouette_score(self, graph=graph, community_detection=best_communities, metric="euclidean",
+                                            sample_size=1000)
         # ==============================================================================================================
 
         current_time = datetime.datetime.now()
-        print("<< The homemade amazon community detection algorithm has finished (at", current_time, ").\n")
+        print("<< The homemade amazon community detection algorithm has finished (at", current_time, "), arigato <3\n")
         return best_communities
 
     def inner_logic(self, graph, size_of_graph, communities, display=True):
@@ -639,17 +637,18 @@ class AnalyticsGraph:
         :param display: Display the details or not
         :type display: boolean
         """
-        #===STAGE THREE================================================================================================
+        # ===STAGE THREE================================================================================================
         communityNodes, newCommunity = {}, []
+        is_directed = graph.is_directed()
 
         # *** INITIALIZATION AND THE ALGO AND LIST *****************************
         # initialization of the community with each node as community
-        still_better     = False
-        operations      = 1
-        pushNodeList    = list(graph.nodes)
-        in_degrees      = dict(graph.in_degree(weight="weight"))
-        out_degrees     = dict(graph.out_degree(weight="weight"))
-        degreeStrengthIn  = list(in_degrees.values())
+        stillBetter = False
+        operations = 1
+        pushNodeList = list(graph.nodes)
+        in_degrees = dict(graph.in_degree(weight="weight"))
+        out_degrees = dict(graph.out_degree(weight="weight"))
+        degreeStrengthIn = list(in_degrees.values())
         degreeStrengthOut = list(out_degrees.values())
 
         weightStrength = {}
@@ -682,19 +681,24 @@ class AnalyticsGraph:
                 degreeStrengthOut[bestCommunity] -= out_degree
 
                 size_power = size_of_graph ** 2
-                remove_cost = (-weightCommunity[bestCommunity] / size_of_graph
-                               + (out_degree * degreeStrengthIn[bestCommunity]
-                                  + in_degree * degreeStrengthOut[bestCommunity])
-                               / size_power)
+                remove_cost = (-weightCommunity[bestCommunity] / size_of_graph + (
+                            out_degree * degreeStrengthIn[bestCommunity] + in_degree * degreeStrengthOut[
+                        bestCommunity]) / size_power)
 
                 for numberCommunities, number_of_edges in weightCommunity.items():
-                    gain = (number_of_edges / size_of_graph - (out_degree * degreeStrengthIn[numberCommunities] + in_degree * degreeStrengthOut[numberCommunities]) / size_power)
+                    gain = (number_of_edges / size_of_graph - (
+                                out_degree * degreeStrengthIn[numberCommunities] + in_degree * degreeStrengthOut[
+                            numberCommunities]) / size_power)
                     Q = remove_cost + gain
 
                     if display:
                         print("\t\t\t\t\t\tnode : ", node)
                         print("\t\t\t\t\t\tnbr_com / number_of_edges: ", numberCommunities, " / ", number_of_edges)
-                        print("\t\t\t\t\t\tgain :   (number_of_edges / size_of_graph - (out_degree * degreeStrengthIn[numberCommunities] + in_degree * degreeStrengthOut[numberCommunities]) / size_power) = (", number_of_edges, " / ", size_of_graph, " - ( ", out_degree, " * ", degreeStrengthIn[numberCommunities], " + ", in_degree, " * ", degreeStrengthOut[numberCommunities], ") / ", size_power, ")")
+                        print(
+                            "\t\t\t\t\t\tgain :   (number_of_edges / size_of_graph - (out_degree * degreeStrengthIn[numberCommunities] + in_degree * degreeStrengthOut[numberCommunities]) / size_power) = (",
+                            number_of_edges, " / ", size_of_graph, " - ( ", out_degree, " * ",
+                            degreeStrengthIn[numberCommunities], " + ", in_degree, " * ",
+                            degreeStrengthOut[numberCommunities], ") / ", size_power, ")")
                         print("\t\t\t\t\t\tdeltaQ : ", Q, "\n")
 
                     if Q > bestModality:
@@ -720,7 +724,7 @@ class AnalyticsGraph:
                     communities[bestCommunity] |= community
                     newCommunity[bestCommunity].add(node)
 
-                    still_better = True
+                    stillBetter = True
                     operations = operations + 1
 
                     communityNodes[node] = bestCommunity
@@ -740,7 +744,7 @@ class AnalyticsGraph:
         newCommunity = newCommunitiesTMP
         communities = communitiesTMP
 
-        return communities, newCommunity, still_better
+        return communities, newCommunity, stillBetter
 
     # =================================================================================================================
     # QUALITY OF THE COMMUNITY DETECTION
@@ -878,6 +882,6 @@ class AnalyticsGraph:
         print("\t\t\t (ANA) : Silhouette index score:", silhouette, "\n")
 
         current_time = datetime.datetime.now()
-        print("\t<< The Silhouette Index Score has finished (at", current_time, ").\n")
+        print("\t<< The Silhouette Index Score has finished (at", current_time, "), arigato <3\n")
 
         return silhouette
