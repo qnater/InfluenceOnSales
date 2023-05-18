@@ -41,7 +41,7 @@ class AnalyticsGraph:
 
         return nodes
 
-    def community_library_detection(graph, library="Default"):
+    def community_library_detection(graph, library="Default", display=False):
         """
         Creator : Quentin Nater
         reviewed by : Sophie Caroni
@@ -50,10 +50,12 @@ class AnalyticsGraph:
         :type graph: networkX
         :param library: string - Library chosen (girvanNewman;louvain;modularity)
         :type graph: string
+        :param display: Boolean - Display or not the plots and prints
+        :type display: Boolean
         :return: Communities found by the chosen library
         """
         current_time = datetime.datetime.now()
-        print(">> You have called the community detection with ", library, " (at", current_time, ")")
+        print(">> You have called the community detection with the library ", library, " (at", current_time, ")")
 
         communities = []
 
@@ -71,11 +73,9 @@ class AnalyticsGraph:
         # Library: louvain_communities
         if library == "louvain":
             communities = louvain_communities(graph, seed=127)
-            for i, c in enumerate(communities):
-                print("(louvain) > community ", i, " : ", c)
-
-            modularity_score = modularity(graph, communities)
-            print("Modularity score:", modularity_score)
+            if display:
+                for i, c in enumerate(communities):
+                    print("\t\t\t(ANL) : ", i, ": ", c)
 
         # Library: greedy_modularity_communities
         if library == "modularity":
@@ -605,7 +605,7 @@ class AnalyticsGraph:
         VisualizationGraph.saveCommunities(best_communities, tag)
         # ==ANALYTICS===================================================================================================
         if run_silhouette:
-            AnalyticsGraph.silhouette_score(graph=graph, community_detection=best_communities, metric="euclidean", sample_size=1000)
+                AnalyticsGraph.silhouette_score(graph=graph, community_detection=best_communities, metric="euclidean", sample_size=1000)
         # ==============================================================================================================
 
         current_time = datetime.datetime.now()
