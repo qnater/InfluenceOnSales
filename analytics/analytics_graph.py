@@ -1,6 +1,5 @@
 import datetime
 import random
-
 import networkx as nx
 import numpy as np
 from networkx.algorithms.community import girvan_newman, louvain_communities, greedy_modularity_communities
@@ -8,26 +7,25 @@ from sklearn.metrics import silhouette_score
 from sklearn.metrics.cluster import normalized_mutual_info_score as NMI3
 from networkx.algorithms.community.quality import modularity
 from collections import defaultdict
-
 from visualization.visualization_graph import VisualizationGraph
 
 
 class AnalyticsGraph:
 
-    def centrality_betweenness_library(graph):
+    def centrality_betweenness_library(self, graph):
         """
         Creator : Quentin Nater
         reviewed by : Sophie Caroni
         Calculate the betweenness centrality of a graph using the networkX library
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
         :return: Each node with its betweenness centrality value (if above 0.0)
         """
         current_time = datetime.datetime.now()
         print(">> You have called the betweenness centrality library for your graph (at", current_time, ").")
 
-        nodes = nx.betweenness_centrality(
-            graph)  # Centrality dictionary: node as key and its betweenness centrality as value
+        # Create a centrality dictionary: nodes as keys and their betweenness centrality as values
+        nodes = nx.betweenness_centrality(graph)
 
         non_central_nodes = 0
         for node in nodes.keys():
@@ -41,60 +39,58 @@ class AnalyticsGraph:
 
         return nodes
 
-    def community_library_detection(graph, library="Default"):
+    def community_library_detection(self, graph, library="Default", display=False):
         """
         Creator : Quentin Nater
         reviewed by : Sophie Caroni
         Detect communities with a specific library
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
-        :param library: string - Library chosen (girvanNewman;louvain;modularity)
+        :param library:Library chosen (girvanNewman;louvain;modularity)
         :type graph: string
+        :param display: Display the details or not
+        :type display: boolean
         :return: Communities found by the chosen library
         """
         current_time = datetime.datetime.now()
-        print(">> You have called the community detection with ", library, " (at", current_time, ")")
+        print(">> You have called the community detection with the library ", library, " (at", current_time, ")")
 
-        communities = []
-
-        # Library: community.girvan_newman
-        if library == "girvanNewman":
+        if library == "girvanNewman":  # Library: community.girvan_newman
             communities = girvan_newman(graph)
-            print(communities)
-            for i, c in enumerate(communities):
-                print("(girvanNewman) > community ", i, " : ", c)
 
-            ### throws an error (using flag = prod and graph=graph) - Sophie
+            if display:
+                print(communities)
+                for i, c in enumerate(communities):
+                    print("(girvanNewman) > community ", i, " : ", c)
+
             modularity_score = modularity(graph, communities)
             print("Modularity score:", modularity_score)
 
-        # Library: louvain_communities
-        if library == "louvain":
+        elif library == "louvain":  # Library: louvain_communities
+            print("\t\t(ANL) : You have run the NetworkX Louvain community detection !")
             communities = louvain_communities(graph, seed=127)
-            for i, c in enumerate(communities):
-                print("(louvain) > community ", i, " : ", c)
+            if display:
+                for i, c in enumerate(communities):
+                    print("\t\t\t(ANL) : ", i, ": ", c)
 
-            modularity_score = modularity(graph, communities)
-            print("Modularity score:", modularity_score)
-
-        # Library: greedy_modularity_communities
-        if library == "modularity":
+        else:  # Library: greedy_modularity_communities
             communities = greedy_modularity_communities(graph)
 
-            for i, c in enumerate(communities):
-                print("(greedy_modularity_communities) > community ", i, " : ", c)
+            if display:
+                for i, c in enumerate(communities):
+                    print("(greedy_modularity_communities) > community ", i, " : ", c)
 
-            modularity_score = modularity(graph, communities)
-            print("Modularity score:", modularity_score)
+                modularity_score = modularity(graph, communities)
+                print("Modularity score:", modularity_score)
 
         return communities
 
-    def homemade_modularity_gain(graph, first_community, second_community):
+    def homemade_modularity_gain(self, graph, first_community, second_community):
         """
         Creator : Sophie Caroni
-        reviewed by : Sophie Caroni
+        reviewed by :
         Compute modularity gain between two communities
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
         :param first_community: list of nodes belonging to the first community
         :type first_community: list
@@ -131,17 +127,19 @@ class AnalyticsGraph:
 
         return [modularity_gain, first_community, second_community]
 
-    def homemade_community_detection(graph, display=False):
+    def homemade_community_detection(self, graph, display=False):
         """
         Creator : Quentin Nater
         reviewed by : Sophie Caroni
         Detect communities with a specific algorithm
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
         :return: Communities found based on the best modularity gain
+        :param display: Display the details or not
+        :type display: boolean
         """
         current_time = datetime.datetime.now()
-        print(">> You've called the homemade (good choice) community detection (at", current_time, "), please wait <3")
+        print(">> You've called the homemade community detection (at", current_time, "), please wait.")
 
         # phase 1 =====================================================================================================
         # Set initial communities as one node each and compute the initial modularity
@@ -153,55 +151,55 @@ class AnalyticsGraph:
             print("\t(ANL) : Original community list : ", communities)
             print("\t(ANL) : Best_modularity : ", best_modularity)
 
-        inc, limit, deltaQ, oldValue, oldDeltaQ = 0, len(communities), 0, 0, 0
+        inc, limit, delta_q, old_value, old_delta_q = 0, len(communities), 0, 0, 0
 
         while limit > inc:
-            # phase 2 =====================================================================================================
+            # phase 2 =================================================================================================
             # Retrieve the first community
             community_vi = communities.pop(0)
 
             if display:
                 print("\t\t(ANL) : community_vi :\t", community_vi)
 
-            # phase 3 =====================================================================================================
-            allResult, nodeNeighbors, communityNeighbors = [], [], []
+            # phase 3 =================================================================================================
+            all_result, node_neighbors, community_neighbors = [], [], []
 
             # Retrieve all neighbors of the treated community (i.e. of each node of the community)
             for node in community_vi:
                 for n in graph.neighbors(node):
-                    nodeNeighbors.append(n)
+                    node_neighbors.append(n)
 
             # Retrieve all communities that are neighbored to all nodes of the treated community
-            for n in nodeNeighbors:
+            for n in node_neighbors:
                 for community in communities:
                     if n in community:
-                        if community not in communityNeighbors:
-                            communityNeighbors.append(community)
+                        if community not in community_neighbors:
+                            community_neighbors.append(community)
 
-            communityNeighbors = sorted(communityNeighbors, reverse=True)
+            community_neighbors = sorted(community_neighbors, reverse=True)
 
             # Skip the treated community if it currently hasn't any neighbor
-            if len(communityNeighbors) == 0:
+            if len(community_neighbors) == 0:
                 communities.append(community_vi)
                 inc += 1
                 continue
 
             # Compute modularity gain for each of the communities born by adding community_vi to each of them
-            for community in communityNeighbors:
-                allResult.append(AnalyticsGraph.homemade_modularity_gain(graph, community_vi, community))
+            for community in community_neighbors:
+                all_result.append(AnalyticsGraph.homemade_modularity_gain(self, graph, community_vi, community))
 
             # Save as "maxValue" the highest modularity gain brought by the adding of community_vi
-            bestDeltaQ = max(allResult[n][0] for n in range(len(allResult)))
+            best_delta_q = max(all_result[n][0] for n in range(len(all_result)))
 
-            # Save as "winningCommunity" the one getting the highest modularity gain from the adding of community_vi
-            for i, values in enumerate(allResult):
-                if allResult[i][0] == bestDeltaQ:
-                    winningCommunity = allResult[i][2]
+            # Save as "winning_community" the one getting the highest modularity gain from the adding of community_vi
+            for i, values in enumerate(all_result):
+                if all_result[i][0] == best_delta_q:
+                    winning_community = all_result[i][2]
 
             # If the new community score is increasing the total modularity score
-            if bestDeltaQ > 0:
+            if best_delta_q > 0:
                 for community in communities:
-                    if community == winningCommunity:
+                    if community == winning_community:
                         for c in community_vi:
                             community.append(c)
             else:
@@ -210,9 +208,9 @@ class AnalyticsGraph:
             current_modularity = modularity(graph, communities)
 
             if display:
-                print("\t\t(ANL) : Max Delta Q :", bestDeltaQ, " (for ", allResult, ")")
-                print("\t\t(ANL) : Winning Community :", winningCommunity)
-                print("\t\t(ANL) : deltaQ :", deltaQ, )
+                print("\t\t(ANL) : Max Delta Q :", best_delta_q, " (for ", all_result, ")")
+                print("\t\t(ANL) : Winning Community :", winning_community)
+                print("\t\t(ANL) : delta_q :", delta_q, )
                 print("\t\t(ANL) : Updated community list : ", communities)
                 print("\t\t(ANL) : score : ", current_modularity)
                 print("\t\t(ANL) : high score : ", best_modularity)
@@ -240,22 +238,22 @@ class AnalyticsGraph:
         print("\n\t(ANL) : Communities result : ", communities, " \n\n")
 
         current_time = datetime.datetime.now()
-        print("<< the louvain detection homemade has finished (at", current_time, "), arigato <3")
+        print("<< The louvain detection homemade has finished (at", current_time, ").")
 
         return communities
 
-    def compare_algo_efficiency(graph, communities_algo_homemade):
+    def compare_algo_efficiency(self, graph, communities_algo_homemade):
         """
         Creator : Quentin Nater
         reviewed by : Sophie Caroni
         Compare communities found using homemade algorithm with those found using louvain_communities library
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
         :param communities_algo_homemade: list of communities, which are list of nodes
         :type communities_algo_homemade: list of list
         :return: Normalized Mutual Information between the two communities
         """
-        print(">> You've called the comparator of algorithm, please wait :)")
+        print(">> You've called the comparator of algorithm, please wait.")
 
         # Compute the communities of the graph using louvain_community library
         communities_algo_library = louvain_communities(graph, seed=123)
@@ -274,167 +272,160 @@ class AnalyticsGraph:
 
             nmi = NMI3(labels_true, labels_pred)
             print("\t\t(ANL) : NMI3 score :", round((nmi * 100), 2), "%")
-        except:
+        except IndexError:
             nmi = -1
             print("\t\t(ANL) : Cannot get a NMI score if the number communities are not the same...")
 
         return nmi
 
-    def deep_analyze(graph, listOfCommands, allChecked=True):
+    def deep_analyze(self, graph, commands, all_checked=True):
         """
-        Creator : Emmanuel
-        reviewed by :
+        Creator : Emmanuel Cazzato
+        reviewed by : Sophie Caroni
         Compare communities found using homemade algorithm with those found using louvain_communities library
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
-        :param listOfCommands: list of String of command
-        (simple_information / degree_distribution / connected_components / diameters / clustering_coefficient /
-        betweenness_centrality / degree_centrality / eigenvector_centrality / pagerank_centrality /
-        closeness_centrality / adamicadar_score / jaccard_score)
-        Jaccard and Adamic-Adar algorith does not work with directed graph no unprocessed
-        :type listOfCommands: String
+        :param commands: [simple_information, degree_distribution, connected_components, diameters, clustering_coefficient,
+        betweenness_centrality, degree_centrality, eigenvector_centrality, pagerank_centrality, closeness_centrality,
+        adamicadar_score, jaccard_score]
+        :type commands: list of strings
+        :param all_checked: To execute all commands once
+        :type all_checked: bool
         :return: list of all results
         """
+        results = []
 
-        listOfResult = []
+        if "degree_distribution" in commands or all_checked:
+            commands.append([["degree_distribution"], [AnalyticsGraph.degree_distribution(graph=graph, display=True)]])
 
-        if "degree_distribution" in listOfCommands or allChecked:
-            listOfResult.append([["degree_distribution"], [AnalyticsGraph.degree_distribution(graph)]])
+        if "clustering_coefficient" in commands or all_checked:
+            commands.append([["clustering_coefficient"], [AnalyticsGraph.clustering_coefficient(graph=graph, display=True)]])
 
-        if "diameters" in listOfCommands or allChecked:
-            listOfResult.append([["diameters"], [AnalyticsGraph.degree_centrality_scores(graph)]])
+        if "diameters" in commands or all_checked:
+            commands.append([["diameters"], [AnalyticsGraph.degree_centrality_scores(graph=graph, display=True)]])
 
-        if "clustering_coefficient" in listOfCommands or allChecked:
-            listOfResult.append([["clustering_coefficient"], [AnalyticsGraph.clustering_coefficient(graph)]])
+        if "degree_centrality" in commands or all_checked:
+            commands.append([["degree_centrality"], [AnalyticsGraph.degree_centrality_scores(graph=graph, display=True)]])
 
-        if "betweenness_centrality" in listOfCommands or allChecked:
-            listOfResult.append([["betweenness_centrality"], [AnalyticsGraph.betweenness_centrality_scores(graph)]])
+        if "eigenvector_centrality" in commands or all_checked:
+            commands.append([["eigenvector_centrality"], [AnalyticsGraph.eigenvector_centrality_scores(graph=graph, display=True)]])
 
-        if "degree_centrality" in listOfCommands or allChecked:
-            listOfResult.append([["degree_centrality"], [AnalyticsGraph.degree_centrality_scores(graph)]])
+        if "pagerank_centrality" in commands or all_checked:
+            commands.append([["pagerank_centrality"], [AnalyticsGraph.pagerank_centrality_scores(graph=graph, display=True)]])
 
-        if "eigenvector_centrality" in listOfCommands or allChecked:
-            listOfResult.append([["eigenvector_centrality"], [AnalyticsGraph.eigenvector_centrality_scores(graph)]])
+        if "closeness_centrality" in commands or all_checked:
+            commands.append([["closeness_centrality"], [AnalyticsGraph.closeness_centrality_scores(graph=graph, display=True)]])
 
-        if "pagerank_centrality" in listOfCommands or allChecked:
-            listOfResult.append([["pagerank_centrality"], [AnalyticsGraph.pagerank_centrality_scores(graph)]])
+        if "betweenness_centrality" in commands or all_checked:
+            commands.append([["betweenness_centrality"], [AnalyticsGraph.betweenness_centrality_scores(graph=graph, display=True)]])
 
-        if "closeness_centrality" in listOfCommands or allChecked:
-            listOfResult.append([["closeness_centrality"], [AnalyticsGraph.closeness_centrality_scores(graph)]])
+        return results
 
-        return listOfResult
-
-    def closeness_centrality_scores(graph, display=False):
+    def closeness_centrality_scores(self, graph, display=False):
         """
         Creator : Emmanuel Cazzato
-        reviewed by : Quentin Nater
-        Get the score for centrality analytics in the context of exploration analysis
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        reviewed by : Quentin Nater & Sophie Caroni
+        Compute centrality closeness centrality of the graph
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
-        :param display: Boolean - Display or not the plots and prints
-        :type display: Boolean
-        :return: list of the results
+        :param display: Display the details or not
+        :type display: boolean
+        :return: Dictionary of nodes as keys and closeness centrality as value
         """
-        # Closeness centrality measure
         cc_scores = nx.closeness_centrality(graph)
+
         if display:
-            print("Closeness centrality:")
-            for node, score in cc_scores.items():
-                print(f"{node}: {score}")
+            print("\t\t\t (ANL) : Closeness centrality = ", cc_scores.items())
+
         return cc_scores
 
-    def pagerank_centrality_scores(graph, display=False):
+    def pagerank_centrality_scores(self, graph, display=False):
         """
         Creator : Emmanuel Cazzato
-        reviewed by : Quentin Nater
-        Get the score for centrality analytics in the context of exploration analysis
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        reviewed by : Quentin Nater & Sophie Caroni
+        Compute PageRank centrality of the graph
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
-        :param display: Boolean - Display or not the plots and prints
-        :type display: Boolean
-        :return: list of the results
+        :param display: Display the details or not
+        :type display: boolean
+        :return: :Dictionary of nodes as keys and PageRank's centrality as value
         """
-        # PageRank's centrality measure
         pr_scores = nx.pagerank(graph)
+
         if display:
-            print("PageRank:")
-            for node, score in pr_scores.items():
-                print(f"{node}: {score}")
+            print("\t\t\t (ANL) : PageRank = ", pr_scores.items())
+
         return pr_scores
 
-    def eigenvector_centrality_scores(graph, display=False):
+    def eigenvector_centrality_scores(self, graph, display=False):
         """
         Creator : Emmanuel Cazzato
-        reviewed by : Quentin Nater
-        Get the score for centrality analytics in the context of exploration analysis
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        reviewed by : Quentin Nater & Sophie Caroni
+        Compute eigenvector centrality of the graph
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
-        :param display: Boolean - Display or not the plots and prints
-        :type display: Boolean
-        :return: list of the results
+        :param display: Display the details or not
+        :type display: boolean
+        :return: Dictionary of nodes as keys and eigenvector centrality as value
         """
-        # Eigenvector centrality measure
         ec_scores = nx.eigenvector_centrality(graph)
 
         if display:
-            print("Eigenvector centrality:")
-            for node, score in ec_scores.items():
-                print(f"{node}: {score}")
+            print("\t\t\t (ANL) : Eigenvector centrality = ", ec_scores.items())
+
         return ec_scores
 
-    def degree_centrality_scores(graph, display=False):
+    def degree_centrality_scores(self, graph, display=False):
         """
         Creator : Emmanuel Cazzato
-        reviewed by : Quentin Nater
-        Get the score for centrality analytics in the context of exploration analysis
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        reviewed by : Quentin Nater & Sophie Caroni
+        Compute degree centrality of the graph
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
-        :param display: Boolean - Display or not the plots and prints
-        :type display: Boolean
-        :return: Result of the degree centrality
+        :param display: Display the details or not
+        :type display: boolean
+        :return: Dictionary of nodes as keys and degree centrality as value
         """
-        # Degree centrality measure
         dc_scores = nx.degree_centrality(graph)
 
         if display:
-            print("\t\t\t (ANL) : Degree centrality:")
-            for node, score in dc_scores.items():
-                print(f"{node}: {score}")
+            print("\t\t\t (ANL) : Degree centrality = ", dc_scores.items())
+
         return dc_scores
 
-    def betweenness_centrality_scores(graph, display=False):
+    def betweenness_centrality_scores(self, graph, display=False):
         """
         Creator : Emmanuel Cazzato
-        reviewed by : Quentin Nater
-        Get the betweenness centrality of the nodes in the graph (a measure of the importance of a node in connecting different parts of the graph)
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        reviewed by : Quentin Nater & Sophie Caroni
+        Compute PageRank centrality of the graph
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
-        :param display: Boolean - Display or not the plots and prints
-        :type display: Boolean
-        :return: list of the results
+        :param display: Display the details or not
+        :type display: boolean
+        :return: Dictionary of nodes as keys and betweennes centrality as value
         """
         bc_scores = nx.betweenness_centrality(graph)
 
         if display:
-            print("\t\t\t (ANL) : Betweenness centrality:")
-            for node, score in bc_scores.items():
-                print(f"{node}: {score}")
+            print("\t\t\t (ANL) : Betweenness centrality = ", bc_scores.items())
+
         return bc_scores
 
-    def highest_betweenness_centrality_score(graph, community, display=False):
+    def highest_betweenness_centrality(self, graph, community, display=False):
         """
         Creator : Emmanuel Cazzato
         reviewed by : Quentin Nater
-        Get the betweenness centrality of the nodes in the graph (a measure of the importance of a node in connecting different parts of the graph)
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        ...
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
         :param community: List of String - All nodes of a community
         :type community: List of String
-        :param display: Boolean - Display or not the plots and prints
-        :type display: Boolean
+        :param display: Display the details or not
+        :type display: boolean
         :return: list of the results
         """
-        subgraph = graph.subgraph(community)  # create subgraph with only those nodes
+        # Create a (sub)graph for the nodes of the choosen community
+        subgraph = graph.subgraph(community)
 
         bc_scores = nx.betweenness_centrality(subgraph)
 
@@ -452,26 +443,25 @@ class AnalyticsGraph:
 
         return [high_score, high_node]
 
-    def highest_betweenness_centrality_scores(graph, communities, display=False):
+    def highest_betweenness_centralities(self, graph, communities, display=False):
         """
         Creator : Emmanuel Cazzato
         reviewed by : Quentin Nater
-        Get the betweenness centrality of the nodes in the graph (a measure of the importance of a node in connecting different parts of the graph)
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        ...
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
         :param communities: String [[]] - All communities with all nodes of a community
         :type communities: String [[]]
-        :param display: Boolean - Display or not the plots and prints
-        :type display: Boolean
+        :param display: Display the details or not
+        :type display: boolean
         :return: list of the results
         """
-
         current_time = datetime.datetime.now()
-        print("\n>> You have called the highest betweeness centrality scores, (at", current_time, "), please wait :)")
+        print("\n>> You have called the highest betweeness centrality scores, (at", current_time, "), please wait...")
 
         popular_nodes = []
         for community in communities:
-            popular_nodes.append(AnalyticsGraph.highest_betweenness_centrality_score(graph, community, display))
+            popular_nodes.append(AnalyticsGraph.highest_betweenness_centrality(self, graph, community, display))
 
         if display:
             for x, popular in enumerate(popular_nodes):
@@ -479,42 +469,44 @@ class AnalyticsGraph:
                       round(int(popular[0] * 100), 2), "%")
 
         current_time = datetime.datetime.now()
-        print("<< The highest betweeness centrality scores has finished (at", current_time, "), arigato <3\n")
+        print("<< The highest betweeness centrality scores has finished (at", current_time, ").\n")
 
-        myExport = ""
+        my_export = ""
         for x, popular in enumerate(popular_nodes):
-            myExport = myExport + str(x) + ":" + str(popular[1]) + "=" + str(round(int(popular[0] * 100), 2)) + "\n"
+            my_export = my_export + str(x) + ":" + str(popular[1]) + "=" + str(round(int(popular[0] * 100), 2)) + "\n"
         with open('./results/communities_populars.txt', 'w') as file:
             # Write the string variable to the file
-            file.write(myExport)
+            file.write(my_export)
 
         return popular_nodes
 
-    def clustering_coefficient(graph, display=False):
+    def clustering_coefficient(self, graph, display=False):
         """
         Creator : Emmanuel Cazzato
-        reviewed by : Quentin Nater
-        Get the score for centrality analytics in the context of exploration analysis
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        reviewed by : Quentin Nater & Sophie Caroni
+        Compute clustering coefficient of the graph
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
-        :param display: Boolean - Display or not the plots and prints
-        :type display: Boolean
+        :param display: Display the details or not
+        :type display: boolean
         :return: Result of the clustering coefficient
         """
         cc = nx.average_clustering(graph)
+
         if display:
             print("\t\t\t (ANL) : Clustering coefficient:", cc)
+
         return cc
 
-    def diameter_centrality(graph, display=False):
+    def diameter_centrality(self, graph, display=False):
         """
         Creator : Emmanuel Cazzato
-        reviewed by : Quentin Nater
-        Get the score for centrality analytics in the context of exploration analysis
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        reviewed by : Quentin Nater & Sophie Caroni
+        Compute diameter centrality of the graph
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
-        :param display: Boolean - Display or not the plots and prints
-        :type display: Boolean
+        :param display: Display the details or not
+        :type display: boolean
         :return: Result of the diameter centrality
         """
         # Get the connected components of the graph
@@ -523,40 +515,56 @@ class AnalyticsGraph:
         # Compute the diameter for each connected component
         diameters = [nx.diameter(graph.subgraph(component)) for component in connected_components]
 
-        # Print the diameters
         if display:
             print("\t\t\t (ANL) : Diameters of connected components:", diameters)
 
         return diameters
 
-    def degree_distribution(graph, display=False):
+    def degree_distribution(self, graph, display=False):
         """
         Creator : Emmanuel Cazzato
         reviewed by : Quentin Nater
-        Get the score for centrality analytics in the context of exploration analysis
-        :param graph: networkX - Graph networkX (of the amazon dataset refined)
+        Get the degree distribution of the nodes in the graph
+        :param graph: Graph networkX of the dataset
         :type graph: networkX
-        :param display: Boolean - Display or not the plots and prints
-        :type display: Boolean
+        :param display: Display the details or not
+        :type display: boolean
         :return: Result of the degree distribution
         """
-        # Get the degree distribution of the nodes in the graph
+        # Store the sequence of the degree of each node
         degree_sequence = [d for n, d in graph.degree()]
-        degree_counts = dict(
-            zip(sorted(set(degree_sequence)), [degree_sequence.count(d) for d in sorted(set(degree_sequence))]))
+
+        # Count the frequency of each degree
+        degree_counts = dict(zip(sorted(set(degree_sequence)), [degree_sequence.count(d) for d in sorted(set(degree_sequence))]))
+
         if display:
             print("\t\t\t (ANL) : Degree distribution:", degree_counts)
+
         return degree_counts
 
 
     # =================================================================================================================
     # COMMUNITY DETECTION HOMEMADE
     # =================================================================================================================
-    def amazon_community_detection(graph, tag="louvain", run_silhouette=False, display=False):
+    def amazon_community_detection(self, graph, tag="louvain", run_silhouette=False, display=False):
+        """
+        Creator : Quentin Nater
+        reviewed by : Sophie Caroni
+        Community detection algorithm
+        :param graph: Graph networkX of the dataset
+        :type graph: networkX
+        :param tag: Name of the analysis
+        :type tag: string
+        :param run_silhouette: Compute silhouette coefficient of not
+        :type run_silhouette: boolean
+        :param display: Display the details or not
+        :type display: boolean
+        :return: Found communities
+        """
         current_time = datetime.datetime.now()
         print("\n<< You have run the homemade amazon community detection algorithm (at", current_time, "), arigato <3")
 
-        #=STAGE ONE====================================================================================================
+        # =STAGE ONE====================================================================================================
         communities = [{u} for u in graph.nodes()]
         modularity = 1 / pow(sum(dict(graph.degree()).values()), 2)
 
@@ -566,10 +574,11 @@ class AnalyticsGraph:
 
         graphSize = myGraph.size()
 
-        communities, inner_partition, stillBetter = AnalyticsGraph.inner_logic(myGraph, graphSize, communities, display=display)
+        communities, inner_partition, stillBetter = AnalyticsGraph.inner_logic(self, myGraph, graphSize, communities,
+                                                                               display=display)
         stillBetter = True
 
-        #====STAGE TWO=================================================================================================
+        # ====STAGE TWO=================================================================================================
         while stillBetter:
             new_modularity = sum(dict(myGraph.degree()).values()) / 2
             deltaQ = new_modularity - modularity
@@ -594,7 +603,8 @@ class AnalyticsGraph:
                 H.add_edge(com1, com2, weight=wt + temp)
             myGraph = H
             # =============================================================================
-            communities, inner_partition, stillBetter = AnalyticsGraph.inner_logic(myGraph, graphSize, communities, display=display)
+            communities, inner_partition, stillBetter = AnalyticsGraph.inner_logic(self, myGraph, graphSize, communities,
+                                                                                   display=display)
 
         # ==DISPLAY=====================================================================================================
         best_communities = list(communities)
@@ -602,29 +612,43 @@ class AnalyticsGraph:
         for x, c in enumerate(best_communities):
             print("\t\t\t(ANL) : ", x, ": ", c)
         # ==SAVE========================================================================================================
-        VisualizationGraph.saveCommunities(best_communities, tag)
+        VisualizationGraph.save_communities(self, best_communities, tag)
         # ==ANALYTICS===================================================================================================
         if run_silhouette:
-            AnalyticsGraph.silhouette_score(graph=graph, community_detection=best_communities, metric="euclidean", sample_size=1000)
+            AnalyticsGraph.silhouette_score(self, graph=graph, community_detection=best_communities, metric="euclidean",
+                                            sample_size=1000)
         # ==============================================================================================================
 
         current_time = datetime.datetime.now()
         print("<< The homemade amazon community detection algorithm has finished (at", current_time, "), arigato <3\n")
         return best_communities
 
-    def inner_logic(graph, size_of_graph, communities, display=True):
-        #===STAGE THREE================================================================================================
+    def inner_logic(self, graph, size_of_graph, communities, display=True):
+        """
+        Creator : Quentin Nater
+        reviewed by :
+        Inner logic of the community detection algorithm
+        :param graph: Graph networkX of the dataset
+        :type graph: networkX
+        :param size_of_graph:
+        :type size_of_graph: int
+        :param communities: Commmunities
+        :type communities: list
+        :param display: Display the details or not
+        :type display: boolean
+        """
+        # ===STAGE THREE================================================================================================
         communityNodes, newCommunity = {}, []
         is_directed = graph.is_directed()
 
         # *** INITIALIZATION AND THE ALGO AND LIST *****************************
         # initialization of the community with each node as community
-        stillBetter     = False
-        operations      = 1
-        pushNodeList    =  list(graph.nodes)
-        in_degrees      = dict(graph.in_degree(weight="weight"))
-        out_degrees     = dict(graph.out_degree(weight="weight"))
-        degreeStrengthIn  = list(in_degrees.values())
+        stillBetter = False
+        operations = 1
+        pushNodeList = list(graph.nodes)
+        in_degrees = dict(graph.in_degree(weight="weight"))
+        out_degrees = dict(graph.out_degree(weight="weight"))
+        degreeStrengthIn = list(in_degrees.values())
         degreeStrengthOut = list(out_degrees.values())
 
         weightStrength = {}
@@ -657,16 +681,24 @@ class AnalyticsGraph:
                 degreeStrengthOut[bestCommunity] -= out_degree
 
                 size_power = size_of_graph ** 2
-                remove_cost = (-weightCommunity[bestCommunity] / size_of_graph + (out_degree * degreeStrengthIn[bestCommunity] + in_degree * degreeStrengthOut[bestCommunity]) / size_power)
+                remove_cost = (-weightCommunity[bestCommunity] / size_of_graph + (
+                            out_degree * degreeStrengthIn[bestCommunity] + in_degree * degreeStrengthOut[
+                        bestCommunity]) / size_power)
 
                 for numberCommunities, number_of_edges in weightCommunity.items():
-                    gain = (number_of_edges / size_of_graph - (out_degree * degreeStrengthIn[numberCommunities] + in_degree * degreeStrengthOut[numberCommunities]) / size_power)
+                    gain = (number_of_edges / size_of_graph - (
+                                out_degree * degreeStrengthIn[numberCommunities] + in_degree * degreeStrengthOut[
+                            numberCommunities]) / size_power)
                     Q = remove_cost + gain
 
                     if display:
                         print("\t\t\t\t\t\tnode : ", node)
                         print("\t\t\t\t\t\tnbr_com / number_of_edges: ", numberCommunities, " / ", number_of_edges)
-                        print("\t\t\t\t\t\tgain :   (number_of_edges / size_of_graph - (out_degree * degreeStrengthIn[numberCommunities] + in_degree * degreeStrengthOut[numberCommunities]) / size_power) = (", number_of_edges, " / ", size_of_graph, " - ( ", out_degree, " * ", degreeStrengthIn[numberCommunities], " + ", in_degree, " * ", degreeStrengthOut[numberCommunities], ") / ", size_power, ")")
+                        print(
+                            "\t\t\t\t\t\tgain :   (number_of_edges / size_of_graph - (out_degree * degreeStrengthIn[numberCommunities] + in_degree * degreeStrengthOut[numberCommunities]) / size_power) = (",
+                            number_of_edges, " / ", size_of_graph, " - ( ", out_degree, " * ",
+                            degreeStrengthIn[numberCommunities], " + ", in_degree, " * ",
+                            degreeStrengthOut[numberCommunities], ") / ", size_power, ")")
                         print("\t\t\t\t\t\tdeltaQ : ", Q, "\n")
 
                     if Q > bestModality:
@@ -714,23 +746,23 @@ class AnalyticsGraph:
 
         return communities, newCommunity, stillBetter
 
-
     # =================================================================================================================
     # QUALITY OF THE COMMUNITY DETECTION
     # =================================================================================================================
 
-    def accuracy_precision_recall_jaccard(communities_library, community_homemade, display=True):
+    def accuracy_precision_recall_jaccard(self, communities_library, community_homemade, display=True):
         """
         Creator : Quentin Nater
-        reviewed by :
+        reviewed by : Sophie Caroni
         Compute the score of Accuracy, Precision, Recall and Jaccard, comparing two community detections
-        :param communities_library: list(set) - All communities detected by the networkX library
+        :param communities_library: All communities detected by the networkX library
         :type communities_library: list(set)
-        :param community_homemade: list(set) - All communities detected by the homemade algorithm
+        :param community_homemade: All communities detected by the homemade algorithm
         :type community_homemade: list(set)
+        :param display: Display the details or not
+        :type display: boolean
         :return: the scores of Accuracy, Precision, Recall and Jaccard
         """
-
         current_time = datetime.datetime.now()
         print("<< The Accuracy/Precision/Recall/Jaccard score between the 2 algorithm has been called (at", current_time, "), please wait...\n")
 
@@ -789,11 +821,11 @@ class AnalyticsGraph:
         print("\t\t (ANA) : Jaccard similarity between the 2 algorithm is :", str(round(jaccard, 2)), "\n")
 
         current_time = datetime.datetime.now()
-        print("<< The Accuracy/Precision/Revall/Jaccard score between the 2 algorithm has finished (at", current_time, "), arigato <3\n")
+        print("<< The Accuracy/Precision/Revall/Jaccard score between the 2 algorithm has finished (at", current_time, ").\n")
 
         return accuracy, precision, recall, jaccard
 
-    def silhouette_score(graph, community_detection, metric='euclidean', sample_size=None):
+    def silhouette_score(self, graph, community_detection, metric='euclidean', sample_size=None):
         """
         Creator: Quentin Nater
         Reviewed by:
