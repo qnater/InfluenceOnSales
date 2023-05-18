@@ -72,6 +72,7 @@ class AnalyticsGraph:
 
         # Library: louvain_communities
         if library == "louvain":
+            print("\t\t(ANL) : You have run the NetworkX Louvain community detection !")
             communities = louvain_communities(graph, seed=127)
             if display:
                 for i, c in enumerate(communities):
