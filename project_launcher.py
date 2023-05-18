@@ -86,7 +86,7 @@ if __name__ == '__main__':
         #communities_library_enhanced = louvain_communities(graph_sampled_enhanced, seed=127)
 
         # QUALITY=======================================================================================================
-        accuracy, precision, recall, jaccard = ag.accuracy_precision_recall_jaccard(communities_library_big, communities_homemade_big_simple, display=False)
+        #accuracy, precision, recall, jaccard = ag.accuracy_precision_recall_jaccard(communities_library_big, communities_homemade_big_simple, display=False)
         accuracy, precision, recall, jaccard = ag.accuracy_precision_recall_jaccard(communities_library_big, communities_homemade_big_homemade, display=False)
         #accuracy, precision, recall, jaccard = ag.accuracy_precision_recall_jaccard(communities_library_enhanced, communities_homemade_big_simple, display=False)
         #accuracy, precision, recall, jaccard = ag.accuracy_precision_recall_jaccard(communities_library_enhanced, communities_homemade_enhanced_homemade, display=False)
