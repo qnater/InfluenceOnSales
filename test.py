@@ -13,8 +13,7 @@ from persistence.persistence_graph import PersistenceGraph
 from visualization.visualization_graph import VisualizationGraph as vg
 from analytics.analytics_graph import AnalyticsGraph as ag, AnalyticsGraph
 from preprocessing.pre_processing_graph import PreProcessGraph as pg, PreProcessGraph
-from export.export_graph import ExportGraph as xg
-
+from export.export_graph import ExportGraph as xg, ExportGraph
 
 if __name__ == '__main__':
     print("\n=========================================================================================")
@@ -28,5 +27,13 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    er = EnrichmentGraph()
-    er.compute_enrichment()
+    er, eg, xp = EnrichmentGraph(), ExploreGraph(), ExportGraph()
+    graph = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_big.txt")
+
+    merged = er.merge_for_enchirment(original_graph=graph, enchriment_file="formatted_amazon_meta.txt")
+
+    #xp.create_dataset(graph=merged, name="dataset_off_amazon_enrichment")
+
+
+
+
