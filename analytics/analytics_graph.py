@@ -296,28 +296,28 @@ class AnalyticsGraph:
         results = []
 
         if "degree_distribution" in commands or all_checked:
-            results.append([["degree_distribution"], [AnalyticsGraph.degree_distribution(self, graph)]])
-
-        if "diameters" in commands or all_checked:
-            results.append([["diameters"], [AnalyticsGraph.degree_centrality_scores(self, graph)]])
+            commands.append([["degree_distribution"], [AnalyticsGraph.degree_distribution(graph=graph, display=True)]])
 
         if "clustering_coefficient" in commands or all_checked:
-            results.append([["clustering_coefficient"], [AnalyticsGraph.clustering_coefficient(self, graph)]])
+            commands.append([["clustering_coefficient"], [AnalyticsGraph.clustering_coefficient(graph=graph, display=True)]])
 
-        if "betweenness_centrality" in commands or all_checked:
-            results.append([["betweenness_centrality"], [AnalyticsGraph.betweenness_centrality_scores(self, graph)]])
+        if "diameters" in commands or all_checked:
+            commands.append([["diameters"], [AnalyticsGraph.degree_centrality_scores(graph=graph, display=True)]])
 
         if "degree_centrality" in commands or all_checked:
-            results.append([["degree_centrality"], [AnalyticsGraph.degree_centrality_scores(self, graph)]])
+            commands.append([["degree_centrality"], [AnalyticsGraph.degree_centrality_scores(graph=graph, display=True)]])
 
         if "eigenvector_centrality" in commands or all_checked:
-            results.append([["eigenvector_centrality"], [AnalyticsGraph.eigenvector_centrality_scores(self, graph)]])
+            commands.append([["eigenvector_centrality"], [AnalyticsGraph.eigenvector_centrality_scores(graph=graph, display=True)]])
 
         if "pagerank_centrality" in commands or all_checked:
-            results.append([["pagerank_centrality"], [AnalyticsGraph.pagerank_centrality_scores(self, graph)]])
+            commands.append([["pagerank_centrality"], [AnalyticsGraph.pagerank_centrality_scores(graph=graph, display=True)]])
 
         if "closeness_centrality" in commands or all_checked:
-            results.append([["closeness_centrality"], [AnalyticsGraph.closeness_centrality_scores(self, graph)]])
+            commands.append([["closeness_centrality"], [AnalyticsGraph.closeness_centrality_scores(graph=graph, display=True)]])
+
+        if "betweenness_centrality" in commands or all_checked:
+            commands.append([["betweenness_centrality"], [AnalyticsGraph.betweenness_centrality_scores(graph=graph, display=True)]])
 
         return results
 
@@ -335,9 +335,7 @@ class AnalyticsGraph:
         cc_scores = nx.closeness_centrality(graph)
 
         if display:
-            print("Closeness centrality:")
-            for node, score in cc_scores.items():
-                print(f"{node}: {score}")
+            print("\t\t\t (ANL) : Closeness centrality = ", cc_scores.items())
 
         return cc_scores
 
@@ -355,9 +353,7 @@ class AnalyticsGraph:
         pr_scores = nx.pagerank(graph)
 
         if display:
-            print("PageRank:")
-            for node, score in pr_scores.items():
-                print(f"{node}: {score}")
+            print("\t\t\t (ANL) : PageRank = ", pr_scores.items())
 
         return pr_scores
 
@@ -375,9 +371,7 @@ class AnalyticsGraph:
         ec_scores = nx.eigenvector_centrality(graph)
 
         if display:
-            print("Eigenvector centrality:")
-            for node, score in ec_scores.items():
-                print(f"{node}: {score}")
+            print("\t\t\t (ANL) : Eigenvector centrality = ", ec_scores.items())
 
         return ec_scores
 
@@ -395,9 +389,7 @@ class AnalyticsGraph:
         dc_scores = nx.degree_centrality(graph)
 
         if display:
-            print("\t\t\t (ANL) : Degree centrality:")
-            for node, score in dc_scores.items():
-                print(f"{node}: {score}")
+            print("\t\t\t (ANL) : Degree centrality = ", dc_scores.items())
 
         return dc_scores
 
@@ -415,9 +407,7 @@ class AnalyticsGraph:
         bc_scores = nx.betweenness_centrality(graph)
 
         if display:
-            print("\t\t\t (ANL) : Betweenness centrality:")
-            for node, score in bc_scores.items():
-                print(f"{node}: {score}")
+            print("\t\t\t (ANL) : Betweenness centrality = ", bc_scores.items())
 
         return bc_scores
 
@@ -471,7 +461,7 @@ class AnalyticsGraph:
 
         popular_nodes = []
         for community in communities:
-            popular_nodes.append(AnalyticsGraph.highest_betweenness_centrality(graph, community, display))
+            popular_nodes.append(AnalyticsGraph.highest_betweenness_centrality(self, graph, community, display))
 
         if display:
             for x, popular in enumerate(popular_nodes):
@@ -545,8 +535,7 @@ class AnalyticsGraph:
         degree_sequence = [d for n, d in graph.degree()]
 
         # Count the frequency of each degree
-        degree_counts = dict(
-            zip(sorted(set(degree_sequence)), [degree_sequence.count(d) for d in sorted(set(degree_sequence))]))
+        degree_counts = dict(zip(sorted(set(degree_sequence)), [degree_sequence.count(d) for d in sorted(set(degree_sequence))]))
 
         if display:
             print("\t\t\t (ANL) : Degree distribution:", degree_counts)

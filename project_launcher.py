@@ -9,7 +9,7 @@ from networkx.algorithms.community import louvain_communities
 
 from explore.exploration_graph import ExploreGraph as eg, ExploreGraph
 from persistence.persistence_graph import PersistenceGraph
-from visualization.visualization_graph import VisualizationGraph as vg
+from visualization.visualization_graph import VisualizationGraph as vg, VisualizationGraph
 from analytics.analytics_graph import AnalyticsGraph as ag, AnalyticsGraph
 from preprocessing.pre_processing_graph import PreProcessGraph as pg, PreProcessGraph
 from export.export_graph import ExportGraph as xg
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    eg, pg, ag = ExploreGraph(), PreProcessGraph(), AnalyticsGraph()
+    eg, pg, ag, vg = ExploreGraph(), PreProcessGraph(), AnalyticsGraph(), VisualizationGraph()
 
     # It exists 5 scenario to test the project:
     # scenario = 1 - Display all information and steps of the pre-processing of the dataset
@@ -136,8 +136,10 @@ if __name__ == '__main__':
     else:
         print(">>Display all information and steps of all our project ********************************************\n\n")
 
+        string_input = input("What size of dataset do you want (big (190'000), middle (120'000), small (90'000), test (10'000) : ")
+
         # CONSTRUCTION OF THE GRAPH ====================================================================================
-        graph_sampled_small = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_big.txt")
+        graph_sampled_small = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_" + string_input + ".txt")
 
         # QUALITY OF THE GRAPH =========================================================================================
         pg.display_efficiency_of_graph(graph=graph_sampled_small)

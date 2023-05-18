@@ -9,7 +9,7 @@ from networkx.algorithms.community import louvain_communities
 
 from explore.exploration_graph import ExploreGraph as eg, ExploreGraph
 from persistence.persistence_graph import PersistenceGraph
-from visualization.visualization_graph import VisualizationGraph as vg
+from visualization.visualization_graph import VisualizationGraph as vg, VisualizationGraph
 from analytics.analytics_graph import AnalyticsGraph as ag, AnalyticsGraph
 from preprocessing.pre_processing_graph import PreProcessGraph as pg, PreProcessGraph
 from export.export_graph import ExportGraph as xg
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    eg, pg = ExploreGraph(), PreProcessGraph()
+    eg, pg, ag, vg = ExploreGraph(), PreProcessGraph(), AnalyticsGraph(), VisualizationGraph()
     print(">>Display all information and steps of all our project ********************************************\n\n")
 
     # CONSTRUCTION OF THE GRAPH ====================================================================================
