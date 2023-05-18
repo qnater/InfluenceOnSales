@@ -21,9 +21,6 @@ class EnrichmentGraph:
 
         merged = nx.compose(original_graph, enrichment)
 
-        PreProcessGraph.refine_graph(self, graph=merged)
-        PreProcessGraph.refine_graph(self, graph=merged)
-
         communities_merged = AnalyticsGraph.amazon_community_detection(graph=merged, tag="merged", run_silhouette=False)
         communities_original = AnalyticsGraph.amazon_community_detection(graph=original_graph, tag="original_graph", run_silhouette=False)
 
