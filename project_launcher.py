@@ -7,11 +7,11 @@ import spicy as sp
 from matplotlib import pyplot as plt
 from networkx.algorithms.community import louvain_communities
 
-from explore.exploration_graph import ExploreGraph as eg
+from explore.exploration_graph import ExploreGraph as eg, ExploreGraph
 from persistence.persistence_graph import PersistenceGraph
 from visualization.visualization_graph import VisualizationGraph as vg
-from analytics.analytics_graph import AnalyticsGraph as ag
-from preprocessing.pre_processing_graph import PreProcessGraph as pg
+from analytics.analytics_graph import AnalyticsGraph as ag, AnalyticsGraph
+from preprocessing.pre_processing_graph import PreProcessGraph as pg, PreProcessGraph
 from export.export_graph import ExportGraph as xg
 
 
@@ -33,10 +33,12 @@ if __name__ == '__main__':
     # scenario = 3 - Display all information and steps of the visualization of our graph
     # scenario = 4 - Display all information and steps of the exploration of our graph
     # scenario = 5 - Display all information and steps of all our project
-    scenario = 2
+    scenario = 1
 
     if scenario == 1:
         print(">>Display all information and steps of the pre-processing of the dataset **************************\n\n")
+        eg = ExploreGraph()
+        #pg = PreProcessGraph()
 
         print("\nConstruction of the graph_original and display of its efficiency :")
         graph_original = eg.construct_graph_by_file(file_name="./dataset/origine_dataset/amazon-meta.txt")
@@ -58,6 +60,9 @@ if __name__ == '__main__':
 
     elif scenario == 2:
         print(">>Display all information and steps of the community detection ************************************\n\n")
+        eg = ExploreGraph()
+        #pg = PreProcessGraph()
+        #ag = AnalyticsGraph()
 
         # CONSTRUCTION OF THE GRAPHS ===================================================================================
         print("\nConstruction of the graph_sampled_big and display of its efficiency :")
