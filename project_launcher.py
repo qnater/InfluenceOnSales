@@ -41,8 +41,8 @@ if __name__ == '__main__':
         #pg = PreProcessGraph()
 
         print("\nConstruction of the graph_original and display of its efficiency :")
-        graph_original = eg.construct_graph_by_file(file_name="./dataset/origine_dataset/amazon-meta.txt")
-        pg.display_efficiency_of_graph(graph=graph_original)
+        #graph_original = eg.construct_graph_by_file(file_name="./dataset/origine_dataset/amazon-meta.txt")
+        #pg.display_efficiency_of_graph(graph=graph_original)
 
         print("\nConstruction of the graph_sampled_big and display of its efficiency :")
         graph_sampled_big = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_big.txt")
