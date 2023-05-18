@@ -109,7 +109,7 @@ if __name__ == '__main__':
         vg.saveCommunities(communities)
 
         for community in communities:
-            eg.exploreCommunity(graph, community, False)
+            eg.explore_community(graph, community, False)
 
         popular_nodes = ag.highest_betweenness_centrality_scores(graph, communities, False)
 

@@ -1,16 +1,11 @@
 import datetime
-from collections import defaultdict
-
 import networkx as nx
 import numpy as np
-from networkx.algorithms.community import girvan_newman, louvain_communities, greedy_modularity_communities, \
-    is_partition
-from networkx.utils import py_random_state
+from networkx.algorithms.community import girvan_newman, louvain_communities, greedy_modularity_communities
 from sklearn.metrics import silhouette_score
 from sklearn.metrics.cluster import normalized_mutual_info_score as NMI3
-from networkx.algorithms.community.quality import modularity, NotAPartition
-from collections import defaultdict, deque
-
+from networkx.algorithms.community.quality import modularity
+from collections import defaultdict
 from visualization.visualization_graph import VisualizationGraph
 
 
