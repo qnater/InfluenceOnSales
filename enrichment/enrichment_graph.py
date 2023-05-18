@@ -21,11 +21,11 @@ class EnrichmentGraph:
 
         merged = nx.compose(original_graph, enrichment)
 
-        communities_merged = AnalyticsGraph.amazon_community_detection(graph=merged, tag="merged", run_silhouette=False)
-        communities_original = AnalyticsGraph.amazon_community_detection(graph=original_graph, tag="original_graph", run_silhouette=False)
+        communities_merged = AnalyticsGraph.amazon_community_detection(self, graph=merged, tag="merged", run_silhouette=False)
+        communities_original = AnalyticsGraph.amazon_community_detection(self, graph=original_graph, tag="original_graph", run_silhouette=False)
 
-        score_merged = AnalyticsGraph.silhouette_score(merged, communities_merged, 'euclidean', 1000)
-        score_original = AnalyticsGraph.silhouette_score(original_graph, communities_original, 'euclidean', 1000)
+        score_merged = AnalyticsGraph.silhouette_score(self, merged, communities_merged, 'euclidean', 1000)
+        score_original = AnalyticsGraph.silhouette_score(self, original_graph, communities_original, 'euclidean', 1000)
 
         print("Number of nodes added : ", merged.number_of_nodes()-original_graph.number_of_nodes())
         print("Number of edges added : ", merged.number_of_edges()-original_graph.number_of_edges())
