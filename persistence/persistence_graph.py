@@ -1,24 +1,10 @@
 import networkx as nx
 import numpy as np
 from neo4j import GraphDatabase
-import logging
-from neo4j.exceptions import ServiceUnavailable
-
-from analytics.analytics_graph import AnalyticsGraph
 from visualization.visualization_graph import VisualizationGraph as vg
 
 
 class PersistenceGraph:
-
-    # MATCH(n) DETACH DELETE n
-    #
-    # LOAD CSV WITH HEADERS FROM "https://naterscreations.com/d/baby.csv"
-    # AS row MERGE(from:Product {ASIN: row.ASIN})
-    # MERGE(to: Product {ASIN: row.Similar})
-    # MERGE(from)-[: SIMILAR_TO]->(to)
-    #
-    # MATCH p = () - [:SIMILAR_TO]->() RETURN p LIMIT 25;
-
 
     def __init__(self):
         uri = "neo4j+s://95147e5a.databases.neo4j.io:7687"
@@ -44,6 +30,8 @@ class PersistenceGraph:
         :type graph: networkX
         :param delete_previous: tells if what is currently in Neo4j needs to be deleted; has to be False if none is in Neo4j
         :type graph: bool
+        :param communities: Communities of nodes of the graph
+        :type communities: set of lists
         """
 
         print(">> You have called the creation of your graph in Neo4j, please wait :)")
@@ -76,7 +64,7 @@ class PersistenceGraph:
 
         if not communities:
             #  Retrieve communities if not already passed as argument
-            communities = vg.retrieveCommunities("./results/communities100000.txt")
+            communities = vg.retrieveCommunities("./results/communities100000.txt") ## to change!
 
         for idx, community in enumerate(communities):
             for node in community:
@@ -95,18 +83,24 @@ class PersistenceGraph:
         # Close driver connection
         PersistenceGraph.close(self) # needed?
 
-    def create_edge(self, depart, destination, tag="similar_to"):
+        return
+
+    def create_edge(self, start, destination, tag="similar_to"):
         """
         Creator : Sophie Caroni
         reviewed by :
         Creates an edge between two nodes in the API Database NEO4J online
-        :param
-        :type
+        :param start: Starting node id
+        :type start: str
+        :param destination: Destination node id
+        :type destination: str
+        :param tag: Type of relationship to display
+        :type tag: str
         """
 
         query = f"""
                 MATCH (n1:Node),(n2:Node)
-                WHERE n1.id = '{depart}' AND n2.id = '{destination}'
+                WHERE n1.id = '{start}' AND n2.id = '{destination}'
                 CREATE (n1)-[r:{tag}]->(n2)
                 RETURN n1.id AS p1, n2.id AS p2
                 """
@@ -115,18 +109,20 @@ class PersistenceGraph:
 
         return
 
-    def create_hyperedge(self, depart, destination):
+    def create_hyperedge(self, start, destination):
         """
         Creator : Sophie Caroni
         reviewed by :
         Creates an edge between two nodes in the API Database NEO4J online
-        :param
-        :type
+        :param start: Starting node ID
+        :type start: str
+        :param destination: Destination node ID
+        :type destination: str
         """
 
         query = f"""
                 MATCH (n1:Hypernode),(n2:Hypernode)
-                WHERE n1.id = '{depart}' AND n2.id = '{destination}'
+                WHERE n1.id = '{start}' AND n2.id = '{destination}'
                 CREATE (n1)-[r:hypernode_link]->(n2)
                 RETURN n1.id AS p1, n2.id AS p2
                 """
@@ -155,8 +151,8 @@ class PersistenceGraph:
         Creator : Quentin Nater
         reviewed by :
         Creates a node in the API Database NEO4J online
-        :param node_id: ID of the new node to create
-        :type node_id: str
+        :param hypernode_id: ID of the new hypernode to create
+        :type hypernode_id: str
         """
 
         query = f"CREATE (:Hypernode {{id: '{hypernode_id}'}})"
@@ -170,6 +166,10 @@ class PersistenceGraph:
         Creator : Sophie Caroni
         reviewed by :
         Deletes the graph currently existing in the API Database NEO4J online
+        :param verbose: Starting and finishing sentences
+        :type verbose: bool
+        :param nodes_to_delete: How many nodes to delete from the graph
+        :type nodes_to_delete: str
         """
 
         if verbose:
@@ -202,12 +202,12 @@ class PersistenceGraph:
 
         return
 
-
     def get_node_number(self):
         """
          Creator : Sophie Caroni
          reviewed by :
          Retrieves how many nodes has the graph currently existing in the API Database NEO4J online
+         :return: number of nodes as integer
          """
 
         query = f"""
@@ -221,7 +221,6 @@ class PersistenceGraph:
             number_of_nodes = record["nodeCount"]
 
         return number_of_nodes
-
 
     def match_node(self, node_id):
         """
@@ -248,9 +247,9 @@ class PersistenceGraph:
         """
         Creator : Sophie Caroni
         reviewed by :
-        :param communities:
-        :type communities: List of tuples.
         Deletes the graph currently existing in the API Database Neo4j online
+        :param communities: Communities of nodes of the graph
+        :type communities: set of lists
         """
         print(">> You have asked the display of communities in the DB.")
 
@@ -274,8 +273,10 @@ class PersistenceGraph:
         """
         Creator : Sophie Caroni
         reviewed by :
-        :param community_id:
-        :type communities: Int
+        :param community_id: ID of the community to display
+        :type community_id: int
+        :param communities: Communities of nodes of the graph
+        :type communities: set of lists
         Display a selected community.
         """
         print(f">> You have called the display of the community {community_id} in the DB.")
@@ -302,16 +303,17 @@ class PersistenceGraph:
 
         return
 
-
     def display_hypernodes_communities(self, graph, communities=None, delete_previous=False): # not sure about the parameters
         """
         Creator : Sophie Caroni
         reviewed by :
+        Display a selected community.
         :param graph: networkX - Graph networkX of the amazon dataset
         :type graph: networkX
-        :param community_id:
-        :type communities: Int
-        Display a selected community.
+        :param communities: Communities of nodes of the graph
+        :type communities: set of lists
+        :param delete_previous: Delete or not the graph currently existing in the database
+        :type delete_previous: bool
         """
         print(">> You have called the display of hypernode communities in the DB.")
 
@@ -361,3 +363,5 @@ class PersistenceGraph:
 
         # Close driver connection
         PersistenceGraph.close(self)
+
+        return
