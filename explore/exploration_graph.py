@@ -75,6 +75,7 @@ class ExploreGraph:
                         inc += 1
 
                         if inc > 2:  # skip two initial blank spaces; only if there are more than 0 similars
+
                             similar_int = ExploreGraph.convert_asin_to_int(self, similar)  # casting
                             list_similars.append(similar_int)
 
@@ -129,13 +130,13 @@ class ExploreGraph:
         :param display: Display or not the plots and prints
         :type display: Boolean
         """
-        print(">> You have called the construction of your graph, please wait :)")
+        print(">> You have exploration analytic of your graph, please wait :)")
 
         if display:
             ExploreGraph.simple_plotting(self, graph)
 
         first_node = list(graph.nodes())[0]
-        path_dfs = ExploreGraph.dfs(self, graph, first_node, [])
+        path_dfs = ExploreGraph.dfs_iterative(self, graph, first_node)
 
         print("\t\t\t (EXP) : All nodes visited nodes (path_dfs) : ", path_dfs)
         print("\t\t\t (EXP) : Size of path_dfs ", len(path_dfs))
