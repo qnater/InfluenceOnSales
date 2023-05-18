@@ -59,34 +59,33 @@ class AnalyticsGraph:
 
         communities = []
 
-        # Library: community.girvan_newman
-        if library == "girvanNewman":
+        if library == "girvanNewman":  # Library: community.girvan_newman
             communities = girvan_newman(graph)
-            print(communities)
-            for i, c in enumerate(communities):
-                print("(girvanNewman) > community ", i, " : ", c)
 
-            ### throws an error (using flag = prod and graph=graph) - Sophie
+            if display:
+                print(communities)
+                for i, c in enumerate(communities):
+                    print("(girvanNewman) > community ", i, " : ", c)
+
             modularity_score = modularity(graph, communities)
             print("Modularity score:", modularity_score)
 
-        # Library: louvain_communities
-        if library == "louvain":
+        elif library == "louvain":  # Library: louvain_communities
             print("\t\t(ANL) : You have run the NetworkX Louvain community detection !")
             communities = louvain_communities(graph, seed=127)
             if display:
                 for i, c in enumerate(communities):
                     print("\t\t\t(ANL) : ", i, ": ", c)
 
-        # Library: greedy_modularity_communities
-        if library == "modularity":
+        else:  # Library: greedy_modularity_communities
             communities = greedy_modularity_communities(graph)
 
-            for i, c in enumerate(communities):
-                print("(greedy_modularity_communities) > community ", i, " : ", c)
+            if display:
+                for i, c in enumerate(communities):
+                    print("(greedy_modularity_communities) > community ", i, " : ", c)
 
-            modularity_score = modularity(graph, communities)
-            print("Modularity score:", modularity_score)
+                modularity_score = modularity(graph, communities)
+                print("Modularity score:", modularity_score)
 
         return communities
 

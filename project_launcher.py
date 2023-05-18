@@ -142,8 +142,8 @@ if __name__ == '__main__':
         print(">>Display all information and steps of the community detection ************************************\n\n")
 
         # COMMUNITY DETECTION===========================================================================================
-        communities = ag.amazon_community_detection(graph=graph_sampled_small, tag="overall_scenario", run_silhouette=False, display=False)
         communities_library = ag.community_library_detection(graph=graph_sampled_small, library="louvain", display=False)
+        communities = ag.amazon_community_detection(graph=graph_sampled_small, tag="overall_scenario", run_silhouette=False, display=False)
 
         # POPULAR ======================================================================================================
         popular_nodes = ag.highest_betweenness_centrality_scores(graph=graph_sampled_small, communities=communities, display=False)
