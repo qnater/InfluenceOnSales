@@ -14,7 +14,6 @@ from analytics.analytics_graph import AnalyticsGraph as ag, AnalyticsGraph
 from preprocessing.pre_processing_graph import PreProcessGraph as pg, PreProcessGraph
 from export.export_graph import ExportGraph as xg
 
-
 if __name__ == '__main__':
     print("\n=========================================================================================")
     print("========================INFLUENCE=OF=POPULARITY=ON=SALES===UNI-FR========================")

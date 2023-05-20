@@ -2,6 +2,7 @@ import datetime
 import random
 import networkx as nx
 import numpy as np
+
 from networkx.algorithms.community import girvan_newman, louvain_communities, greedy_modularity_communities
 from sklearn.metrics import silhouette_score
 from sklearn.metrics.cluster import normalized_mutual_info_score as NMI3
