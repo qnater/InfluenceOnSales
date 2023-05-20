@@ -23,7 +23,7 @@ if __name__ == '__main__':
     if os.name == "nt":
         mpl.use('TkAgg')  # without it, cannot run my plots (maybe personal)
     elif os.name == "posix":
-        print("Choosing a Mac really is the worst thing you've done in life!")
+        print("Choosing a Mac really is the best thing you've done in life!")
     else:
         print("Unknown operating system.")
 
@@ -88,9 +88,9 @@ if __name__ == '__main__':
         acc_homemade, pre_homemade, rec_homemade, jac_homemade = ag.accuracy_precision_recall_jaccard(communities_library=communities_library, community_homemade=communities_homemade, display=False)
 
         # QUALITY=====SILHOUETTE========================================================================================
-        silhouette_simple = ag.silhouette_score(graph=graph_sampled, community_detection=communities_simple, metric="euclidean", sample_size=1000)
-        silhouette_homemade = ag.silhouette_score(graph=graph_sampled, community_detection=communities_homemade, metric="euclidean", sample_size=1000)
-        silhouette_library = ag.silhouette_score(graph=graph_sampled, community_detection=communities_library, metric="euclidean", sample_size=1000)
+        silhouette_simple = ag.silhouette_score(graph=graph_sampled, communities=communities_simple, metric="euclidean", sample_size=1000)
+        silhouette_homemade = ag.silhouette_score(graph=graph_sampled, communities=communities_homemade, metric="euclidean", sample_size=1000)
+        silhouette_library = ag.silhouette_score(graph=graph_sampled, communities=communities_library, metric="euclidean", sample_size=1000)
 
 
 
@@ -157,7 +157,7 @@ if __name__ == '__main__':
         acc, pre, rec, jac = ag.accuracy_precision_recall_jaccard(communities_library=communities_library, community_homemade=communities, display=False)
 
         # QUALITY=====SILHOUETTE========================================================================================
-        silhouette_homemade = ag.silhouette_score(graph=graph_sampled_small, community_detection=communities, metric="euclidean", sample_size=1000)
+        silhouette_homemade = ag.silhouette_score(graph=graph_sampled_small, communities=communities, metric="euclidean", sample_size=1000)
 
         # EXPLORATION OF THE GRAPH =====================================================================================
         eg.analytics_exploration(graph=graph_sampled_small, display=False)
