@@ -1,18 +1,11 @@
-import datetime
 import os
-
 import matplotlib as mpl
-import networkx as nx
-import spicy as sp
-from matplotlib import pyplot as plt
-from networkx.algorithms.community import louvain_communities
-
-from explore.exploration_graph import ExploreGraph as eg, ExploreGraph
+from enrichment.enrichment_graph import EnrichmentGraph
+from explore.exploration_graph import ExploreGraph
 from persistence.persistence_graph import PersistenceGraph
-from visualization.visualization_graph import VisualizationGraph as vg, VisualizationGraph
-from analytics.analytics_graph import AnalyticsGraph as ag, AnalyticsGraph
-from preprocessing.pre_processing_graph import PreProcessGraph as pg, PreProcessGraph
-from export.export_graph import ExportGraph as xg
+from visualization.visualization_graph import VisualizationGraph
+from analytics.analytics_graph import AnalyticsGraph
+from preprocessing.pre_processing_graph import PreProcessGraph
 
 if __name__ == '__main__':
     print("\n=========================================================================================")
@@ -20,13 +13,16 @@ if __name__ == '__main__':
     print("==================================UNIT=TEST=CIRCLE_CI====================================\n")
 
     if os.name == "nt":
-        mpl.use('TkAgg')  # without it, cannot run my plots (maybe personal)
+        mpl.use('TkAgg')
+        print("Windows profile has been loaded.")
     elif os.name == "posix":
-        print("Choosing a Mac really is the best thing you've done in life!")
+        print("Mac profile has been loaded.")
     else:
         print("Unknown operating system.")
 
-    eg, pg, ag, vg = ExploreGraph(), PreProcessGraph(), AnalyticsGraph(), VisualizationGraph()
+    eg, pg, ag, vg, er, db = ExploreGraph(), PreProcessGraph(), AnalyticsGraph(), VisualizationGraph(), EnrichmentGraph(), PersistenceGraph()
+
+
     print(">>Display all information and steps of all our project ********************************************\n\n")
 
     # CONSTRUCTION OF THE GRAPH ====================================================================================
@@ -52,6 +48,13 @@ if __name__ == '__main__':
 
     # EXPLORATION OF THE GRAPH =====================================================================================
     eg.analytics_exploration(graph=graph_sampled_small, display=False)
+
+    # SIMULATE ENRICHMENT===========================================================================================
+    er.compute_enrichment(file="meta_Books", amazon_meta="test", new_amazon_meta="test")
+    merged = er.merge_for_enrichment(original_graph=graph_sampled_small, enrichment_file="formatted_amazon_meta.txt")
+
+    # CHECK DB======================================================================================================
+    db.display_community(community_id=1, communities=communities)
 
     # DISPLAY ALL COMMUNITY IN DIFFERENT COLOR WITH POPULAR NODE (CENTROID) IN GOLD COLOR ==========================
     vg.display_communities_graph(graph=graph_sampled_small, communities=communities, populars=popular_nodes, display=False, tag="overall_scenario_plot")

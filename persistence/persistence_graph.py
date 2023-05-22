@@ -1,3 +1,5 @@
+import datetime
+
 import networkx as nx
 import numpy as np
 from neo4j import GraphDatabase
@@ -23,7 +25,7 @@ class PersistenceGraph:
         Run the driver to the database
         :param query: Query to upload to the server
         :type query: String
-        :param List of other arguments
+        :param kwargs: List of other arguments
         :type kwargs: arguments
         :return result: Code of the result
         """
@@ -39,7 +41,7 @@ class PersistenceGraph:
         """
         self.driver.close()
 
-    def populate_database(self, graph, delete_previous, communities=None, new_community=False):
+    def populate_database(self, graph, delete_previous, communities=None, compute_community=False):
         """
         Creator : Sophie Caroni
         reviewed by : Quentin Nater
@@ -50,11 +52,12 @@ class PersistenceGraph:
         :type graph: bool
         :param communities: Communities of nodes of the graph
         :type communities: set of lists
-        :param new_community: create a new community list from the homemade algorithm
-        :type new_community: bool
+        :param compute_community: create a new community list from the homemade algorithm
+        :type compute_community: bool
+        :return : Communities of the computed nodes
         """
-
-        print(">> You have called the creation of your graph in Neo4j, please wait :)")
+        current_time = datetime.datetime.now()
+        print(">> You have called the creation of your graph in Neo4j, (at", current_time, "), please wait...")
 
         # Delete any previous graph currently existing on Neo4j
         if delete_previous:
@@ -64,7 +67,7 @@ class PersistenceGraph:
         node_ids = {}
 
         for (a, b) in graph.edges():
-            # Check if node a already exists in Neo4j
+            # Check if node an already exists in Neo4j
             if a in node_ids:
                 a_id = node_ids[a]
             else:
@@ -83,7 +86,7 @@ class PersistenceGraph:
             PersistenceGraph.create_edge(self, a_id, b_id)
 
         # create the community list if needed
-        communities = PersistenceGraph.call_communities(self, graph=graph, new_community=new_community, communities=communities)
+        communities = PersistenceGraph.call_communities(self, graph=graph, compute_community=compute_community, communities=communities)
 
         for idx, community in enumerate(communities):
             for node in community:
@@ -96,10 +99,80 @@ class PersistenceGraph:
                                 RETURN n
                             """
                     result = session.run(query)
-        print(">> The graph was successfully created, please enjoy ;)")
+
+        current_time = datetime.datetime.now()
+        print(">> The graph was successfully created, (at", current_time, "), enjoy.\n")
 
         # Close driver connection
-        PersistenceGraph.close(self) # needed?
+        PersistenceGraph.close(self)
+
+        return communities
+
+    def display_hypernodes_communities(self, graph, communities=None, compute_community=False, delete_previous=False):  # not sure about the parameters
+        """
+        Creator : Sophie Caroni
+        reviewed by :
+        Display a selected community.
+        :param graph: networkX - Graph networkX of the amazon dataset
+        :type graph: networkX
+        :param communities: Communities of nodes of the graph
+        :type communities: set of lists
+        :param compute_community: Compute or not the community detection
+        :type compute_community: bool
+        :param delete_previous: Delete or not the graph currently existing in the database
+        :type delete_previous: bool
+        """
+
+        current_time = datetime.datetime.now()
+        print(">> You have called the creation of hypernodes graph in Neo4j, (at", current_time, "), please wait...")
+
+        # Delete any previous graph currently existing on Neo4j
+        if delete_previous:
+            PersistenceGraph.delete_graph(self, verbose=False)
+
+        # create the community list if needed
+        communities = PersistenceGraph.call_communities(self, graph=graph, compute_community=compute_community, communities=communities)
+
+        # Convert the sets into lists, to make them suitable for Cypher
+        communities = [list(community) for community in communities]
+
+        hypernodes = []
+        # Create and display community as hypernodes
+        for idx, community in enumerate(communities):
+
+            # Name each hypernode them by their index and the number of nodes contained in the community
+            hypernode_id = str(idx)
+            PersistenceGraph.create_hypernode(self, hypernode_id)
+
+            all_neighbors = []
+            # Retrieve neighbors of the hypernode
+            for node in community:
+                neighbors = nx.neighbors(graph, node)
+                for node in neighbors:
+                    all_neighbors.append(node)
+            hypernodes.append((idx, np.unique(all_neighbors)))
+        print("\t\t\t\t (DB) Hypernodes: ", hypernodes)
+
+        final_hypernodes = []
+        for (idx, neighbors) in hypernodes:
+            final_neighbors, current_communities = [], -1
+            for node in neighbors:
+                for i, com in enumerate(communities):
+                    if node in com:
+                        current_communities = i
+                final_neighbors.append(current_communities)
+            final_hypernodes.append((idx, np.unique(final_neighbors)))
+
+        for (idx, neighbors) in final_hypernodes:
+            for n in neighbors:
+                if n != idx:
+                    PersistenceGraph.create_hyperedge(self, idx, n)
+
+        # Close driver connection
+        PersistenceGraph.close(self)
+
+        current_time = datetime.datetime.now()
+        print(">> The hypernodes were successfully created, (at", current_time, "), enjoy.")
 
         return
 
@@ -192,7 +265,7 @@ class PersistenceGraph:
         """
 
         if verbose:
-            print(">> You have called the deletion of any currently existing graph in Neo4j, please wait :)")
+            print(">> You have called the deletion of any currently existing graph in Neo4j, please wait...")
 
         current_nodes = PersistenceGraph.get_node_number(self)
 
@@ -204,7 +277,7 @@ class PersistenceGraph:
         interval = nodes_to_delete // 10
         deleted_nodes = 0
 
-        while deleted_nodes != nodes_to_delete:
+        while deleted_nodes < nodes_to_delete:
             query = f"""
                     MATCH (n)
                     WITH n LIMIT {interval}
@@ -214,7 +287,8 @@ class PersistenceGraph:
             with self.driver.session() as session:
                 session.run(query)
 
-            deleted_nodes = current_nodes - PersistenceGraph.get_node_number(self)
+            if nodes_to_delete > 10:
+                deleted_nodes = current_nodes - PersistenceGraph.get_node_number(self)
 
         if verbose:
             print(">> The graph was successfully deleted from Neo4j.")
@@ -257,11 +331,13 @@ class PersistenceGraph:
         with self.driver.session() as session:
             result = session.run(query)
             for record in result:
-                print(record)
+                print("\t\t\t\t (DB) record : ", record)
+
+        print("\t\t\t\t (DB) query successful")
 
         return node_id
 
-    def display_community(self, community_id, communities=None): # not sure about the parameters
+    def display_community(self, community_id, communities=None):
         """
         Creator : Sophie Caroni
         reviewed by : Quentin Nater
@@ -274,9 +350,8 @@ class PersistenceGraph:
         """
         print(f">> You have called the display of the community {community_id} in the DB.")
 
-        # Retrieve communities if not already passed as argument
-        if not communities:
-            communities = vg.retrieveCommunities("./results/default_communities.txt")
+        # create the community list if needed
+        communities = PersistenceGraph.call_communities(self, graph=None, compute_community=False, communities=communities)
 
         # Convert the sets into lists, to make them suitable for Cypher
         communities = [list(community) for community in communities]
@@ -296,7 +371,7 @@ class PersistenceGraph:
 
         return
 
-    def call_communities(self, graph, new_community, communities):
+    def call_communities(self, graph, compute_community, communities):
         """
         Creator : Sophie Caroni
         reviewed by : Quentin Nater
@@ -305,14 +380,14 @@ class PersistenceGraph:
         :type graph: networkX
         :param communities: Communities of nodes of the graph
         :type communities: set of lists
-        :param new_community: create a new community list from the homemade algorithm
-        :type new_community: bool
+        :param compute_community: create a new community list from the homemade algorithm
+        :type compute_community: bool
         """
-        if new_community:
+        if compute_community:
             communities = AnalyticsGraph.amazon_community_detection(self, graph=graph, tag="db", run_silhouette=False, display=False)
         else:
             if not communities:
                 #  Retrieve communities if not already passed as argument
-                communities = vg.retrieveCommunities("./results/default_communities.txt")
+                communities = vg.retrieve_communities(self, "./results/default_communities.txt")
 
         return communities

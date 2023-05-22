@@ -570,7 +570,7 @@ class AnalyticsGraph:
         myGraph.add_weighted_edges_from(graph.edges(data="weight", default=1))
         graph_size = myGraph.size()
 
-        # Peform inner logic of the algorithm
+        # Perform inner logic of the algorithm
         communities, inner_partition, stillBetter = AnalyticsGraph.inner_logic(self, myGraph, graph_size, communities,
                                                                                display=display)
         stillBetter = True
@@ -746,7 +746,7 @@ class AnalyticsGraph:
                         print("\t\t\t\t\t\tnumber of operations : ", operations)
                         print("\t\t\t\t\t\tcurrent communities : ", communities, "\n")
 
-        # Store temporarly communities, if not empty
+        # Store temporarily communities, if not empty
         communitiesTMP, newCommunitiesTMP = [], []
         for community in communities:
             if len(community) > 0:
@@ -785,6 +785,7 @@ class AnalyticsGraph:
         accuracies, precisions, recalls, jaccards = [], [], [], []
 
         # Consider each label-community, to compare it with each data-community
+        # As both community detection algorithms can have the same detection but not in the same time, we need to compute which set is the better compare to the ith to found pairs
         for i in range(len(data)):
             best_jaccard, index = 0.0, None
             for j in range(len(labels)):
@@ -805,10 +806,10 @@ class AnalyticsGraph:
                 # Calculate true positives, i.e. how many nodes are correctly included in the community
                 TP = len(data[i].intersection(labels[index]))
 
-                # Calculate false positives, i.e. how many nodes are wronlgy included in the community
+                # Calculate false positives, i.e. how many nodes are wrongly included in the community
                 FP = len(data[i].difference(labels[index]))
 
-                # Calculate false negative, i.e. how many nodes wronlgy excluded from the community
+                # Calculate false negative, i.e. how many nodes wrongly excluded from the community
                 FN = len(labels[index].difference(data[i]))
 
                 total = len(labels[index])
