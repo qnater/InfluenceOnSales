@@ -34,7 +34,7 @@ if __name__ == '__main__':
     print(">>Display all information and steps of the community detection ************************************\n\n")
 
     # COMMUNITY DETECTION===========================================================================================
-    communities = ag.amazon_community_detection(graph=graph_sampled_small, tag="overall_scenario", run_silhouette=False, display=False)
+    communities = ag.amazon_community_detection(graph=graph_sampled_small, tag="overall_scenario", run_silhouette=False, display=False, sub_function=False)
     communities_library = ag.community_library_detection(graph=graph_sampled_small, library="louvain", display=False)
 
     # POPULAR ======================================================================================================
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     acc, pre, rec, jac = ag.accuracy_precision_recall_jaccard(communities_library=communities_library, community_homemade=communities, display=False)
 
     # QUALITY=====SILHOUETTE========================================================================================
-    silhouette_homemade = ag.silhouette_score(graph=graph_sampled_small, communities=communities, metric="euclidean", sample_size=100)
+    silhouette_homemade = ag.silhouette_score(graph=graph_sampled_small, communities=communities, metric="euclidean", sample_size=100, sub_function=False)
 
     # EXPLORATION OF THE GRAPH =====================================================================================
     eg.analytics_exploration(graph=graph_sampled_small, display=False)

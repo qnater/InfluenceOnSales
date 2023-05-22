@@ -543,26 +543,28 @@ class AnalyticsGraph:
 
         return degree_counts
 
-    def amazon_community_detection(self, graph, tag="louvain", run_silhouette=False, display=False):
+    def amazon_community_detection(self, graph, tag="louvain", run_silhouette=False, display=False, sub_function=False):
         """
         Creator : Quentin Nater
         reviewed by : Sophie Caroni
         Community detection algorithm homemade
         :param graph: Graph networkX of the dataset
         :type graph: networkX
-        :param tag: Name of the algorithm on which this one is ispired
+        :param tag: Name of output result files of the algorithm
         :type tag: string
         :param run_silhouette: Compute silhouette coefficient of not
         :type run_silhouette: boolean
         :param display: Display the details or not
         :type display: boolean
+        :param sub_function: Hidden community detection for sub-function in other method
+        :type sub_function: boolean
         :return: Found communities
         """
         current_time = datetime.datetime.now()
         print("\n<< You have run the homemade amazon community detection algorithm (at", current_time, ").")
 
         # ANALYTICS - STAGE ONE
-        communities = [{u} for u in graph.nodes()]
+        communities = [{node} for node in graph.nodes()]
         modularity = 1 / pow(sum(dict(graph.degree()).values()), 2)
 
         myGraph = graph.__class__()
@@ -607,9 +609,11 @@ class AnalyticsGraph:
 
         # Display and store the best found communities
         best_communities = list(communities)
-        print("\t\t(ANL) : Community detection (louvain homemade) result :")
-        for x, c in enumerate(best_communities):
-            print("\t\t\t(ANL) : ", x, ": ", c)
+
+        if not sub_function:
+            print("\t\t(ANL) : Community detection (louvain homemade) result :")
+            for x, c in enumerate(best_communities):
+                print("\t\t\t(ANL) : ", x, ": ", c)
 
         # Save the found communities
         VisualizationGraph.save_communities(self, best_communities, tag)
@@ -640,7 +644,6 @@ class AnalyticsGraph:
         """
         # ANALYTICS - STAGE THREE
         communityNodes, newCommunity = {}, []
-        is_directed = graph.is_directed()
 
         # Initialize the communities by putting each node in a different community
         stillBetter = False
@@ -850,7 +853,7 @@ class AnalyticsGraph:
 
         return accuracy, precision, recall, jaccard
 
-    def silhouette_score(self, graph, communities, metric='euclidean', sample_size=None):
+    def silhouette_score(self, graph, communities, metric='euclidean', sample_size=None, sub_function=False):
         """
         Creator: Quentin Nater
         Reviewed by: Sophie Caroni
@@ -863,6 +866,8 @@ class AnalyticsGraph:
         :type metric: string
         :param sample_size: Number of nodes to sample from the graph (optional)
         :type sample_size: integer or None
+        :param sub_function: Hidden community detection for sub-function in other method
+        :type sub_function: boolean
         :return: The score of the silhouette index
         """
         current_time = datetime.datetime.now()
@@ -906,7 +911,8 @@ class AnalyticsGraph:
         # Compute the silhouette score from the sklearn library
         silhouette = silhouette_score(X=feature_matrix, labels=node_labels.ravel(), metric=metric)
 
-        print("\t\t\t (ANA) : Silhouette index score:", silhouette, "\n")
+        if not sub_function:
+            print("\t\t\t (ANA) : Silhouette index score:", silhouette, "\n")
 
         current_time = datetime.datetime.now()
         print("\t<< The Silhouette Index Score has finished (at", current_time, ").\n")

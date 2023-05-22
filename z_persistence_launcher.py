@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
     db, eg= PersistenceGraph(), ExploreGraph()
 
-    graph = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_enrichment.txt")
+    graph = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_big.txt")
 
     communities = db.populate_database(graph=graph, delete_previous=True, communities=set(), compute_community=True)
     db.display_hypernodes_communities(graph=graph, communities=communities, compute_community=False, delete_previous=False)

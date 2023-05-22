@@ -29,15 +29,15 @@ class EnrichmentGraph:
 
         merged = nx.compose(original_graph, enrichment)
 
-        communities_merged = AnalyticsGraph.amazon_community_detection(self, graph=merged, tag="merged", run_silhouette=False)
-        communities_original = AnalyticsGraph.amazon_community_detection(self, graph=original_graph, tag="original_graph", run_silhouette=False)
+        communities_merged = AnalyticsGraph.amazon_community_detection(self, graph=merged, tag="merged", run_silhouette=False, sub_function=True)
+        communities_original = AnalyticsGraph.amazon_community_detection(self, graph=original_graph, tag="original_graph", run_silhouette=False, sub_function=True)
 
         score_merged = AnalyticsGraph.silhouette_score(self, merged, communities_merged, 'euclidean', 1000)
         score_original = AnalyticsGraph.silhouette_score(self, original_graph, communities_original, 'euclidean', 1000)
 
         print("\t\t (ENR) : Number of nodes added  -> ", merged.number_of_nodes()-original_graph.number_of_nodes())
         print("\t\t (ENR) : Number of edges added  -> ", merged.number_of_edges()-original_graph.number_of_edges())
-        print("\t\t (ENR) : Difference score index -> ", score_merged-score_original)
+        print("\t\t (ENR) : Increase of the Silhouette Index Score -> ", score_merged-score_original)
 
         current_time = datetime.datetime.now()
         print(">> The merge of your enrichment graph is done, (at", current_time, "), thank you...\n")
