@@ -19,40 +19,34 @@ The Influence on Sales application is able to load and refine amazon datasets, i
 In this class you can find five scenarios to conduct the modules.
 
 ### Scenario 1 : Pre-Processing of the dataset
-In this scenario, the initial dataset will be cleaned and sampled into four different graphs. This process will be displayed by providing information on the number of nodes and quality of the clustering for each graph.
+In this scenario, the initial dataset will be cleaned and sampled into four different graphs. This process will be displayed by providing information on the number of nodes and quality of the clustering for each graph. During the cleaning operation, we will remove unnecessary nodes (not out-edged, not in-edged and isolated). 
 
 #### Used datasets
-_file (number of nodes of the graph)_
-
-amazon-meta.txt (700'000), dataset_off_amazon_enrichment.txt (180'000),  dataset_off_amazon_big.txt (120'000), dataset_off_amazon_small.txt (60'000)
+amazon-meta.txt (700'000 nodes), dataset_off_amazon_enrichment.txt (180'000 nodes),  dataset_off_amazon_big.txt (120'000 nodes), dataset_off_amazon_small.txt (60'000)
 
 #### Returned metrics
-Clustering coefficient, number of nodes.
+Runtime, Clustering Coefficient, number of nodes, number of edges, average degree.
 
 
 
 ### Scenario 2 : Community Detection
-In this scenario, two of the in scenario 1 generated graphs will be analysed and compared. To do so, on each graph, three different community detection algorithms are executed, 
-popular nodes are identified and community partition quality is evaluated.
+In this scenario, we compare algorithms of community detection with different datasets. To do so, on each graph, three different community detection algorithms are executed (simple homemade, enhanced homemade with weight and networkX library), 
+popular nodes are identified and community partition quality is evaluated with metrics such as Accuracy, Precision, Recall, Jaccard Similarity, Silhouette Index.
 
 #### Used datasets
-_file (number of nodes of the graph)_
-
-dataset_off_amazon_enrichment.txt (180'000),  dataset_off_amazon_big.txt (120'000)
+dataset_off_amazon_enrichment.txt (180'000 nodes),  dataset_off_amazon_big.txt (120'000 nodes)
 
 #### Returned metrics
-Popular nodes of each community, silhouette index, accuracy, precision, recall, Jaccard similarity
+Runtime, silhouette index, accuracy, precision, recall, Jaccard similarity, communities detected, popular nodes of each community with centrality value
 
 
 
 ### Scenario 3 : Visualization
-In this scenario, a small sample of the initial dataset will be used to visualize the graph. After running the proper algorithms, the graph will be plotted
+In this scenario, a small sample of the dataset will be used to visualize the graph. After running the community detection algorithm, the graph will be plotted
 with communities in different colors, and the most popular node inside each highlighted.
 
 #### Used datasets
-_file (number of nodes of the graph)_
-
-dataset_off_amazon_test.txt (11'990)
+dataset_off_amazon_test.txt (11'000 nodes)
 
 #### Returned object 
 Plot image
@@ -64,9 +58,7 @@ In this scenario, a small sample of the initial dataset will be used to conduct 
 the connections between nodes and communities (paths).
 
 #### Used datasets
-_file (number of nodes of the graph)_
-
-dataset_off_amazon_test.txt (11'990)
+dataset_off_amazon_test.txt (11'000 nodes)
 
 #### Returned object
 Plot image
@@ -77,14 +69,11 @@ Plot image
 This scenario consists of all four above described scenarios, which will be conducted in succession.
 
 ### Used datasets
-_file (number of nodes of the graph)_
-
 Based on the user choice between:
-
-dataset_off_amazon_enrichment.txt (180'000),  dataset_off_amazon_big.txt (120'000), dataset_off_amazon_small.txt (60'000), dataset_off_amazon_test.txt (11'990)
+dataset_off_amazon_enrichment.txt (180'000 nodes), dataset_off_amazon_big.txt (120'000 nodes), dataset_off_amazon_small.txt (60'000 nodes), dataset_off_amazon_test.txt (11'000 nodes)
 
 ### Returned objects
-Clustering coefficient, number of nodes, popular nodes of each community, silhouette index, accuracy, precision, recall, Jaccard similarity,
+Runtime, Clustering Coefficient, number of nodes, number of edges, average degree, silhouette index, accuracy, precision, recall, Jaccard similarity, community detected, popular nodes of each community with centrality measure
 plot images
 
     
@@ -93,7 +82,7 @@ plot images
 This file allows the unit tests of every possible implementation in the GitHub Circle CI.
 
 ## z_enrichment_launcher.py
-This file allows the merge of the main amazon datasetg with the enriched dataset.
+This file allows the merge of the main amazon dataset with the enriched dataset.
 
 ## z_persistence_launcher.py
 This file allows the population of the database online Neo4J.
