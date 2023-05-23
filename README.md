@@ -13,7 +13,7 @@ To install the Influence On Sales application, you will need to:
 
 
 # User Guide
-The Influence on Sales application is able to load and refine amazon datasets, in order to run different modules such as Pre-Processing, Enrichment, Analytics, Exploration, Persistence and Visualization.
+The Influence on Sales application is able to load and refine amazon datasets that are formated with ASIN. The app consists of different modules such as Pre-Processing, Enrichment, Analytics, Exploration, Persistence and Visualization.
 
 ## project_launcher.py
 In this class you can find five scenarios to conduct the modules.
