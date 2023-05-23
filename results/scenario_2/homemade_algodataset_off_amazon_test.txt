@@ -1,6 +1,6 @@
 Results of the community detection of homemade_algodataset_off_amazon_test
-Run Time : 0:00:00.566704
-Silhouette Index : 0.20372873210631395
+Run Time : 0:00:00.521880
+Silhouette Index : 0.1935234679782692
 Accuracy : 0.9869345536409764
 Precision : 0.9492509689640607
 Recall : 0.9869345536409764

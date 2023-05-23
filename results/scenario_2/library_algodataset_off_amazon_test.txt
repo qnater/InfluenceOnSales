@@ -1,6 +1,6 @@
 Results of the community detection of library_algodataset_off_amazon_test
-Run Time : -1 day, 23:59:59.195898
-Silhouette Index : 0.16759295475907732
+Run Time : 0:00:00.951315
+Silhouette Index : 0.19532352792578164
 Accuracy : 100
 Precision : 100
 Recall : 100

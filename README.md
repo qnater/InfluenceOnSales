@@ -68,11 +68,11 @@ Plot image
 ### Scenario 5 : Overall run
 This scenario consists of all four above described scenarios, which will be conducted in succession.
 
-### Used datasets
+#### Used datasets
 Based on the user choice between:
 dataset_off_amazon_enrichment.txt (180'000 nodes), dataset_off_amazon_big.txt (120'000 nodes), dataset_off_amazon_small.txt (60'000 nodes), dataset_off_amazon_test.txt (11'000 nodes)
 
-### Returned objects
+#### Returned objects
 Runtime, Clustering Coefficient, number of nodes, number of edges, average degree, silhouette index, accuracy, precision, recall, Jaccard similarity, community detected, popular nodes of each community with centrality measure
 plot images
 

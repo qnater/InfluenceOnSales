@@ -1,6 +1,6 @@
 Results of the community detection of simple_algodataset_off_amazon_test
-Run Time : -1 day, 23:38:37.911781
-Silhouette Index : 0.20599313309072612
+Run Time : 0:19:41.579349
+Silhouette Index : 0.23515611839907585
 Accuracy : 0.32295112857372854
 Precision : 0.9756001277686617
 Recall : 0.32295112857372854
