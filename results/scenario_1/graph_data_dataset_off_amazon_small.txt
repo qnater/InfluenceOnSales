@@ -1,0 +1,6 @@
+The efficiency of the graph graph_data_dataset_off_amazon_small
+Run Time : 0:00:01.269794
+Number of Nodes : 60707
+Number of Edges : 260472
+Clustering Coefficient : 0.5627095601123879
+Average Degree : 8.581283871711664

@@ -50,3 +50,46 @@ class ExportGraph:
         print(">> Job done, the refined graph in this directory './dataset/', (at", current_time, "), thank you...")
 
         return
+
+    def export_communities_results(self, run_time, communities, popular, acc, pre, rec, jac, silhouette, tag="default", scenario="2"):
+        """
+        Creator : Quentin Nater
+        reviewed by : Quentin Nater
+        Save the data from the scenario on a file
+        :param run_time: float - Run time of the community detection
+        :type run_time: float
+        :param communities: list of string - List of community detection by the algorithm
+        :type communities: list of string
+        :param popular: list of string - List of popular nodes of each community
+        :type popular: list of string
+        :param acc: float - Accuracy of the community algorithm
+        :type acc: float
+        :param pre: float - Precision of the community algorithm
+        :type pre: float
+        :param pre: float - Precision of the community algorithm
+        :type pre: float
+        :param rec: float - Recall of the community algorithm
+        :type rec: float
+        :param jac: float - Jaccard similitude value of the community algorithm
+        :type jac: float
+        :param silhouette: float - Silhouette Index of the communities
+        :type silhouette: float
+        :param tag: string - Name of the output file of results
+        :type tag: string
+        :param scenario: string - Number of scenario played
+        :type scenario: string
+        :return: -
+        """
+
+        with open("./results/scenario_"+str(scenario)+"/" + str(tag) + ".txt", 'w') as file:
+            file.write("Results of the community detection of " + str(tag) +
+                       "\nRun Time : " + str(run_time) +
+                       "\nSilhouette Index : " + str(silhouette) +
+                       "\nAccuracy : " + str(acc) +
+                       "\nPrecision : " + str(pre) +
+                       "\nRecall : " + str(rec) +
+                       "\nJaccard : " + str(jac) +
+                       "\nNumber of communities : " + str(len(communities)) +
+                       "\nCommunities : " + str(communities) +
+                       "\nPopular : " + str(popular))
+

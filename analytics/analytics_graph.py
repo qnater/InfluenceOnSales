@@ -51,10 +51,10 @@ class AnalyticsGraph:
         :type graph: string
         :param display: Display the details or not
         :type display: boolean
-        :return: Communities found by the chosen library
+        :return: Communities found by the chosen library with run time
         """
-        current_time = datetime.datetime.now()
-        print(">> You have called the community detection with the library ", library, " (at", current_time, ")")
+        start_time = datetime.datetime.now()
+        print(">> You have called the community detection with the library ", library, " (at", start_time, ")")
 
         if library == "girvanNewman":  # Library: community.girvan_newman
             communities = girvan_newman(graph)
@@ -84,7 +84,12 @@ class AnalyticsGraph:
                 modularity_score = modularity(graph, communities)
                 print("Modularity score:", modularity_score)
 
-        return communities
+        end_time = datetime.datetime.now()
+        print(">> The community detection with the library is finished (at", end_time, ")")
+
+        run_time = end_time - start_time
+
+        return communities, run_time
 
     def homemade_modularity_gain(self, graph, first_community, second_community):
         """
@@ -138,9 +143,10 @@ class AnalyticsGraph:
         :return: Communities found based on the best modularity gain
         :param display: Display the details or not
         :type display: boolean
+        :return: Communities detection and run time
         """
-        current_time = datetime.datetime.now()
-        print(">> You've called the homemade community detection (at", current_time, "), please wait.")
+        start_time = datetime.datetime.now()
+        print(">> You've called the homemade community detection (at", start_time, "), please wait.")
 
         # phase 1 =====================================================================================================
         # Set initial communities as one node each and compute the initial modularity
@@ -238,10 +244,12 @@ class AnalyticsGraph:
 
         print("\n\t(ANL) : Communities result : ", communities, " \n\n")
 
-        current_time = datetime.datetime.now()
-        print("<< The louvain detection homemade has finished (at", current_time, ").")
+        end_time = datetime.datetime.now()
+        print("<< The louvain detection homemade has finished (at", end_time, ").")
 
-        return communities
+        run_time = end_time-start_time
+
+        return communities, run_time
 
     def compare_algo_efficiency(self, graph, communities_algo_homemade):
         """
@@ -283,7 +291,7 @@ class AnalyticsGraph:
         """
         Creator : Emmanuel Cazzato
         reviewed by : Sophie Caroni
-        Compare communities found using homemade algorithm with those found using louvain_communities library
+        Compute different metrics to deep analyze the graph and its communities
         :param graph: Graph networkX of the dataset
         :type graph: networkX
         :param commands: [simple_information, degree_distribution, connected_components, diameters, clustering_coefficient,
@@ -349,7 +357,7 @@ class AnalyticsGraph:
         :type graph: networkX
         :param display: Display the details or not
         :type display: boolean
-        :return: :Dictionary of nodes as keys and PageRank's centrality as value
+        :return: Dictionary of nodes as keys and PageRank's centrality as value
         """
         pr_scores = nx.pagerank(graph)
 
@@ -552,7 +560,7 @@ class AnalyticsGraph:
         :type graph: networkX
         :param tag: Name of output result files of the algorithm
         :type tag: string
-        :param run_silhouette: Compute silhouette coefficient of not
+        :param run_silhouette: Compute silhouette index or not
         :type run_silhouette: boolean
         :param display: Display the details or not
         :type display: boolean
@@ -560,8 +568,8 @@ class AnalyticsGraph:
         :type sub_function: boolean
         :return: Found communities
         """
-        current_time = datetime.datetime.now()
-        print("\n<< You have run the homemade amazon community detection algorithm (at", current_time, ").")
+        start_time = datetime.datetime.now()
+        print("\n<< You have run the homemade amazon community detection algorithm (at", start_time, ").")
 
         # ANALYTICS - STAGE ONE
         communities = [{node} for node in graph.nodes()]
@@ -623,10 +631,12 @@ class AnalyticsGraph:
             AnalyticsGraph.silhouette_score(self, graph=graph, communities=best_communities, metric="euclidean",
                                             sample_size=1000)
 
-        current_time = datetime.datetime.now()
-        print("<< The homemade amazon community detection algorithm has finished (at", current_time, ").\n")
+        end_time = datetime.datetime.now()
+        print("<< The homemade amazon community detection algorithm has finished (at", end_time, ").\n")
 
-        return best_communities
+        run_time = end_time-start_time
+
+        return best_communities, run_time
 
     def inner_logic(self, graph, size_of_graph, communities, display=True):
         """

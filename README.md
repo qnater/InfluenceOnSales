@@ -1,10 +1,10 @@
 # Welcome to Influence On Sales on Amazon graphs
 *This project is directed by the University of Fribourg in the context of the course FS2023: 63091 Social Media Analytics*
 
-To be able to use the Influence on Sales application, please followed the belowed steps for installation, user guide and information.
+To be able to use the Influence on Sales application, please follow the steps below for installation, user guide and information.
 
 # Installation
-To install and use the Influence On Sales application, you will need :
+To install the Influence On Sales application, you will need to:
 1) First create a directory on your computer and open a terminal on this directory.
 2) On the terminal, clone the GitHub repository by copying pasting this command : ```git clone https://github.com/qnater/InfluenceOnSales.git```
 3) Once clone, you can open your PyCharm or python environment. On the Terminal of PyCharm or your computer, install or requirements with the command : ```pip install -r requirements.txt```
@@ -13,72 +13,76 @@ To install and use the Influence On Sales application, you will need :
 
 
 # User Guide
-The Influence on Sales application is able to load amazon datasets refined for the project and run different modules as Analytics, Enrichment, Exploration, Persistence, Pre-Processing and Visualization.
+The Influence on Sales application is able to load and refine amazon datasets, in order to run different modules such as Pre-Processing, Enrichment, Analytics, Exploration, Persistence and Visualization.
 
 ## project_launcher.py
-The class "project_launcher.py", you can found all different scenarios prepared to express all features.
+In this class you can find five scenarios to conduct the modules.
 
 ### Scenario 1 : Pre-Processing of the dataset
-This scenario displays the process and the values of steps of pre-processing.
+In this scenario, the initial dataset will be cleaned and sampled into four different graphs. This process will be displayed by providing information on the number of nodes and quality of the clustering for each graph. During the cleaning operation, we will remove unnecessary nodes (not out-edged, not in-edged and isolated). 
 
-#### datasets
-amazon-meta.txt (700'000), dataset_off_amazon_enrichment.txt (180'000),  dataset_off_amazon_big.txt (120'000), dataset_off_amazon_small.txt (60'000)
+#### Used datasets
+amazon-meta.txt (700'000 nodes), dataset_off_amazon_enrichment.txt (180'000 nodes),  dataset_off_amazon_big.txt (120'000 nodes), dataset_off_amazon_small.txt (60'000)
 
-#### variables
-XXX
+#### Returned metrics
+Runtime, Clustering Coefficient, number of nodes, number of edges, average degree.
 
 
 
 ### Scenario 2 : Community Detection
-XXX
+In this scenario, we compare algorithms of community detection with different datasets. To do so, on each graph, three different community detection algorithms are executed (simple homemade, enhanced homemade with weight and networkX library), 
+popular nodes are identified and community partition quality is evaluated with metrics such as Accuracy, Precision, Recall, Jaccard Similarity, Silhouette Index.
 
-#### datasets
-XXX
+#### Used datasets
+dataset_off_amazon_enrichment.txt (180'000 nodes),  dataset_off_amazon_big.txt (120'000 nodes)
 
-#### variables
-XXX
+#### Returned metrics
+Runtime, silhouette index, accuracy, precision, recall, Jaccard similarity, communities detected, popular nodes of each community with centrality value
 
 
 
 ### Scenario 3 : Visualization
-XXX
+In this scenario, a small sample of the dataset will be used to visualize the graph. After running the community detection algorithm, the graph will be plotted
+with communities in different colors, and the most popular node inside each highlighted.
 
-#### datasets
-XXX
+#### Used datasets
+dataset_off_amazon_test.txt (11'000 nodes)
 
-#### variables
-XXX
+#### Returned object 
+Plot image
 
 
 
 ### Scenario 4 : Exploration
-XXX
+In this scenario, a small sample of the initial dataset will be used to conduct a deep analysis of the quality of the graph, as well as 
+the connections between nodes and communities (paths).
 
-#### datasets
-XXX
+#### Used datasets
+dataset_off_amazon_test.txt (11'000 nodes)
 
-#### variables
-XXX
+#### Returned object
+Plot image
 
 
 
 ### Scenario 5 : Overall run
-XXX
+This scenario consists of all four above described scenarios, which will be conducted in succession.
 
-### datasets
-XXX
+#### Used datasets
+Based on the user choice between:
+dataset_off_amazon_enrichment.txt (180'000 nodes), dataset_off_amazon_big.txt (120'000 nodes), dataset_off_amazon_small.txt (60'000 nodes), dataset_off_amazon_test.txt (11'000 nodes)
 
-### variables
-XXX
+#### Returned objects
+Runtime, Clustering Coefficient, number of nodes, number of edges, average degree, silhouette index, accuracy, precision, recall, Jaccard similarity, community detected, popular nodes of each community with centrality measure
+plot images
+
     
     
 ## z_circle_ci_unit_test.py
-The file has been made to run every possible implementation in the GitHub Circle CI as unit tests.
+This file allows the unit tests of every possible implementation in the GitHub Circle CI.
 
 ## z_enrichment_launcher.py
-This file has been implemented to test and make the merge of the current amazon graph and the enriched dataset.
+This file allows the merge of the main amazon dataset with the enriched dataset.
 
 ## z_persistence_launcher.py
-This file has been implemented to test and populate the database online Neo4J.
-
-
+This file allows the population of the database online Neo4J.

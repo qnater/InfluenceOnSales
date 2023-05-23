@@ -112,7 +112,8 @@ class PreProcessGraph:
         :type graph: networkX
         :return: The graph without nodes not having any incoming edge
         """
-        print(">> You have called the pre-processing function to refine your graph (without incoming edges), please wait.")
+        print(
+            ">> You have called the pre-processing function to refine your graph (without incoming edges), please wait.")
 
         notIncomingEdges = []
         for node, in_degree in graph.in_degree():
@@ -140,7 +141,8 @@ class PreProcessGraph:
         :type graph: networkX
         :return: The graph without nodes not having any outgoing edge
         """
-        print(">> You have called the pre-processing function to refine your graph (without outgoing edges), please wait.")
+        print(
+            ">> You have called the pre-processing function to refine your graph (without outgoing edges), please wait.")
 
         notOutgoingEdges = []
 
@@ -260,15 +262,36 @@ class PreProcessGraph:
 
         return nodeDegrees
 
-    def display_efficiency_of_graph(self, graph):
+    def display_efficiency_of_graph(self, graph, write=False, tag="efficiency", run_time=0, scenario="1"):
         """
         Creator : Quentin Nater
         reviewed by : Sophie Caroni
         Display efficiency of the graph with coefficient clustering and average of degrees
         :param graph: Graph networkX of the amazon dataset
         :type graph: networkX
+        :param write: Write the result in the database
+        :type write: bool
+        :param tag: Name of the filename with the results
+        :type tag: string
+        :param run_time: Time of the run of the graph construction
+        :type run_time: float
+        :param scenario: Number of scenario played
+        :type scenario: string
         """
         degrees = [graph.degree(n) for n in graph.nodes()]
-        print("\n\t\t\t\t\t\t (I) number of edges        :\t", graph.number_of_edges(),
-              "\n\t\t\t\t\t\t (I) coefficient clustering :\t", nx.average_clustering(graph),
-              "\n\t\t\t\t\t\t (I) average of degrees     :\t", (sum(degrees) / len(degrees)), "\n\n")
+        number_of_edges = graph.number_of_edges()
+        number_of_nodes = graph.number_of_nodes()
+        coefficient_clustering = nx.average_clustering(graph)
+        avg_degree = (sum(degrees) / len(degrees))
+        print("\n\t\t\t\t\t\t (I) number of edges        :\t", number_of_edges,
+              "\n\t\t\t\t\t\t (I) coefficient clustering :\t", coefficient_clustering,
+              "\n\t\t\t\t\t\t (I) average of degrees     :\t", avg_degree, "\n\n")
+
+        if write:
+            with open("./results/scenario_"+str(scenario)+"/" + str(tag) + ".txt", 'w') as file:
+                file.write("The efficiency of the graph " + str(tag) +
+                           "\nRun Time : " + str(run_time) +
+                           "\nNumber of Nodes : " + str(number_of_nodes) +
+                           "\nNumber of Edges : " + str(number_of_edges) +
+                           "\nClustering Coefficient : " + str(coefficient_clustering) +
+                           "\nAverage Degree : " + str(avg_degree))
