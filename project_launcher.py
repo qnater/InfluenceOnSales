@@ -63,8 +63,7 @@ if __name__ == '__main__':
     elif scenario == "2":
         print(">>Display all information and steps of the community detection ************************************\n\n")
 
-        # datasets = ["dataset_off_amazon_big", "dataset_off_amazon_enrichment"]
-        datasets = ["dataset_off_amazon_test", "dataset_off_amazon_test"]
+        datasets = ["dataset_off_amazon_big", "dataset_off_amazon_enrichment"]
 
         for dataset in datasets:
             # CONSTRUCTION OF THE GRAPH ====================================================================================
