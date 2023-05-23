@@ -26,7 +26,7 @@ class EnrichmentGraph:
 
         # Create a graph
         filename = "./dataset/test_dataset/" + str(enrichment_file)
-        enrichment = ExploreGraph.construct_graph_by_file(self, file_name=filename,  limit=16010574)
+        enrichment, rt = ExploreGraph.construct_graph_by_file(self, file_name=filename,  limit=16010574)
 
         merged = nx.compose(original_graph, enrichment)
 
