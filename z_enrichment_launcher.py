@@ -10,13 +10,14 @@ if __name__ == '__main__':
     print("==================================UNIT=TEST=CIRCLE_CI====================================\n")
 
     if os.name == "nt":
-        mpl.use('TkAgg')  # without it, cannot run my plots (maybe personal)
+        mpl.use('TkAgg')
+        print("Windows profile has been loaded.")
     elif os.name == "posix":
-        print("Choosing a Mac really is the worst thing you've done in life!")
+        print("Mac profile has been loaded.")
     else:
         print("Unknown operating system.")
 
     er, eg, ex = EnrichmentGraph(), ExploreGraph(), ExportGraph()
     graph = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_big.txt")
     merged = er.merge_for_enrichment(original_graph=graph, enrichment_file="formatted_amazon_meta.txt")
-    ex.create_dataset(graph=merged, name="dataset_off_amazon_enrichment_2")
+    ex.create_dataset(graph=merged, name="dataset_off_amazon_enrichment_3")

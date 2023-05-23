@@ -97,6 +97,7 @@ class ExploreGraph:
         n_nodes, n_edges = graph.number_of_nodes(), graph.number_of_edges()
         print("\t\tThe graph has been successfully constructed! (nodes:" + str(n_nodes) + ", edges:" + str(n_edges) + ")")
 
+
         if display:
             list_similars = list(set(list_similars))  # remove redundancy (duplicates)
             list_not_out_edged = set(list_not_out_edged)  # casting

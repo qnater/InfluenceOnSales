@@ -4,6 +4,7 @@ import networkx as nx
 
 from analytics.analytics_graph import AnalyticsGraph
 from explore.exploration_graph import ExploreGraph
+from preprocessing.pre_processing_graph import PreProcessGraph
 
 
 class EnrichmentGraph:
@@ -28,6 +29,8 @@ class EnrichmentGraph:
         enrichment = ExploreGraph.construct_graph_by_file(self, file_name=filename,  limit=16010574)
 
         merged = nx.compose(original_graph, enrichment)
+
+        merged = PreProcessGraph.remove_isolated_nodes(self, merged)
 
         communities_merged = AnalyticsGraph.amazon_community_detection(self, graph=merged, tag="merged", run_silhouette=False, sub_function=True)
         communities_original = AnalyticsGraph.amazon_community_detection(self, graph=original_graph, tag="original_graph", run_silhouette=False, sub_function=True)

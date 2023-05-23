@@ -10,9 +10,10 @@ if __name__ == '__main__':
     print("==================================UNIT=TEST=CIRCLE_CI====================================\n")
 
     if os.name == "nt":
-        mpl.use('TkAgg')  # without it, cannot run my plots (maybe personal)
+        mpl.use('TkAgg')
+        print("Windows profile has been loaded.")
     elif os.name == "posix":
-        print("Choosing a Mac really is the worst thing you've done in life!")
+        print("Mac profile has been loaded.")
     else:
         print("Unknown operating system.")
 

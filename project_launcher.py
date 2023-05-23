@@ -136,7 +136,7 @@ if __name__ == '__main__':
     else:
         print(">>Display all information and steps of all our project ********************************************\n\n")
 
-        string_input = input("What size of dataset do you want (enrichment (120'000), middle (91'000), small (60'000), test (11'000) : ")
+        string_input = input("What size of dataset do you want (enrichment (190'000), big (120'00), middle (90'000), small (60'000), test (10'000) : ")
 
         # CONSTRUCTION OF THE GRAPH ====================================================================================
         graph_sampled_small = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_" + string_input + ".txt")
