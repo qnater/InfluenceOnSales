@@ -1,9 +1,0 @@
-
-# Review Sophie 20.03
-
-TODO's next session:
-
-- investigate what are the asin given as "discontinued product"
-- clarify (and better describe as comments) what lines 60-66 of exploration_graph.py do: categories?
-- clarify (and better describe as comments) what do lines 71-75 of exploration_graph.py do:
-- requirements.txt ? We all should have a single identical environment

@@ -91,7 +91,7 @@ class VisualizationGraph:
                 community_colors.append("#" + "".join([random.choice("0123456789ABCDEF") for _ in range(6)]))
 
         # Draw the graph with each node colored according to its community
-        pos = nx.spring_layout(graph)
+        pos, color = nx.spring_layout(graph), '#FFFFFF'
         for node in graph.nodes():
             for p in populars:
                 if node in p:

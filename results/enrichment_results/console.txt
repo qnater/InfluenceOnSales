@@ -1,0 +1,41 @@
+C:\Users\nquen\.virtualenvs\InfluenceOnSales-hpYKqTbn\Scripts\python.exe "C:/Program Files/JetBrains/PyCharm 2022.2.1/plugins/python/helpers/pydev/pydevconsole.py" --mode=client --host=127.0.0.1 --port=53752
+import sys; print('Python %s on %s' % (sys.version, sys.platform))
+sys.path.extend(['C:\\Users\\nquen\\switchdrive\\MASTER_Semester_02\\02_SIN08609_SocialMediaAnalytics\\InfluenceOnSales', 'C:\\Users\\nquen\\switchdrive\\MASTER_Semester_02\\02_SIN08609_SocialMediaAnalytics\\InfluenceOnSales', 'C:/Users/nquen/switchdrive/MASTER_Semester_02/02_SIN08609_SocialMediaAnalytics/InfluenceOnSales'])
+PyDev console: starting.
+Python 3.10.10 (tags/v3.10.10:aad5f6a, Feb  7 2023, 17:20:36) [MSC v.1929 64 bit (AMD64)] on win32
+runfile('C:/Users/nquen/switchdrive/MASTER_Semester_02/02_SIN08609_SocialMediaAnalytics/InfluenceOnSales/z_enrichment_launcher.py', wdir='C:/Users/nquen/switchdrive/MASTER_Semester_02/02_SIN08609_SocialMediaAnalytics/InfluenceOnSales')
+=========================================================================================
+========================INFLUENCE=OF=POPULARITY=ON=SALES===UNI-FR========================
+==================================UNIT=TEST=CIRCLE_CI====================================
+>> You have called the construction of your graph, please wait :)
+		The graph has been successfully constructed! (nodes:126981, edges:527243)
+				ASIN : 							126981
+				SIMILARS (UNIQUES) 				126981
+				NOT IN-EDGED NODES: 			0
+				NODES CREATED OUTSIDE (FILE) : 	0
+				NOT OUT-EDGED NODES: 			0
+				ISOLATED NODES: 				0
+>> You have called an enrichment of your current graph, (at 2023-05-23 00:06:45.952354 ), please wait for the merge...
+>> You have called the construction of your graph, please wait :)
+		The graph has been successfully constructed! (nodes:78402, edges:91245)
+				ASIN : 							4104
+				SIMILARS (UNIQUES) 				74610
+				NOT IN-EDGED NODES: 			3792
+				NODES CREATED OUTSIDE (FILE) : 	74298
+				NOT OUT-EDGED NODES: 			550
+				ISOLATED NODES: 				550
+<< You have run the homemade amazon community detection algorithm (at 2023-05-23 00:06:47.771348 ).
+<< The homemade amazon community detection algorithm has finished (at 2023-05-23 00:07:13.109373 ).
+<< You have run the homemade amazon community detection algorithm (at 2023-05-23 00:07:13.112423 ).
+<< The homemade amazon community detection algorithm has finished (at 2023-05-23 00:07:25.989201 ).
+	<< The Silhouette Index Score has been called (at 2023-05-23 00:07:25.991196 ), please wait.
+			 (ANA) : Silhouette index score: 0.20789279539031558
+	<< The Silhouette Index Score has finished (at 2023-05-23 00:07:26.475322 ).
+	<< The Silhouette Index Score has been called (at 2023-05-23 00:07:26.477309 ), please wait.
+			 (ANA) : Silhouette index score: 0.05106323346365895
+	<< The Silhouette Index Score has finished (at 2023-05-23 00:07:27.015441 ).
+		 (ENR) : Number of nodes added  ->  62844
+		 (ENR) : Number of edges added  ->  86221
+		 (ENR) : Increase of the Silhouette Index Score ->  0.15682956192665662
+>> The merge of your enrichment graph is done, (at 2023-05-23 00:07:27.111654 ), thank you...
+>> You have called the export of your graph, (at 2023-05-23 00:07:27.124395 ), please wait...

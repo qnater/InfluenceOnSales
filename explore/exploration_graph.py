@@ -97,6 +97,7 @@ class ExploreGraph:
         n_nodes, n_edges = graph.number_of_nodes(), graph.number_of_edges()
         print("\t\tThe graph has been successfully constructed! (nodes:" + str(n_nodes) + ", edges:" + str(n_edges) + ")")
 
+
         if display:
             list_similars = list(set(list_similars))  # remove redundancy (duplicates)
             list_not_out_edged = set(list_not_out_edged)  # casting
@@ -149,13 +150,12 @@ class ExploreGraph:
         path_star = ExploreGraph.a_star_search(self, graph, start_node, goal_node)
 
         if path_star is not None:
-            print("\t\t\t (EXP) : All nodes visited nodes (path_star) : ", path_star)
-            print("\t\t\t (EXP) : Size of path_star ", len(path_star))
-            print("\t\t\t (EXP) : path_star found:", " -> ", path_star)
+            print("\t\t\t (EXP) : Small walk (0->13) -> visited nodes (path_star) : ", path_star)
+            print("\t\t\t (EXP) : Small walk (0->13) -> size of path ", len(path_star))
+            print("\t\t\t (EXP) : Small walk (0->13) -> found:", " -> ", path_star)
             if display:
                 ExploreGraph.draw_path_graph(self, graph, path_star)
-        else:
-            print("\t\t\t (EXP) : Path not found")
+
 
     def draw_path_graph(self, graph, path, tag="visualization_graph"):
         """

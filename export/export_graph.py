@@ -1,14 +1,9 @@
 import datetime
-import re
-
-import networkx as nx
-from explore.exploration_graph import ExploreGraph as eg, ExploreGraph
-import csv
 
 
 class ExportGraph:
 
-    def create_dataset(graph, name):
+    def create_dataset(self, graph, name):
         """
         Creator : Sophie Caroni
         reviewed by : Quentin Nater

@@ -2,6 +2,7 @@ import datetime
 import random
 import networkx as nx
 import numpy as np
+
 from networkx.algorithms.community import girvan_newman, louvain_communities, greedy_modularity_communities
 from sklearn.metrics import silhouette_score
 from sklearn.metrics.cluster import normalized_mutual_info_score as NMI3
@@ -296,28 +297,28 @@ class AnalyticsGraph:
         results = []
 
         if "degree_distribution" in commands or all_checked:
-            commands.append([["degree_distribution"], [AnalyticsGraph.degree_distribution(graph=graph, display=True)]])
+            commands.append([["degree_distribution"], [AnalyticsGraph.degree_distribution(self, graph=graph, display=True)]])
 
         if "clustering_coefficient" in commands or all_checked:
-            commands.append([["clustering_coefficient"], [AnalyticsGraph.clustering_coefficient(graph=graph, display=True)]])
+            commands.append([["clustering_coefficient"], [AnalyticsGraph.clustering_coefficient(self, graph=graph, display=True)]])
 
         if "diameters" in commands or all_checked:
-            commands.append([["diameters"], [AnalyticsGraph.degree_centrality_scores(graph=graph, display=True)]])
+            commands.append([["diameters"], [AnalyticsGraph.degree_centrality_scores(self, graph=graph, display=True)]])
 
         if "degree_centrality" in commands or all_checked:
-            commands.append([["degree_centrality"], [AnalyticsGraph.degree_centrality_scores(graph=graph, display=True)]])
+            commands.append([["degree_centrality"], [AnalyticsGraph.degree_centrality_scores(self, graph=graph, display=True)]])
 
         if "eigenvector_centrality" in commands or all_checked:
-            commands.append([["eigenvector_centrality"], [AnalyticsGraph.eigenvector_centrality_scores(graph=graph, display=True)]])
+            commands.append([["eigenvector_centrality"], [AnalyticsGraph.eigenvector_centrality_scores(self, graph=graph, display=True)]])
 
         if "pagerank_centrality" in commands or all_checked:
-            commands.append([["pagerank_centrality"], [AnalyticsGraph.pagerank_centrality_scores(graph=graph, display=True)]])
+            commands.append([["pagerank_centrality"], [AnalyticsGraph.pagerank_centrality_scores(self, graph=graph, display=True)]])
 
         if "closeness_centrality" in commands or all_checked:
-            commands.append([["closeness_centrality"], [AnalyticsGraph.closeness_centrality_scores(graph=graph, display=True)]])
+            commands.append([["closeness_centrality"], [AnalyticsGraph.closeness_centrality_scores(self, graph=graph, display=True)]])
 
         if "betweenness_centrality" in commands or all_checked:
-            commands.append([["betweenness_centrality"], [AnalyticsGraph.betweenness_centrality_scores(graph=graph, display=True)]])
+            commands.append([["betweenness_centrality"], [AnalyticsGraph.betweenness_centrality_scores(self, graph=graph, display=True)]])
 
         return results
 
@@ -523,7 +524,7 @@ class AnalyticsGraph:
     def degree_distribution(self, graph, display=False):
         """
         Creator : Emmanuel Cazzato
-        reviewed by : Quentin Nater
+        reviewed by : Quentin Nater & Sophie Caroni
         Get the degree distribution of the nodes in the graph
         :param graph: Graph networkX of the dataset
         :type graph: networkX
@@ -542,51 +543,50 @@ class AnalyticsGraph:
 
         return degree_counts
 
-
-    # =================================================================================================================
-    # COMMUNITY DETECTION HOMEMADE
-    # =================================================================================================================
-    def amazon_community_detection(self, graph, tag="louvain", run_silhouette=False, display=False):
+    def amazon_community_detection(self, graph, tag="louvain", run_silhouette=False, display=False, sub_function=False):
         """
         Creator : Quentin Nater
         reviewed by : Sophie Caroni
-        Community detection algorithm
+        Community detection algorithm homemade
         :param graph: Graph networkX of the dataset
         :type graph: networkX
-        :param tag: Name of the analysis
+        :param tag: Name of output result files of the algorithm
         :type tag: string
         :param run_silhouette: Compute silhouette coefficient of not
         :type run_silhouette: boolean
         :param display: Display the details or not
         :type display: boolean
+        :param sub_function: Hidden community detection for sub-function in other method
+        :type sub_function: boolean
         :return: Found communities
         """
         current_time = datetime.datetime.now()
-        print("\n<< You have run the homemade amazon community detection algorithm (at", current_time, "), arigato <3")
+        print("\n<< You have run the homemade amazon community detection algorithm (at", current_time, ").")
 
-        # =STAGE ONE====================================================================================================
-        communities = [{u} for u in graph.nodes()]
+        # ANALYTICS - STAGE ONE
+        communities = [{node} for node in graph.nodes()]
         modularity = 1 / pow(sum(dict(graph.degree()).values()), 2)
 
         myGraph = graph.__class__()
         myGraph.add_nodes_from(graph)
         myGraph.add_weighted_edges_from(graph.edges(data="weight", default=1))
+        graph_size = myGraph.size()
 
-        graphSize = myGraph.size()
-
-        communities, inner_partition, stillBetter = AnalyticsGraph.inner_logic(self, myGraph, graphSize, communities,
+        # Perform inner logic of the algorithm
+        communities, inner_partition, stillBetter = AnalyticsGraph.inner_logic(self, myGraph, graph_size, communities,
                                                                                display=display)
         stillBetter = True
 
-        # ====STAGE TWO=================================================================================================
+        # ANALYTICS - STAGE TWO
+        # Continue as long as the modularity of the graph improves
         while stillBetter:
-            new_modularity = sum(dict(myGraph.degree()).values()) / 2
+            new_modularity = sum(dict(graph.degree()).values()) / 2
             deltaQ = new_modularity - modularity
             if deltaQ <= 0:
                 break
             modularity = new_modularity
 
-            # =UPDATE WEIGHT===========================================================================
+            # Update weight of the edges based on the current partition of communities
             H = myGraph.__class__()
             dicIndex = {}
             for i, part in enumerate(inner_partition):
@@ -602,47 +602,50 @@ class AnalyticsGraph:
                 temp = H.get_edge_data(com1, com2, {"weight": 0})["weight"]
                 H.add_edge(com1, com2, weight=wt + temp)
             myGraph = H
-            # =============================================================================
-            communities, inner_partition, stillBetter = AnalyticsGraph.inner_logic(self, myGraph, graphSize, communities,
+
+            # Compute again the inner logic of the graph with updated weights
+            communities, inner_partition, stillBetter = AnalyticsGraph.inner_logic(self, myGraph, graph_size, communities,
                                                                                    display=display)
 
-        # ==DISPLAY=====================================================================================================
+        # Display and store the best found communities
         best_communities = list(communities)
-        print("\t\t(ANL) : Community detection (louvain homemade) result :")
-        for x, c in enumerate(best_communities):
-            print("\t\t\t(ANL) : ", x, ": ", c)
-        # ==SAVE========================================================================================================
+
+        if not sub_function:
+            print("\t\t(ANL) : Community detection (louvain homemade) result :")
+            for x, c in enumerate(best_communities):
+                print("\t\t\t(ANL) : ", x, ": ", c)
+
+        # Save the found communities
         VisualizationGraph.save_communities(self, best_communities, tag)
-        # ==ANALYTICS===================================================================================================
+
+        # If requested, compute the silhouette index to evaluate the quality of the partition
         if run_silhouette:
-            AnalyticsGraph.silhouette_score(self, graph=graph, community_detection=best_communities, metric="euclidean",
+            AnalyticsGraph.silhouette_score(self, graph=graph, communities=best_communities, metric="euclidean",
                                             sample_size=1000)
-        # ==============================================================================================================
 
         current_time = datetime.datetime.now()
-        print("<< The homemade amazon community detection algorithm has finished (at", current_time, "), arigato <3\n")
+        print("<< The homemade amazon community detection algorithm has finished (at", current_time, ").\n")
+
         return best_communities
 
     def inner_logic(self, graph, size_of_graph, communities, display=True):
         """
         Creator : Quentin Nater
-        reviewed by :
+        reviewed by : Sophie Caroni
         Inner logic of the community detection algorithm
         :param graph: Graph networkX of the dataset
         :type graph: networkX
         :param size_of_graph:
         :type size_of_graph: int
-        :param communities: Commmunities
+        :param communities: Commmunities of nodes of the graph
         :type communities: list
         :param display: Display the details or not
         :type display: boolean
         """
-        # ===STAGE THREE================================================================================================
+        # ANALYTICS - STAGE THREE
         communityNodes, newCommunity = {}, []
-        is_directed = graph.is_directed()
 
-        # *** INITIALIZATION AND THE ALGO AND LIST *****************************
-        # initialization of the community with each node as community
+        # Initialize the communities by putting each node in a different community
         stillBetter = False
         operations = 1
         pushNodeList = list(graph.nodes)
@@ -651,6 +654,7 @@ class AnalyticsGraph:
         degreeStrengthIn = list(in_degrees.values())
         degreeStrengthOut = list(out_degrees.values())
 
+        # Calculate strength of the weight for each node
         weightStrength = {}
         for value in graph:
             weightStrength[value] = defaultdict(float)
@@ -659,9 +663,11 @@ class AnalyticsGraph:
             for node, _, weight in graph.in_edges(value, data="weight"):
                 weightStrength[value][node] += weight
 
+        # Confer each node a specific community
         for x, node in enumerate(graph.nodes()):
             communityNodes[node] = x
 
+        # Put each node in a single community
         for node in graph.nodes():
             newCommunity.append({node})
 
@@ -671,24 +677,30 @@ class AnalyticsGraph:
             for node in pushNodeList:
                 bestModality, bestCommunity = 0, communityNodes[node]
 
+                # Calculate weights of the nodes in each community
                 weightCommunity = defaultdict(int)
                 for key, number_of_edges in weightStrength[node].items():
                     weightCommunity[communityNodes[key]] += number_of_edges
 
+                # Store in and out degree of each node
                 in_degree = in_degrees[value]
                 out_degree = out_degrees[value]
+
+                # Update inner and outer degrees of the best community
                 degreeStrengthIn[bestCommunity] -= in_degree
                 degreeStrengthOut[bestCommunity] -= out_degree
 
+                # Compute size power and removal cost
                 size_power = size_of_graph ** 2
                 remove_cost = (-weightCommunity[bestCommunity] / size_of_graph + (
-                            out_degree * degreeStrengthIn[bestCommunity] + in_degree * degreeStrengthOut[
-                        bestCommunity]) / size_power)
+                        out_degree * degreeStrengthIn[bestCommunity] + in_degree * degreeStrengthOut[bestCommunity]) / size_power)
 
+                # Calculate gain
                 for numberCommunities, number_of_edges in weightCommunity.items():
                     gain = (number_of_edges / size_of_graph - (
-                                out_degree * degreeStrengthIn[numberCommunities] + in_degree * degreeStrengthOut[
-                            numberCommunities]) / size_power)
+                            out_degree * degreeStrengthIn[numberCommunities] + in_degree * degreeStrengthOut[numberCommunities]) / size_power)
+
+                    # Calculate modularity
                     Q = remove_cost + gain
 
                     if display:
@@ -701,6 +713,7 @@ class AnalyticsGraph:
                             degreeStrengthOut[numberCommunities], ") / ", size_power, ")")
                         print("\t\t\t\t\t\tdeltaQ : ", Q, "\n")
 
+                    # If the modality is the best so far, update it and update the communities
                     if Q > bestModality:
                         bestModality = Q
                         bestCommunity = numberCommunities
@@ -708,6 +721,7 @@ class AnalyticsGraph:
                         if display:
                             print("\t\t\t\t\t\tNEW BEST MODALITY !!! \n")
 
+                # Update inner and outer degrees of the best community
                 degreeStrengthIn[bestCommunity] += in_degree
                 degreeStrengthOut[bestCommunity] += out_degree
 
@@ -724,15 +738,18 @@ class AnalyticsGraph:
                     communities[bestCommunity] |= community
                     newCommunity[bestCommunity].add(node)
 
+                    # Indicate that better communities are still present
                     stillBetter = True
                     operations = operations + 1
 
+                    # Assign the current node to the updated community
                     communityNodes[node] = bestCommunity
 
                     if display:
                         print("\t\t\t\t\t\tnumber of operations : ", operations)
                         print("\t\t\t\t\t\tcurrent communities : ", communities, "\n")
 
+        # Store temporarily communities, if not empty
         communitiesTMP, newCommunitiesTMP = [], []
         for community in communities:
             if len(community) > 0:
@@ -741,56 +758,66 @@ class AnalyticsGraph:
             if len(community) > 0:
                 newCommunitiesTMP.append(community)
 
+        # Update new communities and communities
         newCommunity = newCommunitiesTMP
         communities = communitiesTMP
 
         return communities, newCommunity, stillBetter
 
-    # =================================================================================================================
-    # QUALITY OF THE COMMUNITY DETECTION
-    # =================================================================================================================
-
     def accuracy_precision_recall_jaccard(self, communities_library, community_homemade, display=True):
         """
         Creator : Quentin Nater
         reviewed by : Sophie Caroni
-        Compute the score of Accuracy, Precision, Recall and Jaccard, comparing two community detections
-        :param communities_library: All communities detected by the networkX library
-        :type communities_library: list(set)
-        :param community_homemade: All communities detected by the homemade algorithm
-        :type community_homemade: list(set)
+        Compute  metrics to evaluate the quality of the homemade community detections compared to the one of the library
+        :param communities_library: All communities detected using algorithms from the networkX library
+        :type communities_library: list of set
+        :param community_homemade: All communities detected using the homemade algorithm
+        :type community_homemade: list of set
         :param display: Display the details or not
         :type display: boolean
-        :return: the scores of Accuracy, Precision, Recall and Jaccard
+        :return: the scores of Accuracy, Precision, Recall and Jaccard similarity
         """
         current_time = datetime.datetime.now()
-        print("<< The Accuracy/Precision/Recall/Jaccard score between the 2 algorithm has been called (at", current_time, "), please wait...\n")
+        print("<< The Accuracy/Precision/Recall/Jaccard scores between the two algorithm have been called (at", current_time, "), please wait.\n")
 
-        # Convert the list of communities to sets
+        # Denote as labels the communities found using the library and as data those found by the homemade algorithm, and convert them to sets
         labels = [set(community) for community in communities_library]
         data = [set(community) for community in community_homemade]
 
-        # initialize the arrays of results
+        # Initialize the arrays of results
         accuracies, precisions, recalls, jaccards = [], [], [], []
 
+        # Consider each label-community, to compare it with each data-community
+        # As both community detection algorithms can have the same detection but not in the same time, we need to compute which set is the better compare to the ith to found pairs
         for i in range(len(data)):
             best_jaccard, index = 0.0, None
-
             for j in range(len(labels)):
+
+                # Find number of intersecting members and union size between labels and data to calculate Jaccard similarity
                 intersection_size = len(data[i].intersection(labels[j]))
                 union_size = len(data[i].union(labels[j]))
+
                 jaccard_similarity = intersection_size / union_size
 
                 if jaccard_similarity > best_jaccard:
                     best_jaccard = jaccard_similarity
                     index = j
 
+            # Compute other measures on the communities matching between labels and data (only if there is at least one)
             if index is not None:
+
+                # Calculate true positives, i.e. how many nodes are correctly included in the community
                 TP = len(data[i].intersection(labels[index]))
+
+                # Calculate false positives, i.e. how many nodes are wrongly included in the community
                 FP = len(data[i].difference(labels[index]))
+
+                # Calculate false negative, i.e. how many nodes wrongly excluded from the community
                 FN = len(labels[index].difference(data[i]))
 
                 total = len(labels[index])
+
+                # Calculate performance measures
                 accuracy = TP / total
                 precision = TP / (TP + FP)
                 recall = TP / (TP + FN)
@@ -810,78 +837,84 @@ class AnalyticsGraph:
                 recalls.append(recall)
                 jaccards.append(best_jaccard)
 
+        # Compute averages of the performance measures of each community
         accuracy = sum(accuracies) / len(accuracies)
         precision = sum(precisions) / len(precisions)
         recall = sum(recalls) / len(recalls)
         jaccard = sum(jaccards) / len(jaccards)
 
-        print("\n\t\t (ANA) : Accuracy between the 2 algorithm is :", str(round(accuracy * 100, 2)), "%")
-        print("\t\t (ANA) : Precision between the 2 algorithm is :", str(round(precision * 100, 2)), "%")
-        print("\t\t (ANA) : Recall between the 2 algorithm is :", str(round(recall * 100, 2)), "%")
-        print("\t\t (ANA) : Jaccard similarity between the 2 algorithm is :", str(round(jaccard, 2)), "\n")
+        print("\n\t\t (ANA) : Accuracy between the two algorithm is :", str(round(accuracy * 100, 2)), "%")
+        print("\t\t (ANA) : Precision between the two algorithm is :", str(round(precision * 100, 2)), "%")
+        print("\t\t (ANA) : Recall between the two algorithm is :", str(round(recall * 100, 2)), "%")
+        print("\t\t (ANA) : Jaccard similarity between the two algorithm is :", str(round(jaccard, 2)), "\n")
 
         current_time = datetime.datetime.now()
-        print("<< The Accuracy/Precision/Revall/Jaccard score between the 2 algorithm has finished (at", current_time, ").\n")
+        print("<< The Accuracy/Precision/Revall/Jaccard score between the two algorithm has finished (at", current_time, ").\n")
 
         return accuracy, precision, recall, jaccard
 
-    def silhouette_score(self, graph, community_detection, metric='euclidean', sample_size=None):
+    def silhouette_score(self, graph, communities, metric='euclidean', sample_size=None, sub_function=False):
         """
         Creator: Quentin Nater
-        Reviewed by:
-        Compute the score of Accuracy, Precision, Recall, and Jaccard, comparing two community detections
-        :param graph: NetworkX Graph - Total graph of the network
-        :type graph: NetworkX Graph
-        :param community_detection: list(set) - All communities detected by the algorithm
-        :type community_detection: list(set)
-        :param metric: String - Metric to use for the silhouette index
-        :type metric: String
-        :param sample_size: Integer - Number of nodes to sample from the graph (optional)
-        :type sample_size: Integer or None
+        Reviewed by: Sophie Caroni
+        Compute the silhouette score
+        :param graph: Graph networkX of the dataset
+        :type graph: networkX
+        :param communities: All communities detected by the algorithm
+        :type communities: list of set
+        :param metric: Metric to use for the silhouette index
+        :type metric: string
+        :param sample_size: Number of nodes to sample from the graph (optional)
+        :type sample_size: integer or None
+        :param sub_function: Hidden community detection for sub-function in other method
+        :type sub_function: boolean
         :return: The score of the silhouette index
         """
         current_time = datetime.datetime.now()
-        print("\n\t<< The Silhouette Index Score has been called (at", current_time, "), please wait...\n")
+        print("\n\t<< The Silhouette Index Score has been called (at", current_time, "), please wait.\n")
 
+        # Sample the graph, if requested by the user
         if sample_size is not None and sample_size < graph.number_of_nodes():
             sampled_nodes = random.sample(list(graph.nodes()), sample_size)
             subgraph = graph.subgraph(sampled_nodes)
 
-            new_community_detection = []
-            # store the results of computation between the intersection of the community and the sample
-            for community in community_detection:
+            new_communities = []
+            # Store the results of computation between the intersection of the communities and the sample
+            for community in communities:
                 intersection = set(community).intersection(sampled_nodes)
-                new_community_detection.append(intersection)
-            community_detection = new_community_detection
+                new_communities.append(intersection)
+            communities = new_communities
+
+        # If no sampling is requested keep the whole graph as subgraph
         else:
             subgraph = graph
 
-        # create a label for each node
+        # Create a label for each node
         node_to_label = {}
-        for label, community in enumerate(community_detection):
+        for label, community in enumerate(communities):
             for node in community:
                 node_to_label[node] = label
 
-        # create the label
+        # Store the labels
         node_labels = []
         for node in subgraph.nodes():
             label = node_to_label.get(node, -1)
             node_labels.append(label)
-
         node_labels = np.array(node_labels).reshape(-1, 1)
 
-        # Compute the adjacency matrix of the current graph
+        # Compute the adjacency matrix of the graph
         adjacency_matrix = nx.to_numpy_array(subgraph)
 
-        # Stack arrays in sequence horizontally (column wise).
+        # Stack arrays in sequence horizontally (column wise)
         feature_matrix = np.hstack((adjacency_matrix, node_labels))
 
-        # Compute the final score
+        # Compute the silhouette score from the sklearn library
         silhouette = silhouette_score(X=feature_matrix, labels=node_labels.ravel(), metric=metric)
 
-        print("\t\t\t (ANA) : Silhouette index score:", silhouette, "\n")
+        if not sub_function:
+            print("\t\t\t (ANA) : Silhouette index score:", silhouette, "\n")
 
         current_time = datetime.datetime.now()
-        print("\t<< The Silhouette Index Score has finished (at", current_time, "), arigato <3\n")
+        print("\t<< The Silhouette Index Score has finished (at", current_time, ").\n")
 
         return silhouette

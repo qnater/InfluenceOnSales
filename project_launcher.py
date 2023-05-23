@@ -4,9 +4,9 @@ import os
 import matplotlib as mpl
 import networkx as nx
 import spicy as sp
+
 from matplotlib import pyplot as plt
 from networkx.algorithms.community import louvain_communities
-
 from explore.exploration_graph import ExploreGraph as eg, ExploreGraph
 from persistence.persistence_graph import PersistenceGraph
 from visualization.visualization_graph import VisualizationGraph as vg, VisualizationGraph
@@ -14,16 +14,16 @@ from analytics.analytics_graph import AnalyticsGraph as ag, AnalyticsGraph
 from preprocessing.pre_processing_graph import PreProcessGraph as pg, PreProcessGraph
 from export.export_graph import ExportGraph as xg
 
-
 if __name__ == '__main__':
     print("\n=========================================================================================")
     print("========================INFLUENCE=OF=POPULARITY=ON=SALES===UNI-FR========================")
     print("=========================================================================================\n")
 
     if os.name == "nt":
-        mpl.use('TkAgg')  # without it, cannot run my plots (maybe personal)
+        mpl.use('TkAgg')
+        print("Windows profile has been loaded.")
     elif os.name == "posix":
-        print("Choosing a Mac really is the worst thing you've done in life!")
+        print("Mac profile has been loaded.")
     else:
         print("Unknown operating system.")
 
@@ -88,9 +88,9 @@ if __name__ == '__main__':
         acc_homemade, pre_homemade, rec_homemade, jac_homemade = ag.accuracy_precision_recall_jaccard(communities_library=communities_library, community_homemade=communities_homemade, display=False)
 
         # QUALITY=====SILHOUETTE========================================================================================
-        silhouette_simple = ag.silhouette_score(graph=graph_sampled, community_detection=communities_simple, metric="euclidean", sample_size=1000)
-        silhouette_homemade = ag.silhouette_score(graph=graph_sampled, community_detection=communities_homemade, metric="euclidean", sample_size=1000)
-        silhouette_library = ag.silhouette_score(graph=graph_sampled, community_detection=communities_library, metric="euclidean", sample_size=1000)
+        silhouette_simple = ag.silhouette_score(graph=graph_sampled, communities=communities_simple, metric="euclidean", sample_size=1000)
+        silhouette_homemade = ag.silhouette_score(graph=graph_sampled, communities=communities_homemade, metric="euclidean", sample_size=1000)
+        silhouette_library = ag.silhouette_score(graph=graph_sampled, communities=communities_library, metric="euclidean", sample_size=1000)
 
 
 
@@ -136,7 +136,7 @@ if __name__ == '__main__':
     else:
         print(">>Display all information and steps of all our project ********************************************\n\n")
 
-        string_input = input("What size of dataset do you want (big (190'000), middle (120'000), small (90'000), test (10'000) : ")
+        string_input = input("What size of dataset do you want (enrichment (190'000), big (120'00), middle (90'000), small (60'000), test (10'000) : ")
 
         # CONSTRUCTION OF THE GRAPH ====================================================================================
         graph_sampled_small = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_" + string_input + ".txt")
@@ -157,7 +157,7 @@ if __name__ == '__main__':
         acc, pre, rec, jac = ag.accuracy_precision_recall_jaccard(communities_library=communities_library, community_homemade=communities, display=False)
 
         # QUALITY=====SILHOUETTE========================================================================================
-        silhouette_homemade = ag.silhouette_score(graph=graph_sampled_small, community_detection=communities, metric="euclidean", sample_size=1000)
+        silhouette_homemade = ag.silhouette_score(graph=graph_sampled_small, communities=communities, metric="euclidean", sample_size=1000)
 
         # EXPLORATION OF THE GRAPH =====================================================================================
         eg.analytics_exploration(graph=graph_sampled_small, display=False)
