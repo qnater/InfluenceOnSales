@@ -32,8 +32,8 @@ class EnrichmentGraph:
 
         merged = PreProcessGraph.remove_isolated_nodes(self, merged)
 
-        communities_merged = AnalyticsGraph.amazon_community_detection(self, graph=merged, tag="merged", run_silhouette=False, sub_function=True)
-        communities_original = AnalyticsGraph.amazon_community_detection(self, graph=original_graph, tag="original_graph", run_silhouette=False, sub_function=True)
+        communities_merged, run_time = AnalyticsGraph.amazon_community_detection(self, graph=merged, tag="merged", run_silhouette=False, sub_function=True)
+        communities_original, run_time = AnalyticsGraph.amazon_community_detection(self, graph=original_graph, tag="original_graph", run_silhouette=False, sub_function=True)
 
         score_merged = AnalyticsGraph.silhouette_score(self, merged, communities_merged, 'euclidean', 1000)
         score_original = AnalyticsGraph.silhouette_score(self, original_graph, communities_original, 'euclidean', 1000)

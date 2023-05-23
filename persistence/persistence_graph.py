@@ -384,7 +384,7 @@ class PersistenceGraph:
         :type compute_community: bool
         """
         if compute_community:
-            communities = AnalyticsGraph.amazon_community_detection(self, graph=graph, tag="db", run_silhouette=False, display=False, sub_function=True)
+            communities, run_time = AnalyticsGraph.amazon_community_detection(self, graph=graph, tag="db", run_silhouette=False, display=False, sub_function=True)
         else:
             if not communities:
                 #  Retrieve communities if not already passed as argument

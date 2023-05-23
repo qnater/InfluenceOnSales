@@ -1,3 +1,4 @@
+import datetime
 import heapq
 import networkx as nx
 import re
@@ -41,9 +42,10 @@ class ExploreGraph:
         :type display: bool
         :param display_detail: Display the detail of the construction
         :type display_detail: bool
-        :return: The constructed graph
+        :return: The constructed graph and the run time
         """
-        print(">> You have called the construction of your graph, please wait :)")
+        current_time = datetime.datetime.now()
+        print("\n<< You have called the construction of your graph (at", current_time, ").")
 
         # initialization of the variables
         graph = nx.DiGraph()
@@ -95,7 +97,6 @@ class ExploreGraph:
                     break
 
         n_nodes, n_edges = graph.number_of_nodes(), graph.number_of_edges()
-        print("\t\tThe graph has been successfully constructed! (nodes:" + str(n_nodes) + ", edges:" + str(n_edges) + ")")
 
 
         if display:
@@ -118,7 +119,12 @@ class ExploreGraph:
             print("\t\t\t\tNOT OUT-EDGED NODES: \t\t\t" + str(int(not_out_edged)))
             print("\t\t\t\tISOLATED NODES: \t\t\t\t" + str(len(total_isolated)), "\n")
 
-        return graph
+        end_time = datetime.datetime.now()
+        print(">>The graph has been successfully constructed! (at", end_time, ") (nodes:" + str(n_nodes) + ", edges:" + str(n_edges) + ")")
+
+        run_time = end_time-current_time
+
+        return graph, run_time
 
     def analytics_exploration(self, graph, display=False):
         """

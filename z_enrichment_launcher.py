@@ -18,6 +18,6 @@ if __name__ == '__main__':
         print("Unknown operating system.")
 
     er, eg, ex = EnrichmentGraph(), ExploreGraph(), ExportGraph()
-    graph = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_big.txt")
+    graph, run_time = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_big.txt")
     merged = er.merge_for_enrichment(original_graph=graph, enrichment_file="formatted_amazon_meta.txt")
     ex.create_dataset(graph=merged, name="dataset_off_amazon_enrichment_3")
