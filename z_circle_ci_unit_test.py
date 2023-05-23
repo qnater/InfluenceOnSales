@@ -55,18 +55,3 @@ if __name__ == '__main__':
 
     # CHECK DB======================================================================================================
     db.display_community(community_id=1, communities=communities)
-
-    # DISPLAY ALL COMMUNITY IN DIFFERENT COLOR WITH POPULAR NODE (CENTROID) IN GOLD COLOR ==========================
-    vg.display_communities_graph(graph=graph_sampled_small, communities=communities, populars=popular_nodes, display=False, tag="overall_scenario_plot")
-
-    # DISPLAY THE DEGREE DISTRIBUTION OF THE EDGES IN THE GRAPH ====================================================
-    vg.degree_distribution(graph=graph_sampled_small, display=False, tag="overall_scenario_distribution")
-
-    # DISPLAY EACH COMMUNITY (FOR SAKE OF TIME ONLY 3) ============================================================
-    limit, number_to_display = 0, 3
-
-    for community in communities:
-        if limit >= number_to_display:
-            break
-        eg.explore_community(graph=graph_sampled_small, community=community, display=False)
-        limit += 1
