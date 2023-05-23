@@ -64,6 +64,7 @@ if __name__ == '__main__':
 
     # DISPLAY EACH COMMUNITY (FOR SAKE OF TIME ONLY 3) ============================================================
     limit, number_to_display = 0, 3
+
     for community in communities:
         if limit >= number_to_display:
             break
