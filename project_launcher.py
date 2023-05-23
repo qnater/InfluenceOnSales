@@ -35,7 +35,7 @@ if __name__ == '__main__':
     # scenario = 3 - Display all information and steps of the visualization of our graph
     # scenario = 4 - Display all information and steps of the exploration of our graph
     # scenario = 5 - Display all information and steps of all our project
-    scenario = 2
+    scenario = 5
 
     if scenario == 1:
         print(">>Display all information and steps of the pre-processing of the dataset **************************\n\n")
