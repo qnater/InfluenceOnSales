@@ -54,7 +54,7 @@ _file (number of nodes of the graph)_
 
 dataset_off_amazon_test.txt (11'990)
 
-#### Returned 
+#### Returned object 
 Plot image
 
 
@@ -68,8 +68,8 @@ _file (number of nodes of the graph)_
 
 dataset_off_amazon_test.txt (11'990)
 
-#### Returned metrics
-XXX
+#### Returned object
+Plot image
 
 
 
@@ -83,8 +83,10 @@ Based on the user choice between:
 
 dataset_off_amazon_enrichment.txt (180'000),  dataset_off_amazon_big.txt (120'000), dataset_off_amazon_small.txt (60'000), dataset_off_amazon_test.txt (11'990)
 
-### Returned metrics
-XXX 
+### Returned objects
+Clustering coefficient, number of nodes, popular nodes of each community, silhouette index, accuracy, precision, recall, Jaccard similarity,
+plot images
+
     
     
 ## z_circle_ci_unit_test.py
@@ -95,5 +97,3 @@ This file allows the merge of the main amazon datasetg with the enriched dataset
 
 ## z_persistence_launcher.py
 This file allows the population of the database online Neo4J.
-
-
