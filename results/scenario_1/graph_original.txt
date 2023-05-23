@@ -1,6 +1,0 @@
-The efficiency of the graph graph_original
-Run Time : 0:00:21.038029
-Number of Nodes : 719150
-Number of Edges : 1788712
-Coefficient Clustering : 0.17402568086654796
-Average Degree : 4.974517138288257

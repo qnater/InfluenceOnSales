@@ -35,36 +35,26 @@ if __name__ == '__main__':
     # scenario = 3 - Display all information and steps of the visualization of our graph
     # scenario = 4 - Display all information and steps of the exploration of our graph
     # scenario = 5 - Display all information and steps of all our project
-    scenario = 5
+    scenario = 2
 
     if scenario == 1:
         print(">>Display all information and steps of the pre-processing of the dataset **************************\n\n")
 
         start = datetime.datetime.now()
 
-        print("\nConstruction of the graph_original and display of its efficiency :")
-        # CONSTRUCTION OF THE GRAPH ====================================================================================
-        graph_original, run_time = eg.construct_graph_by_file(file_name="dataset/origin_dataset/amazon-meta.txt")
-        # QUALITY OF THE GRAPH =========================================================================================
-        pg.display_efficiency_of_graph(graph=graph_original, write=True, tag="graph_original", run_time=run_time, scenario="1")
+        datasets = ["origin_dataset/amazon-meta", "dataset_off_amazon_big", "dataset_off_amazon_enrichment", "dataset_off_amazon_small"]
 
-        print("\nConstruction of the graph_sampled_enrichment and display of its efficiency :")
-        # CONSTRUCTION OF THE GRAPH ====================================================================================
-        graph_sampled_big, run_time = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_big.txt")
-        # QUALITY OF THE GRAPH =========================================================================================
-        pg.display_efficiency_of_graph(graph=graph_sampled_big, write=True, tag="graph_sampled_big", run_time=run_time, scenario="1")
+        for index, dataset in enumerate(datasets):
+            if index == 0:
+                str = "amazon_meta"
+            else:
+                str = dataset
 
-        print("\nConstruction of the graph_sampled_big and display of its efficiency :")
-        # CONSTRUCTION OF THE GRAPH ====================================================================================
-        graph_enrichment, run_time = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_enrichment.txt")
-        # QUALITY OF THE GRAPH =========================================================================================
-        pg.display_efficiency_of_graph(graph=graph_enrichment, write=True, tag="graph_enrichment", run_time=run_time, scenario="1")
-
-        print("\nConstruction of the graph_sampled_small and display of its efficiency :")
-        # CONSTRUCTION OF THE GRAPH ====================================================================================
-        graph_sampled_small, run_time = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_small.txt")
-        # QUALITY OF THE GRAPH =========================================================================================
-        pg.display_efficiency_of_graph(graph=graph_sampled_small, write=True, tag="graph_sampled_small", run_time=run_time, scenario="1")
+            print("\nConstruction of the", dataset, "and display of its efficiency :")
+            # CONSTRUCTION OF THE GRAPH ================================================================================
+            graph_sampled, run_time = eg.construct_graph_by_file(file_name="./dataset/"+dataset+".txt")
+            # QUALITY OF THE GRAPH =====================================================================================
+            pg.display_efficiency_of_graph(graph=graph_sampled, write=True, tag="graph_data_"+str, run_time=run_time, scenario="1")
 
 
     elif scenario == 2:
@@ -158,7 +148,7 @@ if __name__ == '__main__':
         graph_sampled_small, run_time = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_" + string_input + ".txt")
 
         # QUALITY OF THE GRAPH =========================================================================================
-        pg.display_efficiency_of_graph(graph=graph_sampled_small, write=True, tag="graph_sampled_big", run_time=run_time, scenario="5")
+        pg.display_efficiency_of_graph(graph=graph_sampled_small, write=True, tag="graph_data_dataset_off_amazon_"+string_input, run_time=run_time, scenario="5")
 
         print(">>Display all information and steps of the community detection ************************************\n\n")
 

@@ -53,8 +53,8 @@ class AnalyticsGraph:
         :type display: boolean
         :return: Communities found by the chosen library with run time
         """
-        current_time = datetime.datetime.now()
-        print(">> You have called the community detection with the library ", library, " (at", current_time, ")")
+        start_time = datetime.datetime.now()
+        print(">> You have called the community detection with the library ", library, " (at", start_time, ")")
 
         if library == "girvanNewman":  # Library: community.girvan_newman
             communities = girvan_newman(graph)
@@ -87,7 +87,7 @@ class AnalyticsGraph:
         end_time = datetime.datetime.now()
         print(">> The community detection with the library is finished (at", end_time, ")")
 
-        run_time = end_time - current_time
+        run_time = end_time - start_time
 
         return communities, run_time
 
@@ -145,8 +145,8 @@ class AnalyticsGraph:
         :type display: boolean
         :return: Communities detection and run time
         """
-        current_time = datetime.datetime.now()
-        print(">> You've called the homemade community detection (at", current_time, "), please wait.")
+        start_time = datetime.datetime.now()
+        print(">> You've called the homemade community detection (at", start_time, "), please wait.")
 
         # phase 1 =====================================================================================================
         # Set initial communities as one node each and compute the initial modularity
@@ -247,7 +247,7 @@ class AnalyticsGraph:
         end_time = datetime.datetime.now()
         print("<< The louvain detection homemade has finished (at", end_time, ").")
 
-        run_time = current_time-end_time
+        run_time = end_time-start_time
 
         return communities, run_time
 

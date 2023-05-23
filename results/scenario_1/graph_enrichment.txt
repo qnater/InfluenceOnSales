@@ -1,6 +1,0 @@
-The efficiency of the graph graph_enrichment
-Run Time : 0:00:03.145858
-Number of Nodes : 189825
-Number of Edges : 613464
-Coefficient Clustering : 0.33310227492510425
-Average Degree : 6.463468984591071
