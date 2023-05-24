@@ -57,7 +57,7 @@ class PersistenceGraph:
         :return : Communities of the computed nodes
         """
         current_time = datetime.datetime.now()
-        print(">> You have called the creation of your graph in Neo4j, (at", current_time, "), please wait...")
+        print("\n>> You have called the creation of your graph in Neo4j, (at", current_time, "), please wait...")
 
         # Delete any previous graph currently existing on Neo4j
         if delete_previous:
