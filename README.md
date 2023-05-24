@@ -6,15 +6,17 @@ To be able to use the Influence on Sales application, please follow the steps be
 # Installation
 To install the Influence On Sales application, you will need to:
 1) First create a directory on your computer and open a terminal on this directory.
-2) On the terminal, clone the GitHub repository by copying pasting this command : ```git clone https://github.com/qnater/InfluenceOnSales.git```
-3) Once clone, you can open your PyCharm or python environment. On the Terminal of PyCharm or your computer, install or requirements with the command : ```pip install -r requirements.txt```
-4) If an error appears, we may need to install pip.
-5) Once install, the application can be run. To understand the different features and command, please follow the bellowed user guide.
+2) On the terminal, clone the GitHub repository. To do so, copy and paste this command : ```git clone https://github.com/qnater/InfluenceOnSales.git```
+3) Once clone enter inside the clone directory with the command : ```cd InfluenceOnSales```
+4) Install the requirements with the command : ```pip install -r requirements.txt```
+5) If an error appears, we may need to install pip.
+6) Once installed, the application can be run with the command : ```python project_launcher.py```
+7) To understand the different features and command, please follow the bellowed user guide.
 
 <br><br>
 
 # User Guide
-The Influence on Sales application is able to load and refine amazon datasets that are formated with ASIN. The app consists of different modules such as Pre-Processing, Enrichment, Analytics, Exploration, Persistence and Visualization.
+The Influence on Sales application is able to load and refine amazon datasets that are formatted with ASIN. The app consists of different modules such as Pre-Processing, Enrichment, Analytics, Exploration, Persistence and Visualization.
 
 ## project_launcher.py
 In this class you can find five scenarios to conduct the modules.
