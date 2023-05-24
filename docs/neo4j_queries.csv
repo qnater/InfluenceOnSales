@@ -1,0 +1,7 @@
+name,description,query,id,parentId,isFolder
+00_q_display_db,,MATCH p=()-[:similar_to]->() RETURN p LIMIT 1000;,0,,false
+00_q_display_full_db,,MATCH p=()-[:similar_to]->() RETURN p LIMIT 199999;,1,,false
+01_q_display_community,,"MATCH (n:Node)-[r]-()
+WHERE n.community = ""1"" // Choose your community
+RETURN n, r",2,,false
+02_q_display_community_as_hypernode,,MATCH p=()-[:hypernode_link]->() RETURN p LIMIT 500;,3,,false

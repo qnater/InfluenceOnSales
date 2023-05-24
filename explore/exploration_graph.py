@@ -136,7 +136,7 @@ class ExploreGraph:
         :param display: Display or not the plots and prints
         :type display: Boolean
         """
-        print(">> You have called the construction of your graph, please wait :)")
+        print(">> You have called the analytic exploration of your graph, please wait.")
 
         if display:
             ExploreGraph.simple_plotting(self, graph)
@@ -175,7 +175,7 @@ class ExploreGraph:
         :param tag: Part of the file name of the figure that will be saved
         :type tag: string
         """
-        print(">> You have called the plot of your graph with draw of the path, please wait :)")
+        print(">> You have called the plot of your graph with draw of the path, please wait.")
 
         # Calculate the layout positions of the nodes using the spring layout algorithm
         pos = nx.spring_layout(graph, seed=42)
@@ -206,7 +206,7 @@ class ExploreGraph:
         :param tag: Part of the file name of the figure that will be saved
         :type tag: string
         """
-        print(">> You have called the plot of your graph, please wait :)")
+        print(">> You have called the plot of your graph, please wait.")
 
         # Visualize the graph
         plt.figure(figsize=(10, 6))

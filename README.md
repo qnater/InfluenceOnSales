@@ -11,12 +11,15 @@ To install the Influence On Sales application, you will need to:
 4) If an error appears, we may need to install pip.
 5) Once install, the application can be run. To understand the different features and command, please follow the bellowed user guide.
 
+<br><br>
 
 # User Guide
 The Influence on Sales application is able to load and refine amazon datasets that are formated with ASIN. The app consists of different modules such as Pre-Processing, Enrichment, Analytics, Exploration, Persistence and Visualization.
 
 ## project_launcher.py
 In this class you can find five scenarios to conduct the modules.
+
+<br>
 
 ### Scenario 1 : Pre-Processing of the dataset
 In this scenario, the initial dataset will be cleaned and sampled into four different graphs. This process will be displayed by providing information on the number of nodes and quality of the clustering for each graph. During the cleaning operation, we will remove unnecessary nodes (not out-edged, not in-edged and isolated). 
@@ -27,23 +30,21 @@ amazon-meta.txt (700'000 nodes), dataset_off_amazon_enrichment.txt (180'000 node
 #### Returned metrics
 Runtime, Clustering Coefficient, number of nodes, number of edges, average degree.
 
-
+<br><br>
 
 ### Scenario 2 : Community Detection
-In this scenario, we compare algorithms of community detection with different datasets. To do so, on each graph, three different community detection algorithms are executed (simple homemade, enhanced homemade with weight and networkX library), 
-popular nodes are identified and community partition quality is evaluated with metrics such as Accuracy, Precision, Recall, Jaccard Similarity, Silhouette Index.
+In this scenario, we compare algorithms of community detection with different datasets. To do so, on each graph, three different community detection algorithms are executed (simple homemade, enhanced homemade with weight and networkX library), popular nodes are identified and community partition quality is evaluated with metrics such as Accuracy, Precision, Recall, Jaccard Similarity, Silhouette Index.
 
 #### Used datasets
 dataset_off_amazon_enrichment.txt (180'000 nodes),  dataset_off_amazon_big.txt (120'000 nodes)
 
 #### Returned metrics
-Runtime, silhouette index, accuracy, precision, recall, Jaccard similarity, communities detected, popular nodes of each community with centrality value
+Runtime, silhouette index, accuracy, precision, recall, Jaccard similarity, communities detected, popular nodes of each community with centrality value.
 
-
+<br><br>
 
 ### Scenario 3 : Visualization
-In this scenario, a small sample of the dataset will be used to visualize the graph. After running the community detection algorithm, the graph will be plotted
-with communities in different colors, and the most popular node inside each highlighted.
+In this scenario, a small sample of the dataset will be used to visualize the graph. After running the community detection algorithm, the graph will be plotted with communities in different colors, and the most popular node inside each highlighted.
 
 #### Used datasets
 dataset_off_amazon_test.txt (11'000 nodes)
@@ -51,11 +52,10 @@ dataset_off_amazon_test.txt (11'000 nodes)
 #### Returned object 
 Plot image
 
-
+<br><br>
 
 ### Scenario 4 : Exploration
-In this scenario, a small sample of the initial dataset will be used to conduct a deep analysis of the quality of the graph, as well as 
-the connections between nodes and communities (paths).
+In this scenario, a small sample of the initial dataset will be used to conduct a deep analysis of the quality of the graph, as well as the connections between nodes and communities (paths).
 
 #### Used datasets
 dataset_off_amazon_test.txt (11'000 nodes)
@@ -63,9 +63,21 @@ dataset_off_amazon_test.txt (11'000 nodes)
 #### Returned object
 Plot image
 
+<br><br>
 
+### Scenario 5 : Statistical Analysis
+This scenario consists of analysing the report between the betweeness centrality of the popular nodes of each community and their actual sale ranks.  
 
-### Scenario 5 : Overall run
+#### Used datasets
+
+dataset_off_amazon_enrichment.txt (180'000 nodes)
+
+#### Returned objects
+ASIN, betweeness centrality value, sale rank 
+
+<br><br>
+
+### Scenario 6 : Overall run
 This scenario consists of all four above described scenarios, which will be conducted in succession.
 
 #### Used datasets
@@ -73,16 +85,50 @@ Based on the user choice between:
 dataset_off_amazon_enrichment.txt (180'000 nodes), dataset_off_amazon_big.txt (120'000 nodes), dataset_off_amazon_small.txt (60'000 nodes), dataset_off_amazon_test.txt (11'000 nodes)
 
 #### Returned objects
-Runtime, Clustering Coefficient, number of nodes, number of edges, average degree, silhouette index, accuracy, precision, recall, Jaccard similarity, community detected, popular nodes of each community with centrality measure
-plot images
+Runtime, Clustering Coefficient, number of nodes, number of edges, average degree, silhouette index, accuracy, precision, recall, Jaccard similarity, community detected, popular nodes of each community with centrality measures, plot images.
 
-    
+<br><br>
     
 ## z_circle_ci_unit_test.py
 This file allows the unit tests of every possible implementation in the GitHub Circle CI.
 
+<br><br>
+
+## z_compare_algo_launcher.py
+This file compares the different algorithms for group-based community detection
+
+<br><br>
+
 ## z_enrichment_launcher.py
 This file allows the merge of the main amazon dataset with the enriched dataset.
 
+<br><br>
+
 ## z_persistence_launcher.py
 This file allows the population of the database online Neo4J.
+
+1) You can find the database on this link : https://workspace-preview.neo4j.io/workspace/query 
+
+2) To connect, please go to "*Query*", then click on the array under "*No connection*", "*Connect*".
+<table>
+    <tr>
+        <td>Connection URL</td>
+        <td>95147e5a.databases.neo4j.io:7687</td>
+    </tr>
+    <tr>
+        <td>Database use</td>
+        <td>neo4j</td>
+    </tr>
+    <tr>
+        <td>password</td>
+        <td>GslPkJDwnmAZC_COZUcHQ1hFymVSQTzS_f6loACAyNY</td>
+    </tr>
+</table>
+<br>
+3) To import the queries, please go on "*Saved Cypher*" and import the file "*./docs/neo4j_queries.csv*" of the project tree.
+
+<br><br>
+
+## Outside project data
+Do to large file limitation, you can download outside out this repository some datasets.
+You can find the Stanford Amazon-Meta dataset here : https://naterscreations.com/d/amazon-meta.txt  
