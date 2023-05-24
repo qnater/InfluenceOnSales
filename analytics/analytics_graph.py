@@ -158,12 +158,18 @@ class AnalyticsGraph:
             print("\t(ANL) : Original community list : ", communities)
             print("\t(ANL) : Best_modularity : ", best_modularity)
 
-        inc, limit, delta_q, old_value, old_delta_q = 0, len(communities), 0, 0, 0
+        inc, limit, delta_q, old_value, old_delta_q, old_p, percentage = 0, len(communities), 0, 0, 0, 0, 0
 
         while limit > inc:
             # phase 2 =================================================================================================
             # Retrieve the first community
             community_vi = communities.pop(0)
+
+            old_p = percentage
+            percentage = round((inc/limit)*100, 2)
+
+            if old_p != percentage:
+                print("\t\t (ANL) : Run : ", percentage, "%")
 
             if display:
                 print("\t\t(ANL) : community_vi :\t", community_vi)

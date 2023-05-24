@@ -1,6 +1,6 @@
 Results of the community detection of overall_export
-Run Time : 0:00:00.804251
-Silhouette Index : 0.19887037694962606
+Run Time : 0:00:00.559605
+Silhouette Index : 0.2035234606975601
 Accuracy : 0.9869345536409764
 Precision : 0.9492509689640607
 Recall : 0.9869345536409764

@@ -16,11 +16,11 @@ if __name__ == '__main__':
 
     if os.name == "nt":
         mpl.use('TkAgg')
-        print("Windows profile has been loaded.")
+        print("Windows profile has been loaded.\n")
     elif os.name == "posix":
-        print("Mac profile has been loaded.")
+        print("Mac profile has been loaded.\n")
     else:
-        print("Unknown operating system.")
+        print("Unknown operating system.\n")
 
     eg, pg, ag, vg, ex = ExploreGraph(), PreProcessGraph(), AnalyticsGraph(), VisualizationGraph(), ExportGraph()
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
         datasets = ["dataset_off_amazon_big", "dataset_off_amazon_enrichment"]
 
-        do_simple = input("Do you want to run the fist homemade slow algorithm (The run of this community detection is very slow, it takes more than 1 day compare to the other (about 15 secondes)... (Y/N) :")
+        do_simple = input("Do you want to run the homemade slow algorithm (The run is very slow by taking more than 1 day compare to the other (about 15 secondes). (Y/N) :")
 
         for dataset in datasets:
             # CONSTRUCTION OF THE GRAPH ====================================================================================

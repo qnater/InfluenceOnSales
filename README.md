@@ -107,7 +107,9 @@ This file allows the merge of the main amazon dataset with the enriched dataset.
 ## z_persistence_launcher.py
 This file allows the population of the database online Neo4J.
 
-You can find the database on this link : https://workspace-preview.neo4j.io/workspace/query 
+1) You can find the database on this link : https://workspace-preview.neo4j.io/workspace/query 
+
+2) To connect, please go to "*Query*", then click on the array under "*No connection*", "*Connect*".
 <table>
     <tr>
         <td>Connection URL</td>
@@ -122,6 +124,8 @@ You can find the database on this link : https://workspace-preview.neo4j.io/work
         <td>GslPkJDwnmAZC_COZUcHQ1hFymVSQTzS_f6loACAyNY</td>
     </tr>
 </table>
+<br>
+3) To import the queries, please go on "*Saved Cypher*" and import the file "*./docs/neo4j_queries.csv*" of the project tree.
 
 <br><br>
 
