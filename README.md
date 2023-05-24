@@ -63,9 +63,21 @@ dataset_off_amazon_test.txt (11'000 nodes)
 #### Returned object
 Plot image
 
+<br><br>
 
+### Scenario 5 : Statistical Analysis
+This scenario consists of analysing the report between the betweeness centrality of the popular nodes of each community and their actual sale ranks.  
 
-### Scenario 5 : Overall run
+#### Used datasets
+
+dataset_off_amazon_enrichment.txt (180'000 nodes)
+
+#### Returned objects
+ASIN, betweeness centrality value, sale rank 
+
+<br><br>
+
+### Scenario 6 : Overall run
 This scenario consists of all four above described scenarios, which will be conducted in succession.
 
 #### Used datasets
@@ -95,7 +107,21 @@ This file allows the merge of the main amazon dataset with the enriched dataset.
 ## z_persistence_launcher.py
 This file allows the population of the database online Neo4J.
 
-You can find the database on this link : https://workspace-preview.neo4j.io/workspace/query (Credentials are given in the report)
+You can find the database on this link : https://workspace-preview.neo4j.io/workspace/query 
+<table>
+    <tr>
+        <td>Connection URL</td>
+        <td>95147e5a.databases.neo4j.io:7687</td>
+    </tr>
+    <tr>
+        <td>Database use</td>
+        <td>neo4j</td>
+    </tr>
+    <tr>
+        <td>password</td>
+        <td>GslPkJDwnmAZC_COZUcHQ1hFymVSQTzS_f6loACAyNY</td>
+    </tr>
+</table>
 
 <br><br>
 
