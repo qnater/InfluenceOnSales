@@ -1,5 +1,5 @@
 The efficiency of the graph graph_data_amazon_meta
-Run Time : 0:00:24.876697
+Run Time : 0:00:20.946405
 Number of Nodes : 719150
 Number of Edges : 1788712
 Clustering Coefficient : 0.17402568086654796

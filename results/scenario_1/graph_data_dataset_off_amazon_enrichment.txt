@@ -1,5 +1,5 @@
 The efficiency of the graph graph_data_dataset_off_amazon_enrichment
-Run Time : 0:00:03.761516
+Run Time : 0:00:03.691040
 Number of Nodes : 189825
 Number of Edges : 613464
 Clustering Coefficient : 0.33310227492510425

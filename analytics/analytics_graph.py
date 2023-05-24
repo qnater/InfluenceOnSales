@@ -291,10 +291,10 @@ class AnalyticsGraph:
         """
         Creator : Emmanuel Cazzato
         reviewed by : Sophie Caroni
-        Compute different metrics to deep analyze the graph and its communities
+        Compute different metrics to deeply analyze the graph and its communities
         :param graph: Graph networkX of the dataset
         :type graph: networkX
-        :param commands: [simple_information, degree_distribution, connected_components, diameters, clustering_coefficient,
+        :param commands: [simple_information, degree_distribution, connected_components, clustering_coefficient,
         betweenness_centrality, degree_centrality, eigenvector_centrality, pagerank_centrality, closeness_centrality,
         adamicadar_score, jaccard_score]
         :type commands: list of strings
@@ -305,28 +305,25 @@ class AnalyticsGraph:
         results = []
 
         if "degree_distribution" in commands or all_checked:
-            commands.append([["degree_distribution"], [AnalyticsGraph.degree_distribution(self, graph=graph, display=True)]])
+            results.append([["degree_distribution"], [AnalyticsGraph.degree_distribution(self, graph=graph, display=True)]])
 
         if "clustering_coefficient" in commands or all_checked:
-            commands.append([["clustering_coefficient"], [AnalyticsGraph.clustering_coefficient(self, graph=graph, display=True)]])
-
-        if "diameters" in commands or all_checked:
-            commands.append([["diameters"], [AnalyticsGraph.degree_centrality_scores(self, graph=graph, display=True)]])
+            results.append([["clustering_coefficient"], [AnalyticsGraph.clustering_coefficient(self, graph=graph, display=True)]])
 
         if "degree_centrality" in commands or all_checked:
-            commands.append([["degree_centrality"], [AnalyticsGraph.degree_centrality_scores(self, graph=graph, display=True)]])
+            results.append([["degree_centrality"], [AnalyticsGraph.degree_centrality_scores(self, graph=graph, display=True)]])
 
         if "eigenvector_centrality" in commands or all_checked:
-            commands.append([["eigenvector_centrality"], [AnalyticsGraph.eigenvector_centrality_scores(self, graph=graph, display=True)]])
+            results.append([["eigenvector_centrality"], [AnalyticsGraph.eigenvector_centrality_scores(self, graph=graph, display=True)]])
 
         if "pagerank_centrality" in commands or all_checked:
-            commands.append([["pagerank_centrality"], [AnalyticsGraph.pagerank_centrality_scores(self, graph=graph, display=True)]])
+            results.append([["pagerank_centrality"], [AnalyticsGraph.pagerank_centrality_scores(self, graph=graph, display=True)]])
 
         if "closeness_centrality" in commands or all_checked:
-            commands.append([["closeness_centrality"], [AnalyticsGraph.closeness_centrality_scores(self, graph=graph, display=True)]])
+            results.append([["closeness_centrality"], [AnalyticsGraph.closeness_centrality_scores(self, graph=graph, display=True)]])
 
         if "betweenness_centrality" in commands or all_checked:
-            commands.append([["betweenness_centrality"], [AnalyticsGraph.betweenness_centrality_scores(self, graph=graph, display=True)]])
+            results.append([["betweenness_centrality"], [AnalyticsGraph.betweenness_centrality_scores(self, graph=graph, display=True)]])
 
         return results
 
@@ -506,28 +503,6 @@ class AnalyticsGraph:
             print("\t\t\t (ANL) : Clustering coefficient:", cc)
 
         return cc
-
-    def diameter_centrality(self, graph, display=False):
-        """
-        Creator : Emmanuel Cazzato
-        reviewed by : Quentin Nater & Sophie Caroni
-        Compute diameter centrality of the graph
-        :param graph: Graph networkX of the dataset
-        :type graph: networkX
-        :param display: Display the details or not
-        :type display: boolean
-        :return: Result of the diameter centrality
-        """
-        # Get the connected components of the graph
-        connected_components = nx.connected_components(graph)
-
-        # Compute the diameter for each connected component
-        diameters = [nx.diameter(graph.subgraph(component)) for component in connected_components]
-
-        if display:
-            print("\t\t\t (ANL) : Diameters of connected components:", diameters)
-
-        return diameters
 
     def degree_distribution(self, graph, display=False):
         """

@@ -77,45 +77,28 @@ if __name__ == '__main__':
             communities_simple, run_time_simple = ag.homemade_community_detection(graph=graph_sampled, display=False)
 
             # homemade community detection with research (weight) optimal __________________________________________________
-            communities_homemade, run_time_homemade = ag.amazon_community_detection(graph=graph_sampled,
-                                                                                    tag="community_detection_scenario",
-                                                                                    run_silhouette=False, display=False)
+            communities_homemade, run_time_homemade = ag.amazon_community_detection(graph=graph_sampled, tag="community_detection_scenario", run_silhouette=False, display=False)
 
             # networkX community detection louvain _________________________________________________________________________
-            communities_library, run_time_library = ag.community_library_detection(graph=graph_sampled,
-                                                                                   library="louvain", display=False)
+            communities_library, run_time_library = ag.community_library_detection(graph=graph_sampled, library="louvain", display=False)
 
             # POPULAR ======================================================================================================
-            popular_nodes_simple = ag.highest_betweenness_centralities(graph=graph_sampled,
-                                                                       communities=communities_simple, display=False)
-            popular_nodes_homemade = ag.highest_betweenness_centralities(graph=graph_sampled,
-                                                                         communities=communities_homemade,
-                                                                         display=False)
-            popular_nodes_library = ag.highest_betweenness_centralities(graph=graph_sampled,
-                                                                        communities=communities_library, display=False)
+            popular_nodes_simple = ag.highest_betweenness_centralities(graph=graph_sampled, communities=communities_simple, display=False)
+            popular_nodes_homemade = ag.highest_betweenness_centralities(graph=graph_sampled, communities=communities_homemade, display=False)
+            popular_nodes_library = ag.highest_betweenness_centralities(graph=graph_sampled, communities=communities_library, display=False)
 
             # QUALITY=====ACCURACY=PRECISION=RECALL=JACCARD=================================================================
-            acc_simple, pre_simple, rec_simple, jac_simple = ag.accuracy_precision_recall_jaccard(
-                communities_library=communities_library, community_homemade=communities_simple, display=False)
-            acc_homemade, pre_homemade, rec_homemade, jac_homemade = ag.accuracy_precision_recall_jaccard(
-                communities_library=communities_library, community_homemade=communities_homemade, display=False)
+            acc_simple, pre_simple, rec_simple, jac_simple = ag.accuracy_precision_recall_jaccard(communities_library=communities_library, community_homemade=communities_simple, display=False)
+            acc_homemade, pre_homemade, rec_homemade, jac_homemade = ag.accuracy_precision_recall_jaccard(communities_library=communities_library, community_homemade=communities_homemade, display=False)
 
             # QUALITY=====SILHOUETTE========================================================================================
-            silhouette_simple = ag.silhouette_score(graph=graph_sampled, communities=communities_simple,
-                                                    metric="euclidean", sample_size=1000)
-            silhouette_homemade = ag.silhouette_score(graph=graph_sampled, communities=communities_homemade,
-                                                      metric="euclidean", sample_size=1000)
-            silhouette_library = ag.silhouette_score(graph=graph_sampled, communities=communities_library,
-                                                     metric="euclidean", sample_size=1000)
+            silhouette_simple = ag.silhouette_score(graph=graph_sampled, communities=communities_simple, metric="euclidean", sample_size=1000)
+            silhouette_homemade = ag.silhouette_score(graph=graph_sampled, communities=communities_homemade, metric="euclidean", sample_size=1000)
+            silhouette_library = ag.silhouette_score(graph=graph_sampled, communities=communities_library, metric="euclidean", sample_size=1000)
 
-            ex.export_communities_results(run_time_homemade, communities_homemade, popular_nodes_homemade, acc_homemade,
-                                          pre_homemade, rec_homemade, jac_homemade, silhouette_homemade,
-                                          "homemade_algo" + dataset, "2")
-            ex.export_communities_results(run_time_simple, communities_simple, popular_nodes_simple, acc_simple,
-                                          pre_simple, rec_simple, jac_simple, silhouette_simple,
-                                          "simple_algo" + dataset, "2")
-            ex.export_communities_results(run_time_library, communities_library, popular_nodes_library, 100, 100, 100,
-                                          1, silhouette_library, "library_algo" + dataset, "2")
+            ex.export_communities_results(run_time_simple, communities_simple, popular_nodes_simple, acc_simple, pre_simple, rec_simple, jac_simple, silhouette_simple, "simple_algo" + dataset, "2")
+            ex.export_communities_results(run_time_homemade, communities_homemade, popular_nodes_homemade, acc_homemade, pre_homemade, rec_homemade, jac_homemade, silhouette_homemade, "homemade_algo_2" + dataset, "2")
+            ex.export_communities_results(run_time_library, communities_library, popular_nodes_library, 100, 100, 100, 1, silhouette_library, "library_algo_2" + dataset, "2")
 
 
     elif scenario == "3":
@@ -154,7 +137,7 @@ if __name__ == '__main__':
         graph_sampled_small, run_time = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_test.txt")
 
         # DEEP ANALYZE OF ALL GRAPH ====================================================================================
-        ag.deep_analyze(graph=graph_sampled_small, commands=["*"], all_checked=True)
+        ag.deep_analyze(graph=graph_sampled_small, commands=["clustering_coefficient", "degree_distribution"], all_checked=False)
 
         # EXPLORATION OF THE GRAPH =====================================================================================
         eg.analytics_exploration(graph=graph_sampled_small, display=True)
@@ -163,8 +146,7 @@ if __name__ == '__main__':
     else:
         print(">>Display all information and steps of all our project ********************************************\n\n")
 
-        string_input = input(
-            "What size of dataset do you want (enrichment (190'000), big (120'00), middle (90'000), small (60'000), test (10'000) : ")
+        string_input = input("What size of dataset do you want (enrichment (190'000), big (120'00), middle (90'000), small (60'000), test (10'000) : ")
 
         # CONSTRUCTION OF THE GRAPH ====================================================================================
         graph_sampled_small, run_time = eg.construct_graph_by_file(

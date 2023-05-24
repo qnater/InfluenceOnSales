@@ -30,20 +30,18 @@ Runtime, Clustering Coefficient, number of nodes, number of edges, average degre
 
 
 ### Scenario 2 : Community Detection
-In this scenario, we compare algorithms of community detection with different datasets. To do so, on each graph, three different community detection algorithms are executed (simple homemade, enhanced homemade with weight and networkX library), 
-popular nodes are identified and community partition quality is evaluated with metrics such as Accuracy, Precision, Recall, Jaccard Similarity, Silhouette Index.
+In this scenario, we compare algorithms of community detection with different datasets. To do so, on each graph, three different community detection algorithms are executed (simple homemade, enhanced homemade with weight and networkX library), popular nodes are identified and community partition quality is evaluated with metrics such as Accuracy, Precision, Recall, Jaccard Similarity, Silhouette Index.
 
 #### Used datasets
 dataset_off_amazon_enrichment.txt (180'000 nodes),  dataset_off_amazon_big.txt (120'000 nodes)
 
 #### Returned metrics
-Runtime, silhouette index, accuracy, precision, recall, Jaccard similarity, communities detected, popular nodes of each community with centrality value
+Runtime, silhouette index, accuracy, precision, recall, Jaccard similarity, communities detected, popular nodes of each community with centrality value.
 
 
 
 ### Scenario 3 : Visualization
-In this scenario, a small sample of the dataset will be used to visualize the graph. After running the community detection algorithm, the graph will be plotted
-with communities in different colors, and the most popular node inside each highlighted.
+In this scenario, a small sample of the dataset will be used to visualize the graph. After running the community detection algorithm, the graph will be plotted with communities in different colors, and the most popular node inside each highlighted.
 
 #### Used datasets
 dataset_off_amazon_test.txt (11'000 nodes)
@@ -54,8 +52,7 @@ Plot image
 
 
 ### Scenario 4 : Exploration
-In this scenario, a small sample of the initial dataset will be used to conduct a deep analysis of the quality of the graph, as well as 
-the connections between nodes and communities (paths).
+In this scenario, a small sample of the initial dataset will be used to conduct a deep analysis of the quality of the graph, as well as the connections between nodes and communities (paths).
 
 #### Used datasets
 dataset_off_amazon_test.txt (11'000 nodes)
@@ -73,13 +70,15 @@ Based on the user choice between:
 dataset_off_amazon_enrichment.txt (180'000 nodes), dataset_off_amazon_big.txt (120'000 nodes), dataset_off_amazon_small.txt (60'000 nodes), dataset_off_amazon_test.txt (11'000 nodes)
 
 #### Returned objects
-Runtime, Clustering Coefficient, number of nodes, number of edges, average degree, silhouette index, accuracy, precision, recall, Jaccard similarity, community detected, popular nodes of each community with centrality measure
-plot images
+Runtime, Clustering Coefficient, number of nodes, number of edges, average degree, silhouette index, accuracy, precision, recall, Jaccard similarity, community detected, popular nodes of each community with centrality measures, plot images.
 
     
     
 ## z_circle_ci_unit_test.py
 This file allows the unit tests of every possible implementation in the GitHub Circle CI.
+
+## z_compare_algo_launcher.py
+This file compares the different algorithms for group-based community detection
 
 ## z_enrichment_launcher.py
 This file allows the merge of the main amazon dataset with the enriched dataset.
