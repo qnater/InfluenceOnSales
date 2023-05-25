@@ -4,6 +4,7 @@ import os
 import matplotlib as mpl
 
 from explore.exploration_graph import ExploreGraph
+from statistics.statistics_graph import StatisticsGraph
 from visualization.visualization_graph import VisualizationGraph
 from analytics.analytics_graph import AnalyticsGraph
 from preprocessing.pre_processing_graph import PreProcessGraph
@@ -22,16 +23,19 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.\n")
 
-    eg, pg, ag, vg, ex = ExploreGraph(), PreProcessGraph(), AnalyticsGraph(), VisualizationGraph(), ExportGraph()
+    eg, pg, ag, vg, ex, st = ExploreGraph(), PreProcessGraph(), AnalyticsGraph(), VisualizationGraph(), ExportGraph(), StatisticsGraph()
 
     # It exists 5 scenario to test the project:
     print("1 - Display all information and steps of the pre-processing of the dataset")
     print("2 - Display all information and steps of the community detection")
     print("3 - Display all information and steps of the visualization of our graph")
     print("4 - Display all information and steps of the exploration of our graph")
-    print("5 - Display all information and steps of all our project\n")
+    print("5 - Display all information and steps of to prove the hypothesis of this project")
+    print("6 - Display all information and steps of all our project\n")
 
-    scenario = input("Which scenario would you like to run : (1-2-3-4-5) ")
+    scenario, possibilities = "", ["1", "2", "3", "4", "5", "6"]
+    while scenario not in possibilities:
+        scenario = input("Which scenario would you like to run : (1-2-3-4-5-6) ")
 
     if scenario == "1":
         print(">>Display all information and steps of the pre-processing of the dataset **************************\n\n")
@@ -58,7 +62,9 @@ if __name__ == '__main__':
 
         datasets = ["dataset_off_amazon_big", "dataset_off_amazon_enrichment"]
 
-        do_simple = input("Do you want to run the homemade slow algorithm (The run is very slow by taking more than 1 day compare to the other (about 15 secondes). (Y/N) :")
+        do_simple, possibilities = "", ["Y", "N"]
+        while do_simple not in possibilities:
+            do_simple = input("Do you want to run the homemade slow algorithm (The run is very slow by taking more than 1 day compare to the other (about 15 secondes). (Y/N) :")
 
         for dataset in datasets:
             # CONSTRUCTION OF THE GRAPH ====================================================================================
@@ -142,20 +148,35 @@ if __name__ == '__main__':
         # EXPLORATION OF THE GRAPH =====================================================================================
         eg.analytics_exploration(graph=graph_sampled_small, display=True)
 
+    elif scenario == "5":
+
+        dataset_input, possibilities = "", ["enrichment", "test"]
+        while dataset_input not in possibilities:
+            dataset_input = input("Please, write the name of dataset that you want (enrichment (~10hr), test (~2min)) : ")
+
+        graph, run_time = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_" + str(dataset_input) + ".txt", display=False)
+        products_popularity_scores = st.real_popularities(graph=graph, community_output_file="stat_data_" + str(dataset_input) + ".txt")
+
+        products_sale_ranks = st.ranking_sales()
+        st.correlate_popularity_and_sales(products_popularity_scores=products_popularity_scores, products_salesranks=products_sale_ranks)
 
     else:
+
         print(">>Display all information and steps of all our project ********************************************\n\n")
 
-        string_input = input("What size of dataset do you want (enrichment (190'000), big (120'00), middle (90'000), small (60'000), test (10'000) : ")
+        string_input, possibilities = "", ["enrichment", "big", "middle", "small", "test"]
+        while string_input not in possibilities:
+            string_input = input("Please, write the name of dataset that you want (enrichment (190'000), big (120'00), middle (90'000), small (60'000), test (10'000) : ")
 
-        do_plots = input("Do you want to display the plot ? (few minutes to load) (Y/N) ")
-
+        do_plots, possibilities = "", ["Y", "N"]
+        while do_plots not in possibilities:
+            do_plots = input("Do you want to display the plot ? (few minutes to load) (Y/N) ")
 
         # CONSTRUCTION OF THE GRAPH ====================================================================================
         graph_sampled_small, run_time = eg.construct_graph_by_file(file_name="./dataset/dataset_off_amazon_" + string_input + ".txt")
 
         # QUALITY OF THE GRAPH =========================================================================================
-        pg.display_efficiency_of_graph(graph=graph_sampled_small, write=True, tag="graph_data_dataset_off_amazon_" + string_input, run_time=run_time, scenario="5")
+        pg.display_efficiency_of_graph(graph=graph_sampled_small, write=True, tag="graph_data_dataset_off_amazon_" + string_input, run_time=run_time, scenario="6")
 
         print(">>Display all information and steps of the community detection ************************************\n\n")
 
@@ -173,7 +194,7 @@ if __name__ == '__main__':
         silhouette_score = ag.silhouette_score(graph=graph_sampled_small, communities=communities, metric="euclidean", sample_size=1000)
 
         # QUALITY=====SAVE RESULTS======================================================================================
-        ex.export_communities_results(run_time, communities, popular_nodes, acc, pre, rec, jac, silhouette_score, "overall_export", "5")
+        ex.export_communities_results(run_time, communities, popular_nodes, acc, pre, rec, jac, silhouette_score, "overall_export", "6")
 
         # EXPLORATION OF THE GRAPH =====================================================================================
         eg.analytics_exploration(graph=graph_sampled_small, display=False)
