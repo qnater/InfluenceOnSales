@@ -3,6 +3,7 @@ import matplotlib as mpl
 from enrichment.enrichment_graph import EnrichmentGraph
 from explore.exploration_graph import ExploreGraph
 from persistence.persistence_graph import PersistenceGraph
+from statistics.statistics_graph import StatisticsGraph
 from visualization.visualization_graph import VisualizationGraph
 from analytics.analytics_graph import AnalyticsGraph
 from preprocessing.pre_processing_graph import PreProcessGraph
@@ -20,7 +21,7 @@ if __name__ == '__main__':
     else:
         print("Unknown operating system.")
 
-    eg, pg, ag, vg, er, db = ExploreGraph(), PreProcessGraph(), AnalyticsGraph(), VisualizationGraph(), EnrichmentGraph(), PersistenceGraph()
+    eg, pg, ag, vg, er, db, st = ExploreGraph(), PreProcessGraph(), AnalyticsGraph(), VisualizationGraph(), EnrichmentGraph(), PersistenceGraph(), StatisticsGraph()
 
 
     print(">>Display all information and steps of all our project ********************************************\n\n")
@@ -52,6 +53,11 @@ if __name__ == '__main__':
     # SIMULATE ENRICHMENT===========================================================================================
     er.compute_enrichment(file="meta_Books", amazon_meta="test", new_amazon_meta="test")
     merged = er.merge_for_enrichment(original_graph=graph_sampled_small, enrichment_file="formatted_amazon_meta.txt")
+
+    # CHECK STATS======================================================================================================e)
+    products_popularity_scores = st.real_popularities(graph=graph_sampled_small, community_output_file="stat_data_test.txt")
+    products_sale_ranks = st.ranking_sales()
+    st.correlate_popularity_and_sales(products_popularity_scores=products_popularity_scores, products_salesranks=products_sale_ranks)
 
     # CHECK DB======================================================================================================
     db.display_community(community_id=1, communities=communities)
