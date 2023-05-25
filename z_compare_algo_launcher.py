@@ -28,7 +28,7 @@ if __name__ == '__main__':
     for algo in algorithms:
         communities, run_time = ag.community_library_detection(graph=graph, library=algo, display=False)
         silhouette = ag.silhouette_score(graph=graph, communities=communities, metric="euclidean", sample_size=1000)
-        ex.export_communities_results(run_time, communities, [], 0, 0, 0, 0, silhouette, "compare_algo_"+algo, "x")
+        ex.export_communities_results(run_time, communities, [], 0, 0, 0, 0, silhouette, "compare_algo_"+algo+"_big", "x")
 
 
 
