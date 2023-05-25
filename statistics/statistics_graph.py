@@ -28,7 +28,6 @@ class StatisticsGraph:
             discontinued_product = False
 
             for line in file:
-
                 # Strip any leading or trailing whitespace from the line
                 line = line.strip()
 
