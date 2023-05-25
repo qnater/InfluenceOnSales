@@ -1,13 +1,18 @@
 import datetime
 import random
+import re
+
 import networkx as nx
 import numpy as np
+import scipy
 
 from networkx.algorithms.community import girvan_newman, louvain_communities, greedy_modularity_communities
 from sklearn.metrics import silhouette_score
 from sklearn.metrics.cluster import normalized_mutual_info_score as NMI3
 from networkx.algorithms.community.quality import modularity
 from collections import defaultdict
+
+from explore.exploration_graph import ExploreGraph
 from visualization.visualization_graph import VisualizationGraph
 
 
@@ -913,13 +918,13 @@ class AnalyticsGraph:
     def ranking_sales(self, txt_file="amazon-meta.txt"):
         """
         Creator: Sophie Caroni & Emmanuel Cazzato
-        Reviewed by:
+        Reviewed by: Quentin Nater
         Retrieve ranking level of sales of the amazon products from the raw file
         :param txt_file: Amazon meta dataset
         :type txt_file: file
         :return: Dictionary for salesranks (values) of ASINs (keys)
         """
-        with open("./dataset/" + txt_file, "r", encoding="utf-8") as file:
+        with open("./dataset/origin_dataset/" + txt_file, "r", encoding="utf-8") as file:
 
             # Initialize a dictionary to later store asins and their salesranks
             salesranks = {}
@@ -937,7 +942,7 @@ class AnalyticsGraph:
                 # Retrieve for each product its ASIN
                 if line.startswith('ASIN:'):
                     asin = line.split()[1]
-                    current_asin = eg.convert_asin_to_int(self, asin)
+                    current_asin = ExploreGraph.convert_asin_to_int(self, asin)
 
                 # Check if product is labelled as discontinued (so no salesrank)
                 if line.startswith('  discontinued product'):
@@ -959,10 +964,10 @@ class AnalyticsGraph:
 
         return salesranks
 
-    def real_popularities(self, graph, community_output_file="homemade_algo_2dataset_off_amazon_enrichment.txt"):
+    def real_popularities(self, graph, community_output_file):
         """
         Creator: Sophie Caroni
-        Reviewed by:
+        Reviewed by: Quentin Nater
         Compute popularity scores relative to the whole graph of community-popular products
         :param graph: Graph networkX of the dataset
         :type graph: networkX
@@ -971,9 +976,7 @@ class AnalyticsGraph:
         :return: Dictionary for popularity scores (values) of ASINs (keys)
         """
         current_time_start = datetime.datetime.now()
-        print(
-            ">> You have called the computing of popularity scores (relative to the entire graph) of community-popular nodes (at",
-            current_time_start, ").")
+        print("\n>> You have called the computing of popularity scores (relative to the entire graph) of community-popular nodes (at", current_time_start, ").")
 
         # Initialize the dictionary to store the popularity scores from the community detection
         comm_popularity_scores = {}
@@ -982,7 +985,7 @@ class AnalyticsGraph:
         real_popularity_scores = {}
 
         # Read the community detection output file
-        with open("./results/scenario_2/" + community_output_file, "r", encoding="utf-8") as file:
+        with open("./results/scenario_5/" + community_output_file, "r", encoding="utf-8") as file:
             content = file.read()
 
             # Retrieve the popular nodes of each community
@@ -1003,15 +1006,14 @@ class AnalyticsGraph:
             real_popularity_scores[int(asin)] = graph_popularity_scores[int(asin)]
 
         current_time_end = datetime.datetime.now()
-        print(">> The computing of popularity scores relative to the entire graph as finished (at", current_time_end,
-              ", taking ", current_time_end - current_time_start, "minutes).")
+        print(">> The computing of popularity scores relative to the entire graph as finished (at", current_time_end, ", taking ", current_time_end - current_time_start, "minutes).")
 
         return real_popularity_scores
 
     def correlate_popularity_and_sales(self, products_popularity_scores, products_salesranks):
         """
         Creator: Sophie Caroni
-        Reviewed by:
+        Reviewed by: Quentin Nater
         Compute correlation between popularity score and salesrank of community-popular products
         :param products_popularity_scores: Popularity scores (relative to the whole graph) of community-popular products
         :type  products_popularity_scores: dict
