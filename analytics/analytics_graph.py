@@ -666,7 +666,7 @@ class AnalyticsGraph:
             operations = 0
 
             for node in pushNodeList:
-                bestModality, bestCommunity = 0, communityNodes[node]
+                bestModularity, bestCommunity = 0, communityNodes[node]
 
                 # Calculate weights of the nodes in each community
                 weightCommunity = defaultdict(int)
@@ -704,13 +704,13 @@ class AnalyticsGraph:
                             degreeStrengthOut[numberCommunities], ") / ", size_power, ")")
                         print("\t\t\t\t\t\tdeltaQ : ", Q, "\n")
 
-                    # If the modality is the best so far, update it and update the communities
-                    if Q > bestModality:
-                        bestModality = Q
+                    # If the modularity is the best so far, update it and update the communities
+                    if Q > bestModularity:
+                        bestModularity = Q
                         bestCommunity = numberCommunities
 
                         if display:
-                            print("\t\t\t\t\t\tNEW BEST MODALITY !!! \n")
+                            print("\t\t\t\t\t\tNEW BEST MODULARITY !!! \n")
 
                 # Update inner and outer degrees of the best community
                 degreeStrengthIn[bestCommunity] += in_degree
