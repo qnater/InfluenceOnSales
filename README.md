@@ -8,12 +8,14 @@ In order to use the Influence on Sales application, please follow the steps belo
 # Installation
 To install the Influence On Sales application, you will need to:
 1) First create a directory on your computer and open a terminal on this directory.
-2) On the terminal, clone the GitHub repository. To do so, copy and paste this command : ```git clone https://github.com/qnater/InfluenceOnSales.git```
-3) Once clone enter inside the clone directory with the command : ```cd InfluenceOnSales```
-4) Install the requirements with the command : ```pip install -r requirements.txt```
-5) If an error appears, you may need to install pip.
-6) Once installed, the application can be run with one of the following commands, according to your operating system: ```python project_launcher.py``` for Windows, ```python3 project_launcher.py``` for Mac
-7) To understand how to use the different features and commands, please follow the user guide below.
+2) Go on *https://git-lfs.com/* and install the lfs tool as explained on the website.
+   1) Alternatively, download, copy, past the dataset amazon-meta.txt after the clone (command 3) on *https://github.com/qnater/InfluenceOnSales/blob/master/dataset/origin_dataset/amazon-meta.txt* into the folder : *./dataset/origin_dataset/*
+3) On the terminal, clone the GitHub repository. To do so, copy and paste this command : ```git clone https://github.com/qnater/InfluenceOnSales.git```
+4) Once clone enter inside the clone directory with the command : ```cd InfluenceOnSales```
+5) Install the requirements with the command : ```pip install -r requirements.txt```
+6) If an error appears, you may need to install pip.
+7) Once installed, the application can be run with one of the following commands, according to your operating system: ```python project_launcher.py``` for Windows, ```python3 project_launcher.py``` for Mac
+8) To understand how to use the different features and commands, please follow the user guide below.
 
 <br><br>
 
