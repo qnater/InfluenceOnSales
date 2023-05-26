@@ -166,7 +166,7 @@ if __name__ == '__main__':
 
         string_input, possibilities = "", ["enrichment", "big", "middle", "small", "test"]
         while string_input not in possibilities:
-            string_input = input("Please, write the name of dataset that you want (enrichment (190'000), big (120'00), middle (90'000), small (60'000), test (10'000) : ")
+            string_input = input("Please, write the name of dataset that you want (enrichment (190'000), big (120'00), middle (90'000), small (60'000), test (11'000) : ")
 
         do_plots, possibilities = "", ["Y", "N"]
         while do_plots not in possibilities:
